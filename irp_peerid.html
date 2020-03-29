@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<pre>Your PeerID is : <span id=peerid>peerid</span></pre>
+
+<script>
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ getPeerID().then(callback('peerid'))
+
+ function getPeerID() {
+     var url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
+     console.log('getPeerID url '+url);
+     var result = fetchJson(url)
+	 .then( obj => { return Promise.resolve(obj.Value) })
+	 .catch(logError)
+     console.log('getPeerID result '+result);
+     return result
+ }
+
+ function fetchJson(url) {
+     return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
+ }
+
+ function validate(resp) {
+     console.log('validate status '+resp.status)
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     }
+     return Promise.reject(new Error(resp.statusText))
+ }
+ 
+ function callback(tag) {
+     console.log('callback tag '+tag)
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return substi
+ }
+
+ function logError(err) { console.log(err); }
+
+</script>

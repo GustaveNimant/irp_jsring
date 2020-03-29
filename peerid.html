@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<div>
+    Your Peerid is : <span id=peerid></span>
+
+    --&nbsp;<br>
+    This page is located at <a href=https://willforge.github.io/jsring/peerid.html>https://willforge.github.io/jsring/peerid.html</a>
+</div>
+
+
+<script>
+ const webui = 'http://127.0.0.1:5001';
+ //const webui = '{{site.data.ipfs.webui}}'
+ const api_url = webui + '/api/v0/'
+
+ // calling the function and update the id=peerid
+ getPeerID().then(callback('peerid'))
+
+ function callback(tag) {
+     console.log('callback tag '+tag)
+     const substi = buf => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = buf;
+     };
+     return substi
+ }
+
+ function getPeerID() {
+     var url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
+     console.log('getPeerID url '+url);
+     var result = fetchjson(url)
+	 .then( obj => { return Promise.resolve(obj.Value) })
+	 .catch(error)
+     console.log('getPeerID result '+result);
+     return result
+ }
+
+ function fetchjson(url) {
+     return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
+ }
+
+ function validate(resp) {
+     console.log('validate status '+resp.status)
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     }
+     return Promise.reject(new Error(resp.statusText))
+ }
+ function error(err) { console.log(err); }
+</script>

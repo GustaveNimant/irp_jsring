@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<pre>Your IPaddress is : <span id=ip>ip</span></pre>
+
+<script>
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+ 
+ getIp().then(callback('ip'))
+ 
+ function getIp() {
+     let url = 'https://iph.heliohost.org/cgi-bin/jsonip.pl'
+     var result = fetchJsonCors(url)
+	 .then( obj => { return Promise.resolve(obj.ip) })
+	 .catch(logError)
+     console.log('getIp result '+result);
+     return result
+ }
+ 
+ function fetchJsonCors(url) {
+     console.log('fetchJson url '+url)
+     return fetch(url, {mode: "cors"} ).then(validate)
+				       .then( resp => resp.json() )
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     } else {
+	 console.log('status:',resp.status)
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+ 
+ function callback(tag) {
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     console.log('substi '+substi)
+     return substi
+ }
+ 
+ function logError(err) { console.log("logError "+err); }
+ 
+</script>
+    

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<div>
+    Stat of QmP9XyzoG7hHjCMvixjuFpVRJg8Q8BHi56X3YdCT7nJQg3 is
+    <p>Enter Hash <input id="hash" type="text" name="hash">
+	<button type="button" onclick="myFunction()">Submit</button>
+
+	<br>File Cat is <br> <span id=cat>cat</span>
+
+	--&nbsp;<br>
+	This page is located at <a href=https://willforge.github.io/jsring/cat.html>https://willforge.github.io/jsring/cat.html</a>
+</div>
+
+
+<script>
+
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ function getCat(hash) {
+     console.log('getCat hash '+hash);
+     var url = api_url + 'cat?&arg='+hash
+     console.log('url '+url);
+     return fetchtext(url)
+	 .then( obj => { return Promise.resolve(obj) })
+	 .catch(logError)
+ }
+
+ function myFunction() {
+     var hash = document.getElementById("hash").value;
+     console.log('myFunction hash '+hash)
+     if (hash == "") {
+	 alert("Name must be filled out");
+	 return false;
+     }
+     getCat(hash).then(callback('cat'))
+ } 
+
+ function callback(tag) {
+     console.log('callback tag '+tag)
+     const substi = buf => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = buf;
+     };
+     return substi
+ }
+
+ function fetchtext(url) {
+     return fetch(url, { method: "GET", mode: "cors"} ).then(validate).then( resp => resp.text() )
+ }
+
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     }
+     return Promise.reject(new Error(resp.statusText))
+ }
+
+ function logError(err) { console.log(err); }
+</script>
