@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<script>
+ // https://www.freecodecamp.org/news/here-is-the-most-popular-ways-to-make-an-http-request-in-javascript-954ce8c95aaa/
+
+ const Url = 'http://127.0.0.1:5001/api/v0/add?arg=/home/achadde/sources/javascript/json/files/test.json'
+ 
+ const othePram = { 
+     headers: {
+         'Content-Type': 'text/plain;charset=utf-8',
+     },
+     body: "a string",
+     method: 'POST',
+ };
+
+ fetch(Url, othePram)
+     .then( data => {return data.text()} )
+     .then ( res => {console.log(res)} )
+     .catch(error => {console.log(error)} )
+</script>

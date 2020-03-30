@@ -18,7 +18,6 @@ _perl5
 META-INF/
 *.class
 *.xml
-*.html
 *.bin
 *.exec
 caches-jvm/

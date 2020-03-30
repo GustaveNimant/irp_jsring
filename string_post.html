@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<script>
+ 'use strict';
+
+ (async () => {
+     let response = await fetch('http://www.mocky.io/v2/5e81ff612f00002b002fb7ae',
+	{
+	 method: 'POST',
+	 headers: {
+             'Content-Type': 'text/plain;charset=utf-8',
+	 },
+	 body: "a string",
+     });
+
+     console.log(JSON.stringify(response))
+     let result = await response.text();
+     console.log(JSON.stringify(response))
+     alert(result.message);
+ })();
+</script>

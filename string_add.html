@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<script>
+
+ var url = 'http://127.0.0.1:5001/api/v0/add'
+ return fetchTextPost(url)
+     .then( obj => { return Promise.resolve(obj) })
+     .catch(logError)
+ 
+ function fetchTextPost(url) {
+     return fetch(url, {
+	 headers: {
+	     'Content-Type': 'text/plain;charset=utf-8'
+	 },
+	 method: "POST",
+	 body: "a string"
+     })
+	 .then( res => {console.log(res)} )
+	 .catch( res => {console.log(res)} )
+ }
+
+</script>
