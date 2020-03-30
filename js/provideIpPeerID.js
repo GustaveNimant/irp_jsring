@@ -92,5 +92,5 @@ function storeOfKeyOfValue (key, val){
     console.log( 'Entering in '+here) 
     document.cookie = key + '=' + val;
     console.log('Cookie : '+document.cookie);
-    console.log( 'Exiting from '+here)  
+    console.log("Exiting from "+here+" with '"+document.cookie+"'")  
 }
