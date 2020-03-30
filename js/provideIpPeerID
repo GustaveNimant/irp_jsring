@@ -73,6 +73,22 @@ function logError(err) {
 getIp().then(callback('ip'));
 getPeerID().then(callback('peerid'));
 
+async function isStoredOfKey(key) {
+    const here = arguments.callee.name
+    console.log('Entering in '+here)
+
+    const result = document.cookie.include(key+"=");
+    console.log('Exiting from '+here+' result '+result)
+}
+
+async function retrieveOfKey(key) {
+    const here = arguments.callee.name
+    console.log('Entering in '+here)
+
+    const value = document.cookie;
+    console.log('Exiting from '+here+' value '+value)
+}
+
 async function provideOfKeyOfFunction(key, funPar) {
     const here = arguments.callee.name
     console.log('Entering in '+here)
@@ -84,13 +100,22 @@ async function provideOfKeyOfFunction(key, funPar) {
     console.log('Exiting from '+here+' with result '+value)
   }
 
-provideOfKeyOfFunction('IP', getIp())
-provideOfKeyOfFunction('PEERID', getPeerID())
-
-function storeOfKeyOfValue (key, val){
+function storeOfKeyOfValue (key, value){
     const here = arguments.callee.name
-    console.log( 'Entering in '+here) 
-    document.cookie = key + '=' + val;
+    console.log( 'Entering in '+here)
+    
+    document.cookie = key + '=' + value;
     console.log('Cookie : '+document.cookie);
-    console.log( 'Exiting from '+here)  
+    console.log('Exiting from '+here)  
+}
+
+async function buildAndStoreOfKeyOfFunction (key, funPar){
+    const here = arguments.callee.name
+    console.log( 'Entering in '+here)
+    
+    var value = await funPar
+    console.log(here+" key '"+key+"' value '"+value+"'")
+    storeOfKeyOfValue (key, value)
+
+    console.log('Exiting from '+here)  
 }
