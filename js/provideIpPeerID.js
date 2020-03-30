@@ -75,12 +75,10 @@ getPeerID().then(callback('peerid'));
 
 async function provideOfKeyOfFunction(key, funPar) {
     const here = arguments.callee.name
-    console.log('Entering in '+here)
+    console.log("Entering in "+here+" with '"+key+"'")
 
-    var value = await funPar
-    console.log(here+" key '"+key+"' value '"+value+"'")
-    storeOfKeyOfValue (key, value)
-    
+    var value = await buildAndStoreOfKeyOfFunction (key, funPar);
+	
     console.log('Exiting from '+here+' with result '+value)
   }
 
@@ -89,8 +87,21 @@ provideOfKeyOfFunction('PEERID', getPeerID())
 
 function storeOfKeyOfValue (key, val){
     const here = arguments.callee.name
-    console.log( 'Entering in '+here) 
+    console.log("Entering in "+here+" with '"+key+"'")
+    
     document.cookie = key + '=' + val;
     console.log('Cookie : '+document.cookie);
     console.log("Exiting from "+here+" with '"+document.cookie+"'")  
+}
+
+async function buildAndStoreOfKeyOfFunction (key, funPar){
+    const here = arguments.callee.name
+    console.log("Entering in "+here+" with '"+key+"'")
+    
+    var value = await funPar
+    console.log(here+" key '"+key+"' value '"+value+"'")
+    storeOfKeyOfValue (key, value)
+
+    console.log('Exiting from '+here)
+    return value
 }
