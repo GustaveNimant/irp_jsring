@@ -13,6 +13,8 @@
 -->
 
 <script>
+'use strict';
+// const O = require('./outils');
  const webui = 'http://127.0.0.1:5001';
  //const webui = '{{site.data.ipfs.webui}}'
  const api_url = webui + '/api/v0/'
@@ -86,7 +88,7 @@
  }
 
  function dot2num(dip) {
-     console.log('dot2num dip '+dip)
+     console.log('dot2num input dip '+dip)
      let atoms = dip.split('.');
      var nip = 0;
      for (let i = 3; i >= 0; i--) {
@@ -96,10 +98,10 @@
      return nip>>>0
  }
  
- function dot2Int(dot) 
- {
+ function dot2Int(dot) {
+     console.log('dot2Int input dot '+dot)
      let d = dot.split('.');
-     result = ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
+     var result = ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
      console.log('dot2Int result '+result)
      return result
  }

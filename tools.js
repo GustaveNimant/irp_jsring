@@ -1,16 +1,6 @@
 'use strict';
 
-var CryptoJS = require("crypto-js");
-
-var ModuleName = 'outils.js';
-
-function calculateHashForBlock (block) {
-    return calculateHash(block.index, block.hashPrecedent, block.horodatage, block.contenu);
-};
-
-function calculateHash (index, hashPrecedent, horodatage, contenu) {
-    return CryptoJS.SHA256(index + hashPrecedent + horodatage + contenu).toString();
-};
+var ModuleName = './tools.js';
 
 function errorHandler (error) {
     if (error.syscall !== 'listen') {
@@ -89,14 +79,4 @@ function normalizePort (val) {
   }
   return false;
 };
-
-module.exports.calculateHash = calculateHash;
-module.exports.calculateHashForBlock = calculateHashForBlock;
-module.exports.errorHandler = errorHandler;
-module.exports.errorMessage = errorMessage;
-module.exports.functionNameJS = functionNameJS;
-module.exports.getLatestElement = getLatestElement;
-module.exports.isValidEmail = isValidEmail;
-module.exports.normalizePort = normalizePort;
-
 

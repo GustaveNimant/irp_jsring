@@ -11,14 +11,14 @@
  function getPeerID() {
      var url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
      console.log('getPeerID url '+url);
-     var result = fetchJson(url)
+     var result = fetchJsonGet(url)
 	 .then( obj => { return Promise.resolve(obj.Value) })
 	 .catch(logError)
      console.log('getPeerID result '+result);
      return result
  }
 
- function fetchJson(url) {
+ function fetchJsonGet(url) {
      return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
  }
 

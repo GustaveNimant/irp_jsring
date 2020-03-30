@@ -45,6 +45,7 @@
      }
      else {
 	 result = buildAndStoreOfSpot();
+	 console.log('provideSpot X result '+result);
 	 document.getElementById('spot').innerHTML = result;
 
      }
@@ -60,10 +61,11 @@
 	 console.log('buildAndStoreOfSpot ip '+ip);
 	 console.log('buildAndStoreOfSpot peeId '+peeId);
 	 spot = buildSpotOfIpOfPeerId(ip, peeId);
-     });
-     spotMap.set("spot", spot)
-     console.log('buildAndStoreOfSpot spot has been stored with '+spot);
-     return spot; 
+	 spotMap.set("spot", spot)
+	 console.log('buildAndStoreOfSpot spot has been stored with '+spot);
+	 return spot; 
+     }).then(callback('spot'))
+
  }
 
  function buildSpotOfIpOfPeerId(ip, peeId) {
