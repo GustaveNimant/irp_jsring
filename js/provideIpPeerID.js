@@ -85,11 +85,11 @@ async function provideOfKeyOfFunction(key, funPar) {
 provideOfKeyOfFunction('IP', getIp())
 provideOfKeyOfFunction('PEERID', getPeerID())
 
-function storeOfKeyOfValue (key, val){
+function storeOfKeyOfValue (key, value){
     const here = arguments.callee.name
     console.log("Entering in "+here+" with '"+key+"'")
     
-    document.cookie = key + '=' + val;
+    document.cookie = key + '=' + value;
     console.log('Cookie : '+document.cookie);
     console.log("Exiting from "+here+" with '"+document.cookie+"'")  
 }
@@ -105,3 +105,20 @@ async function buildAndStoreOfKeyOfFunction (key, funPar){
     console.log('Exiting from '+here)
     return value
 }
+
+async function isStoredOfKey(key) {
+    const here = arguments.callee.name
+    console.log('Entering in '+here)
+
+    const result = document.cookie.include(key+"=");
+    console.log('Exiting from '+here+' result '+result)
+}
+
+async function retrieveOfKey(key) {
+    const here = arguments.callee.name
+    console.log('Entering in '+here)
+
+    const value = document.cookie;
+    console.log('Exiting from '+here+' value '+value)
+}
+
