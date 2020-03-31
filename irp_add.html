@@ -17,7 +17,7 @@
  
  function getAdd(str) {
      console.log('getAdd input str '+str);
-     var url = api_url + 'add'
+     var url = api_url + 'add?arg=str'
      console.log('url '+url);
      return fetchTextPost(url, str)
 	 .then( obj => { return Promise.resolve(obj) })
