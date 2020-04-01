@@ -14,75 +14,7 @@
 
 <script>
  const webui = 'http://127.0.0.1:5001';
- //const webui = '{{site.data.ipfs.webui}}'
  const api_url = webui + '/api/v0/'
-
- var spotMap = new Map();
-
- getPeerID().then(callback('peerid'));
- getIp().then(callback('ip'));
-
- let result = provideSpot();
- console.log('provideSpot result '+result);
-
- function isStoredSpot() {
-     const result = spotMap.has("spot");
-     console.log('isStoredSpot result '+result);
-     return result;
- }
-
- function retrieveSpot() {
-     const result = spotMap.get("spot");
-     console.log('retrieveSpot result '+result);
-     return result;
- }
-
- function provideSpot() {
-     console.log('Entering in provideSpot');
-     var result;
-     if(isStoredSpot()) {
-	 result = retrieveSpot();
-     }
-     else {
-	 result = buildAndStoreOfSpot();
-	 console.log('provideSpot X result '+result);
-	 document.getElementById('spot').innerHTML = result;
-
-     }
-     console.log('provideSpot result '+result);
-     return result; 
- }
-
- function buildAndStoreOfSpot() {
-     console.log('Entering in buildAndStoreOfSpot');
-     var spot;
-     Promise.all([getIp(), getPeerID()]).then(data => {
-	 const [ip, peeId] = data;
-	 console.log('buildAndStoreOfSpot ip '+ip);
-	 console.log('buildAndStoreOfSpot peeId '+peeId);
-	 spot = buildSpotOfIpOfPeerId(ip, peeId);
-	 spotMap.set("spot", spot)
-	 console.log('buildAndStoreOfSpot spot has been stored with '+spot);
-	 return spot; 
-     }).then(callback('spot'))
-
- }
-
- function buildSpotOfIpOfPeerId(ip, peeId) {
-     console.log('buildSpotOfIpOfPeerId input ip '+ip)
-     console.log('buildSpotOfIpOfPeerId input peeId '+peeId)
-     const tic = getTic();
-     var ipInt = dot2Int(ip);
-     var spot = (tic ^ +ipInt)>>>0;
-     
-     var result = "--- # spot for "+peeId+"\n";
-     result += "tic: "+tic+"\n";
-     result += "ip: "+ipInt+"\n";
-     result += "spot: "+spot;
-     
-     console.log('buildSpotOfIpOfPeerId result '+result);
-     return result;
- } 
  
  function getIp() {
      let url = 'https://iph.heliohost.org/cgi-bin/jsonip.pl'
@@ -112,31 +44,6 @@
  function fetchJsonGet(url) {
      console.log('fetchJsonGet url '+url)
      return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
- }
- 
- function getTic() {
-     var date = new Date();
-     var result =parseInt (date.getTime() / 1000);
-     console.log('getTic result '+result)
-     return result
- }
- 
- function dot2num(dip) {
-     console.log('dot2num dip '+dip)
-     let atoms = dip.split('.');
-     var nip = 0;
-     for (let i = 3; i >= 0; i--) {
-	 nip |= (+parseInt(atoms[3 - i]) << (i * 8));
-	 console.log('dot2num nip: '+nip)
-     }
-     return nip>>>0
- }
- 
- function dot2Int(dot) {
-     let d = dot.split('.');
-     result = ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
-     console.log('dot2Int result '+result)
-     return result
  }
  
  function callback(tag) {

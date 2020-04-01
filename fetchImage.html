@@ -1,0 +1,15 @@
+<img class="my-image" src="https://wikipedia.org/static/images/project-logos/frwiki-1.5x.png">
+<script>
+const myImage = document.querySelector('.my-image');
+
+fetch('http:/js/irp_jsring/book_1984.jpg')
+    .then(function(response) {
+	return response.blob();
+    })
+    .then(function(myBlob) {
+	const objectURL = URL.createObjectURL(myBlob);
+	myImage.src = objectURL;
+    });
+</script>
+
+
