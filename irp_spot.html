@@ -1,7 +1,11 @@
+
 <pre>Your IPaddress is : <span id=ip>ip</span></pre>
 <pre>Your PeerId is : <span id=peerid>peerid</span></pre>
-<pre>Your Spot is : <span id=spot>spot</span></pre>
+Your Spot is : <textarea cols="60" rows="4" name="spot_txt" id="spot"></textarea><br><br>
+<h3><center>Sauver le spot dans un fichier</center></h3>
 
+Nom du fichier : <input type="text" id="inputFileNameToSaveAs" value="spot.yml" disabled>
+<button onclick="saveTextAsFile()">Sauver le spot</button>
 <!--
      "--- # spot for $peeId\n"
      "tic: $tic\n"
@@ -13,7 +17,10 @@
 -->
 
 <script>
+'use strict';
+// const O = require('./outils');
  const webui = 'http://127.0.0.1:5001';
+ //const webui = '{{site.data.ipfs.webui}}'
  const api_url = webui + '/api/v0/'
 
  getPeerID().then(callback('peerid'));
@@ -123,7 +130,41 @@
  function logError(err) { console.log("logError "+err); }
  
  console.log('ip',ip);
- 
+
+function saveTextAsFile()
+{
+	var textToWrite = document.getElementById("spot").value;
+	var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+	var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
+
+	var downloadLink = document.createElement("a");
+	downloadLink.download = fileNameToSaveAs;
+	downloadLink.innerHTML = "Download File";
+	if (window.webkitURL != null)
+	{
+		// Chrome allows the link to be clicked
+		// without actually adding it to the DOM.
+downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+
+	}
+	else
+	{
+		// Firefox requires the link to be added to the DOM
+		// before it can be clicked.
+		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+		downloadLink.onclick = destroyClickedElement;
+		downloadLink.style.display = "none";
+		document.body.appendChild(downloadLink);
+	}
+
+	downloadLink.click();
+}
+
+function destroyClickedElement(event)
+{
+	document.body.removeChild(event.target);
+}
+
 </script>
 
 
