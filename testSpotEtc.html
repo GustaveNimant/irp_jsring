@@ -2,38 +2,33 @@
 <pre>Your PeerId is : <span id=peerid>peerid</span></pre>
 <pre>Your Spot is : <span id=spot>spot</span></pre>
 
-<!--
-     "--- # spot for $peeId\n"
-     "tic: $tic\n"
-     "ip: $ipSys\n"
-     "spot: $spot
-
-     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-
--->
-
 <script>
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
  getPeerID().then(callback('peerid'));
  getIp().then(callback('ip'));
- 
- const promises = [getIp(), getPeerID()];
- console.log('promises '+promises);
+ getSpot();
 
- Promise.all(promises).then(data => {
-     const [ip, peeId] = data;
-     console.log('ip '+ip);
-     console.log('peeId '+peeId);
-     const spot = getSpot(ip, peeId);
-     let e = document.getElementById('spot');
-     e.innerHTML = spot;
- });
+ function getSpot() {
+     console.log('Entering in getSpot')
 
- function getSpot(ip, peeId) {
-     console.log('getSpot input ip '+ip)
-     console.log('getSpot input peeId '+peeId)
+     const promises = [getIp(), getPeerID()];
+     console.log('promises '+promises);
+
+     Promise.all(promises).then(data => {
+	 const [ip, peeId] = data;
+	 console.log('ip '+ip);
+	 console.log('peeId '+peeId);
+	 const spot = spotOfIpOfPeerId(ip, peeId);
+	 let e = document.getElementById('spot');
+	 e.innerHTML = spot;
+     });
+ }
+
+ function spotOfIpOfPeerId(ip, peeId) {
+     console.log('spotOfIpOfPeerId input ip '+ip)
+     console.log('spotOfIpOfPeerId input peeId '+peeId)
      const tic = getTic();
      var ipInt = dot2Int(ip);
      var spot = (tic ^ +ipInt)>>>0;
@@ -43,7 +38,7 @@
      result += "ip: "+ipInt+"\n";
      result += "spot: "+spot;
      
-     console.log('getSpot result '+result);
+     console.log('spotOfIpOfPeerId result '+result);
      return result;
  } 
  

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<pre>Hash is : <span id=hash>hash</span></pre>
+
+<script>
+ // https://github.com/ipfs/http-api-docs/issues/4#issuecomment-391455691
+
+ const formData = new FormData();
+ formData.append('file',
+		 new Blob([fileContent],
+			  {type : 'application/octet-stream'}), 'filename.txt');
+ fetch('http://localhost:5001/api/v0/add', {method: 'POST', body: formData, mode: 'cors' });
+</script>
