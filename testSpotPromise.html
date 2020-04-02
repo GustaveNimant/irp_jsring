@@ -8,19 +8,22 @@
 
  getPeerID().then(callback('peerid'));
  getIp().then(callback('ip'));
+ getSpot();
  
- const promises = [getIp(), getPeerID()];
- console.log('promises '+promises);
-
- Promise.all(promises).then(data => {
-     const [ip, peeId] = data;
-     console.log('ip '+ip);
-     console.log('peeId '+peeId);
-     const spot = spotOfIpOfPeerId(ip, peeId);
-     let e = document.getElementById('spot');
-     e.innerHTML = spot;
- });
-
+ function getSpot() {
+     const promises = [getIp(), getPeerID()];
+     console.log('promises '+promises);
+     
+     Promise.all(promises).then(data => {
+	 const [ip, peeId] = data;
+	 console.log('ip '+ip);
+	 console.log('peeId '+peeId);
+	 const spot = spotOfIpOfPeerId(ip, peeId);
+	 let e = document.getElementById('spot');
+	 e.innerHTML = spot;
+     });
+ }
+ 
  function spotOfIpOfPeerId(ip, peeId) {
      console.log('spotOfIpOfPeerId input ip '+ip)
      console.log('spotOfIpOfPeerId input peeId '+peeId)
