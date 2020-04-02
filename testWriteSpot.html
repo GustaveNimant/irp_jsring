@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<pre>Hash is : <span id=hash>hash</span></pre>
+
+<script>
+ const path = 'http://127.0.0.1/js/irp_jsring/' // ???
+ const file = 'spot.yml';
+
+ readFile(file)
+     .then( content => {
+	 console.log('Readfile: content: ',content);
+	 getAdd(file, content)
+     } )
+
+ function readFile(file_url) {
+     console.log('readFile file_url '+file_url);
+     return fetch(file_url)
+	 .then( resp => { console.log(resp); return resp.text()  } )
+	 .catch(logError) 
+ }
+
+ function getAdd(file, content) {
+     console.log('getAdd input file '+file);
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'add?arg='+file
+     console.log('getAdd url: '+url);
+
+     fetchTextPost(url, content)
+	 .then( obj => obj.json() )
+	 .then( json => { console.log('getAdd json: ',json); return json.Hash } )
+	 .then( callback('hash') )
+	 .catch(logError)
+ }
+ 
+ writeFile(file)
+     .then( content => {
+	 console.log('Readfile: content: ',content);
+	 getWrite(file, content)
+     } )
+
+ function writeFile(file_url) {
+     console.log('writeFile file_url '+file_url);
+     return fetch(file_url)
+	 .then( resp => { console.log(resp); return resp.text()  } )
+	 .catch(logError) 
+ }
+
+
+ function getWrite(file, content) {
+     console.log('getWrite input file '+file);
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/write?arg=' + '/etc/' + file
+     console.log('getWrite url: '+url);
+
+     fetchTextPost(url, content)
+	 .then( obj => obj.json() )
+	 .then( json => { console.log('getWrite json: ',json); return json.Hash } )
+	 .then( callback('hash') )
+	 .catch(logError)
+ }
+ 
+ function fetchTextPost(url, content) {
+     console.log('fetchTextPost input url: '+url);
+     let form = new FormData();
+     form.append('file', content)   
+     return fetch(url, {
+	 method: "POST",
+	 mode: 'cors',
+	 body: form
+     })
+ }
+ 
+ function callback(tag) {
+     console.log('callback tag: '+tag)
+     const substi = buf => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+buf+">"+buf+"</a>";
+     };
+     return substi
+ }
+
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     }
+     return Promise.reject(new Error(resp.statusText))
+ }
+
+ function logError(err) { console.log(err); }
+
+</script>
