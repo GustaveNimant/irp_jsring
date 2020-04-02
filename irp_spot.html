@@ -33,14 +33,14 @@ Nom du fichier : <input type="text" id="inputFileNameToSaveAs" value="spot.yml" 
      const [ip, peeId] = data;
      console.log('ip '+ip);
      console.log('peeId '+peeId);
-     const spot = getSpot(ip, peeId);
+     const spot = spotOfIpOfPeerId(ip, peeId);
      let e = document.getElementById('spot');
      e.innerHTML = spot;
  });
 
- function getSpot(ip, peeId) {
-     console.log('getSpot input ip '+ip)
-     console.log('getSpot input peeId '+peeId)
+ function spotOfIpOfPeerId(ip, peeId) {
+     console.log('spotOfIpOfPeerId input ip '+ip)
+     console.log('spotOfIpOfPeerId input peeId '+peeId)
      const tic = getTic();
      var ipInt = dot2Int(ip);
      var spot = (tic ^ +ipInt)>>>0;
@@ -50,7 +50,7 @@ Nom du fichier : <input type="text" id="inputFileNameToSaveAs" value="spot.yml" 
      result += "ip: "+ipInt+"\n";
      result += "spot: "+spot;
      
-     console.log('getSpot result '+result);
+     console.log('spotOfIpOfPeerId result '+result);
      return result;
  } 
  
