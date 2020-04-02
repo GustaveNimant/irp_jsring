@@ -1,0 +1,126 @@
+<pre>Your IPaddress is : <span id=ip>ip</span></pre>
+<pre>Your PeerId is : <span id=peerid>peerid</span></pre>
+<pre>Your Spot is : <span id=spot>spot</span></pre>
+
+<script>
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ getPeerID().then(callback('peerid'));
+ getIp().then(callback('ip'));
+ getSpot().then(callback('spot'));
+ 
+ function getSpot() {
+     console.log('Entering in getSpot')
+     const promises = [getIp(), getPeerID()];
+     console.log('getSpot promises '+promises);
+     
+     Promise.all(promises).then(data => {
+	 const [ip, peeId] = data;
+	 console.log('getSpot ip '+ip);
+	 console.log('getSpot peeId '+peeId);
+	 var result = spotOfIpOfPeerId(ip, peeId)
+	     .then(spot => {return spot})
+	 console.log('getSpot result '+result);
+	 return result
+     })
+ }
+ 
+ function spotOfIpOfPeerId(ip, peeId) {
+     console.log('spotOfIpOfPeerId input ip '+ip)
+     console.log('spotOfIpOfPeerId input peeId '+peeId)
+     const tic = getTic();
+     var ipInt = dot2Int(ip);
+     var spot = (tic ^ +ipInt)>>>0;
+
+     return new Promise ( (resolve, reject) => {
+	 var result = "--- # spot for "+peeId+"\n";
+	 result += "tic: "+tic+"\n";
+	 result += "ip: "+ipInt+"\n";
+	 result += "spot: "+spot;
+	 console.log('spotOfIpOfPeerId result '+result);
+	 resolve(result)
+     });
+
+ } 
+ 
+ function getIp() {
+     let url = 'https://iph.heliohost.org/cgi-bin/jsonip.pl'
+     var result = fetchJsonCors(url)
+	 .then( obj => { return Promise.resolve(obj.ip) })
+	 .catch(logError)
+     console.log('getIp result '+result);
+     return result
+ }
+
+ function getPeerID() {
+     let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
+     console.log('getPeerID url '+url);
+     var result = fetchJsonGet(url)
+	 .then( obj => { return Promise.resolve(obj.Value) })
+	 .catch(logError)
+     console.log('getPeerID result '+result);
+     return result
+ }
+ 
+ function fetchJsonCors(url) {
+     console.log('fetchJsonCors url '+url)
+     return fetch(url, {mode: "cors"} ).then(validate)
+				       .then( resp => resp.json() )
+ }
+ 
+ function fetchJsonGet(url) {
+     console.log('fetchJsonGet url '+url)
+     return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
+ }
+ 
+ function getTic() {
+     var date = new Date();
+     var result =parseInt (date.getTime() / 1000);
+     console.log('getTic result '+result)
+     return result
+ }
+
+ function dot2num(dip) {
+     console.log('dot2num input dip '+dip)
+     let atoms = dip.split('.');
+     var nip = 0;
+     for (let i = 3; i >= 0; i--) {
+	 nip |= (+parseInt(atoms[3 - i]) << (i * 8));
+	 console.log('dot2num nip: '+nip)
+     }
+     return nip>>>0
+ }
+ 
+ function dot2Int(dot) {
+     console.log('dot2Int input dot '+dot)
+     let d = dot.split('.');
+     var result = ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
+     console.log('dot2Int result '+result)
+     return result
+ }
+ 
+ function callback(tag) {
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return substi
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     } else {
+	 console.log('status:',resp.status)
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+ 
+ function logError(err) { console.log("logError "+err); }
+ 
+ console.log('ip',ip);
+ 
+</script>
+
+
