@@ -1,0 +1,56 @@
+<pre>P_1 is : <span id=p_1>p_1</span></pre>
+<pre>P_2 is : <span id=p_2>p_2</span></pre>
+<pre>Sum is : <span id=sum>sum</span></pre>
+
+<script>
+ promise_1().then(callback('p_1'));
+ promise_2().then(callback('p_2'));
+ sumOfPromises(); // sumOfPromises().then(callback('sum')); gives TypeError: sumOfPromises(...) is undefined (see below)
+
+ function callback(tag) {
+     const result = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return result
+ }
+
+ function sumOfPromises() {
+     const promises = [promise_1(), promise_2()];
+     
+     Promise.all(promises).then(function (data) {
+	 return sumOfData(data)
+     }).then(callback('sum')); // then moved to top gives TypeError: sumOfPromises(...) is undefined (see upper)
+ }
+ 
+ function sumOfData(data) {
+     const [p_1, p_2] = data;
+     console.log('sumOfData input p_1 '+p_1);
+     console.log('sumOfData input p_2 '+p_2);
+     
+     return new Promise ( (resolve) => {
+	 var result = p_1 + p_2;
+	 console.log('sumOfData result '+result);
+	 resolve(result)
+     });
+ } 
+
+ function promise_1() {
+     return new Promise((resolve) => {
+	 const value = Math.random();
+	 console.log('promise_1 value '+value);
+	 resolve(value);
+     })
+ }
+
+ function promise_2() {
+     return new Promise((resolve, reject) => {
+	 const value = - Math.random();
+	 console.log('promise_2 value '+value);
+	 resolve(value);
+     })
+ }
+
+</script>
+
+
