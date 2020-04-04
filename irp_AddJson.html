@@ -31,7 +31,7 @@
      document.getElementById('file').innerHTML = filNam;
      
      return fetchPostTextForm(url, content)
-	 .then( obj => obj.json() )
+	 .then( obj => {return obj.json()} )
 	 .then( json => {return json.Hash} );
  }
  
