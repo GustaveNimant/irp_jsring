@@ -1,66 +1,41 @@
 <!DOCTYPE html>
-
-<pre>Hash is : <span id=hash>hash</span></pre>
+<pre>File <span id=file>file</span> added as Hash <span id=hash>hash</span> </pre>
 
 <script>
+ const api_url = 'http://127.0.0.1:5001/api/v0/'
  const path = 'http://127.0.0.1/js/irp_jsring/' // ???
- const file = 'spot.yml';
+ const filNam = 'test.json';
 
- readFile(file)
+ readFile(filNam)
      .then( content => {
-	 console.log('Readfile: content: ',content);
-	 getAdd(file, content)
-     } )
-
- function readFile(file_url) {
-     console.log('readFile file_url '+file_url);
-     return fetch(file_url)
+	 console.log('Readfile: content ',content);
+	 (hashOfFileOfContent(filNam, content))
+	     .then(callbackIpfsIo('hash') )
+     })
+ 
+ function readFile(filNam) {
+     console.log('readFile filNam '+filNam);
+     return fetch(filNam)
 	 .then( resp => { console.log(resp); return resp.text()  } )
 	 .catch(logError) 
  }
-
- function getAdd(file, content) {
-     console.log('getAdd input file '+file);
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'add?arg='+file
-     console.log('getAdd url: '+url);
-
-     fetchTextPost(url, content)
+ 
+ function hashOfFileOfContent(filNam, content) {
+     console.log('hashOfFileOfContent input filNam '+filNam);
+     var url = api_url + 'add?arg='+filNam
+     console.log('hashOfFileOfContent url: '+url);
+     
+     document.getElementById('file').innerHTML = filNam;
+     
+     return fetchPostTextForm(url, content)
 	 .then( obj => obj.json() )
-	 .then( json => { console.log('getAdd json: ',json); return json.Hash } )
-	 .then( callback('hash') )
-	 .catch(logError)
+	 .then( json => json.Hash );
  }
  
- writeFile(file)
-     .then( content => {
-	 console.log('Readfile: content: ',content);
-	 getWrite(file, content)
-     } )
-
- function writeFile(file_url) {
-     console.log('writeFile file_url '+file_url);
-     return fetch(file_url)
-	 .then( resp => { console.log(resp); return resp.text()  } )
-	 .catch(logError) 
- }
-
-
- function getWrite(file, content) {
-     console.log('getWrite input file '+file);
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'files/write?arg=' + '/etc/' + file
-     console.log('getWrite url: '+url);
-
-     fetchTextPost(url, content)
-	 .then( obj => obj.json() )
-	 .then( json => { console.log('getWrite json: ',json); return json.Hash } )
-	 .then( callback('hash') )
-	 .catch(logError)
- }
- 
- function fetchTextPost(url, content) {
-     console.log('fetchTextPost input url: '+url);
+ function fetchPostTextForm(url, content) {
+     console.log('fetchPostTextForm input url: '+url);
+     console.log('fetchPostTextForm input content: '+content);
+     
      let form = new FormData();
      form.append('file', content)   
      return fetch(url, {
@@ -70,11 +45,53 @@
      })
  }
  
+ writeFile(filNam)
+     .then( content => {
+	 console.log('Readfile: content ',content);
+	 (writeOfFileOfContent(filNam, content))
+     } )
+
+ function writeFile(filNam) {
+     console.log('writeFile filNam '+filNam);
+     return fetch(filNam)
+	 .then( resp => { console.log(resp); return resp.text()  } )
+	 .catch(logError) 
+ }
+
+ function writeOfFileOfContent(filNam, content) {
+     console.log('writeOfFileOfContent input filNam '+filNam);
+     console.log('writeOfFileOfContent input content '+content)
+
+     var url = api_url + 'files/write?arg=' + '/etc/' + filNam + '&arg='+content;
+     console.log('writeOfFileOfContent : url '+url);
+
+     return fetchPostTextForm(url, content)
+	 .then( obj => obj.json() )
+	 .catch(logError)
+ }
+
  function callback(tag) {
-     console.log('callback tag: '+tag)
-     const substi = buf => {
+     const result = obj => {
 	 let e = document.getElementById(tag);
-	 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+buf+">"+buf+"</a>";
+	 e.innerHTML = obj;
+     };
+     return result
+ }
+ 
+ function callbackIpfsIo(tag) {
+     console.log('callback tag: '+tag)
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+     };
+     return substi
+ }
+
+ function callbackIpfsLocal(tag) {
+     console.log('callback tag: '+tag)
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
      };
      return substi
  }
@@ -85,7 +102,7 @@
      }
      return Promise.reject(new Error(resp.statusText))
  }
-
+ 
  function logError(err) { console.log(err); }
 
 </script>

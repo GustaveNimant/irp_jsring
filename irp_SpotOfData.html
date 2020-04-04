@@ -66,7 +66,8 @@
  
  function fetchJsonGet(url) {
      console.log('fetchJsonGet url '+url)
-     return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
+     return fetch(url, { method: "GET"} ).then(validate)
+					 .then( resp => resp.json() )
  }
  
  function getTic() {
