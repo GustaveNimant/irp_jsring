@@ -4,17 +4,15 @@
 
 <script>
  const api_url = 'http://127.0.0.1:5001/api/v0/'
- const path = 'http://127.0.0.1/js/irp_jsring/' // ???
+ const path = 'http://127.0.0.1/js/irp_jsring/' // Improve
  const filNam = 'test.json';
 
- // Improve then ( then (
- 
  readFile(filNam)
      .then( content => {
 	 console.log('Readfile: content ',content);
-	 (hashOfFileOfContent(filNam, content))
-	     .then(callbackIpfsIo('hash') )
+	 return (hashOfFileOfContent(filNam, content))
      })
+     .then(callbackIpfsIo('hash') )
  
  function readFile(filNam) {
      console.log('readFile filNam '+filNam);
@@ -25,19 +23,21 @@
  
  function hashOfFileOfContent(filNam, content) {
      console.log('hashOfFileOfContent input filNam '+filNam);
+     console.log('fetchPostTextForm input content '+content);
+     
      var url = api_url + 'add?arg='+filNam
-     console.log('hashOfFileOfContent url: '+url);
+     console.log('hashOfFileOfContent url '+url);
      
      document.getElementById('file').innerHTML = filNam;
      
      return fetchPostTextForm(url, content)
 	 .then( obj => obj.json() )
-	 .then( json => json.Hash );
+	 .then( json => {return json.Hash} );
  }
  
  function fetchPostTextForm(url, content) {
-     console.log('fetchPostTextForm input url: '+url);
-     console.log('fetchPostTextForm input content: '+content);
+     console.log('fetchPostTextForm input url '+url);
+     console.log('fetchPostTextForm input content '+content);
      
      let form = new FormData();
      form.append('file', content)   
@@ -49,6 +49,7 @@
  }
  
  function callback(tag) {
+     console.log('callback tag: '+tag)
      const result = obj => {
 	 let e = document.getElementById(tag);
 	 e.innerHTML = obj;
@@ -57,7 +58,7 @@
  }
  
  function callbackIpfsIo(tag) {
-     console.log('callback tag: '+tag)
+     console.log('callbackIpfsIo tag: '+tag)
      const substi = obj => {
 	 let e = document.getElementById(tag);
 	 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
@@ -66,7 +67,7 @@
  }
 
  function callbackIpfsLocal(tag) {
-     console.log('callback tag: '+tag)
+     console.log('callbackIpfsLocal tag: '+tag)
      const substi = obj => {
 	 let e = document.getElementById(tag);
 	 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
