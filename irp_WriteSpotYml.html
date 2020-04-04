@@ -15,7 +15,7 @@
  function writeFile(filNam) {
      console.log('writeFile filNam '+filNam);
      return fetch(filNam)
-	 .then( resp => { console.log(resp); return resp.text()  } )
+	 .then( resp => { console.log(resp); return resp.text()} )
 	 .catch(logError) 
  }
 
@@ -23,7 +23,7 @@
      console.log('writeOfFileOfContent input filNam '+filNam);
      console.log('writeOfFileOfContent input content '+content)
 
-     var url = api_url + 'files/write?arg=' + '/etc/' + filNam + '&create=1&arg='+content;
+     var url = api_url + 'files/write?arg=' + '/etc/' + filNam + '&create=1&truncate=1';
      console.log('writeOfFileOfContent : url '+url);
 
      return fetchPostTextForm(url, content)
