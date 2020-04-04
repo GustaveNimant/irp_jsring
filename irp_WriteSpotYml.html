@@ -6,19 +6,12 @@
  const path = 'http://127.0.0.1/js/irp_jsring/' // ???
  const filNam = 'spot.yml';
 
- writeFile(filNam)
+ readFile(filNam)
      .then( content => {
 	 console.log('Readfile: content ',content);
 	 (writeOfFileOfContent(filNam, content))
      } )
-
- function writeFile(filNam) {
-     console.log('writeFile filNam '+filNam);
-     return fetch(filNam)
-	 .then( resp => { console.log(resp); return resp.text()} )
-	 .catch(logError) 
- }
-
+ 
  function writeOfFileOfContent(filNam, content) {
      console.log('writeOfFileOfContent input filNam '+filNam);
      console.log('writeOfFileOfContent input content '+content)
@@ -28,7 +21,8 @@
 
      return fetchPostTextForm(url, content)
 	 .then( obj => obj.json() )
-	 .catch(logError)
+     	 .then( json => {return json.Hash} )
+         .catch(logError)
  }
 
  readFile(filNam)
@@ -55,7 +49,7 @@
      document.getElementById('file').innerHTML = filNam;
      
      return fetchPostTextForm(url, content)
-	 .then( obj => {return obj.json()} )
+	 .then( obj => obj.json() )
 	 .then( json => {return json.Hash} );
  }
  
