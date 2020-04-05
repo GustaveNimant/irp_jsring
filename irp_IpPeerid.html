@@ -1,16 +1,5 @@
 <pre>Your IPaddress is : <span id=ip>ip</span></pre>
 <pre>Your PeerId is : <span id=peerid>peerid</span></pre>
-<pre>Your Spot is : <span id=spot>spot</span></pre>
-
-<!--
-     "--- # spot for $peeId\n"
-     "tic: $tic\n"
-     "ip: $ipSys\n"
-     "spot: $spot
-
-     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-
--->
 
 <script>
  const webui = 'http://127.0.0.1:5001';
@@ -47,17 +36,10 @@
  
  function fetchJson(url) {
      console.log('fetchJson url '+url)
-     return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
+     return fetch(url, { method: "GET"} ).then(validate)
+					 .then( resp => resp.json() )
  }
- 
- function getTic() {
-     console.log('getTic')
-     var dat = new Date();
-     var result = dat.getTime() / 1000;
-     console.log('getTic result '+result)
-     return result
- }
- 
+  
  function callback(tag) {
      const substi = obj => {
 	 let e = document.getElementById(tag);
