@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <pre>File <span id=file>file</span> added as Hash <span id=hash>hash</span> </pre>
-
+<pre>to path <span id=path>path</span></pre>
 <script>
  const api_url = 'http://127.0.0.1:5001/api/v0/'
  const path = 'http://127.0.0.1/js/irp_jsring/' // ???
@@ -16,7 +16,9 @@
      console.log('writeOfFileOfContent input filNam '+filNam);
      console.log('writeOfFileOfContent input content '+content)
 
-     var url = api_url + 'files/write?arg=' + '/etc/' + filNam + '&create=1&truncate=1';
+     var patNam = '/etc/' + filNam 
+     document.getElementById('path').innerHTML = patNam;
+     var url = api_url + 'files/write?arg=' + patNam + '&create=1&truncate=1';
      console.log('writeOfFileOfContent : url '+url);
 
      return fetchPostTextForm(url, content)
