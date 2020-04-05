@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+
 <pre>File <span id=file>file</span> added as Hash <span id=hash>hash</span> </pre>
 <pre>to path <span id=path>path</span></pre>
+<input type="text" id="filNam" name="filNam">
+<input type="submit" value="Submit">
+
 <script>
  const api_url = 'http://127.0.0.1:5001/api/v0/'
  const path = 'http://127.0.0.1/js/irp_jsring/' // ???
- const filNam = 'test.json';
+ var filNam = document.getElementById("filNam").value
 
  readFile(filNam)
      .then( content => {

@@ -4,7 +4,7 @@
 <script>
  // https://www.freecodecamp.org/news/here-is-the-most-popular-ways-to-make-an-http-request-in-javascript-954ce8c95aaa/
 
- const Url = '/js/json/files/test.json' // OK
+ const Url = '/js/irp_jsring/test.json' // OK
 
  const othePram = { 
      headers: {
@@ -15,7 +15,6 @@
 
  fetch(Url, othePram)
      .then ( data => {return data.json()} )
-     .then ( res => {console.log(res)} )
      .then ( data => {document.getElementById('data').innerHTML=data} )
      .catch( error => {console.log(error)} )
 </script>

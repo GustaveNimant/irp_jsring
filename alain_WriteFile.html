@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<pre>File <span id=file>file</span> added as Hash <span id=hash>hash</span> </pre>
+<meta charset="utf8"/>
+<pre>Local File <b><span id=file>file</span></b> has been stored as Local Ipfs File <b><span id=filPat>filPat</span></b></pre>
+<pre>with Hash <span id=hash>hash</span> </pre>
+
 
 <script>
  const api_url = 'http://127.0.0.1:5001/api/v0/'
  const path = 'http://127.0.0.1/js/irp_jsring/' // ???
  const filNam = getQuerystring('getNamOfFil')
+ const dirNam = getQuerystring('getNamOfDir')
  
-  function getQuerystring(key, default_) {
-      console.log ("getQuerystring : key "+key)
-      if (default_==null) default_="";
-      key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-      var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
-      var result = regex.exec(window.location.href);
-      console.log ("getQuerystring : result[1] "+result[1])
-      return result[1]
-  }
+ function getQuerystring(key, default_) {
+     console.log ("getQuerystring : key "+key)
+     
+     if (default_==null) default_="";
+     key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+     var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+     var result = regex.exec(window.location.href);
+     console.log ("getQuerystring : result[1] "+result[1])
+     return result[1]
+ }
  
  readFile(filNam)
      .then( content => {
@@ -26,7 +31,11 @@
      console.log('writeOfFileOfContent input filNam '+filNam);
      console.log('writeOfFileOfContent input content '+content)
 
-     var url = api_url + 'files/write?arg=' + '/etc/' + filNam + '&create=1&truncate=1';
+     var filPat = dirNam + filNam
+     console.log('writeOfFileOfContent filPat '+filPat)
+     document.getElementById('filPat').innerHTML = filPat;
+     
+     var url = api_url + 'files/write?arg=' + filPat + '&create=1&truncate=1';
      console.log('writeOfFileOfContent : url '+url);
 
      return fetchPostTextForm(url, content)
