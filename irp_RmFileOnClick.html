@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<pre>File <b><span id=file>file</span></b> deleted with error <span id=error>error</span></pre>
+
+File name: <input type="text" id="path" value="some Ipfs path">
+<button onclick="myFunction()">Delete File</button>
+
+<script>
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ function myFunction() {
+     var filPat = document.getElementById("path").value;
+     console.log('myFunctiob filPat '+filPat);
+     document.getElementById('file').innerHTML = filPat;
+     rmOfPath(filPat);
+ }
+ 
+ function rmOfPath(path) {
+     console.log('rmOfPath path '+path);
+     
+     var url = api_url + 'files/rm?&arg='+path
+     console.log('rmOfPath url '+url);
+     return fetchTextGetCors(url)
+	 .then( obj => { return Promise.resolve(obj) })
+	 .catch(err => logError(err))
+ }
+
+ function callback(tag) {
+     console.log('callback tag '+tag)
+     const substi = buf => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = buf;
+     };
+     return substi
+ }
+
+ function fetchTextGetCors(url) {
+     return fetch(url, { method: "GET", mode: "cors"} )
+	 .then(validate)
+	 .then( resp => resp.text() )
+ }
+
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     }
+     return Promise.reject(new Error(resp.statusText))
+ }
+
+ function logError(err) {
+     console.log('Error '+err.message);
+     let e = document.getElementById('error');
+     e.innerHTML = err.message;
+
+ }
+ 
+</script>
