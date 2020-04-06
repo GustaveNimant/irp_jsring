@@ -2,7 +2,7 @@
 <script>
  // https://www.freecodecamp.org/news/here-is-the-most-popular-ways-to-make-an-http-request-in-javascript-954ce8c95aaa/
 
- const Url = '/js/json/files/test.json'
+ const Url = '/js/json/files/test.json' // OK
 
  const Data= {
      name:"John",
@@ -20,5 +20,5 @@
  fetch(Url, othePram)
      .then ( data => {return data.json()} )
      .then ( res => {console.log(res)} )
-     .catch(error => {console.log(error)} )
+     .catch( error => {console.log(error)} )
 </script>

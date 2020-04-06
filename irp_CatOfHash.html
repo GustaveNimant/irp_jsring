@@ -17,15 +17,6 @@
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
- function getCat(hash) {
-     console.log('getCat hash '+hash);
-     var url = api_url + 'cat?&arg='+hash
-     console.log('url '+url);
-     return fetchTextGetCors(url)
-	 .then( obj => { return Promise.resolve(obj) })
-	 .catch(logError)
- }
-
  function getHash() {
      var hash = document.getElementById("hash").value;
      console.log('getHash hash '+hash)
@@ -35,6 +26,15 @@
      }
      getCat(hash).then(callback('cat'))
  } 
+
+ function getCat(hash) {
+     console.log('getCat hash '+hash);
+     var url = api_url + 'cat?&arg='+hash
+     console.log('url '+url);
+     return fetchTextGetCors(url)
+	 .then( obj => { return Promise.resolve(obj) })
+	 .catch(logError)
+ }
 
  function callback(tag) {
      console.log('callback tag '+tag)
