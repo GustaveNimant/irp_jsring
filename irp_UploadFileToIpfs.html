@@ -1,0 +1,119 @@
+<H3>Select a file from disk space to store it in a Local IPFS directory</H3>
+<html>
+    <body>
+
+	<form method=POST>
+	    Select a file: <input type=file>
+	    <input name=mfspath type=text value="" placeholder="mfs path">
+	    <input type=button onClick="writeFile(this.closest('form'))" value="Upload">
+	</form>
+	
+	Hash: <span id="hash">hash</span>
+
+	<p id="error"></p>
+	
+	<script>
+	 
+	 // Improve catch errors
+	 
+	 function writeFile(form) {
+	     console.log('writeFile : form.elements ',form.elements);
+	     let path = form.elements[0].value
+	     console.log('writeFile : path ',path)
+	     let mfspath = form.elements[1].value
+	     console.log('writeFile : mfspath ',mfspath)
+	     let file = form.elements[0].files[0]
+	     console.log('writeFile : element[0].files ',form.elements[0].files)
+	     console.log('writeFile : file',file)
+	     
+	     let reader = new FileReader();
+	     reader.onload = event => {
+		 const content = event.target.result;
+		 console.log('writeFile : content ',content)
+		 writeOfFileOfContent(mfspath, content).then(callback('hash'))
+	     }
+	     /*
+		reader.addEventListener('load', function() {
+		console.log('Contenu du fichier "' + file.name + '" :\n\n' + reader.result);
+		});
+	      */
+	     
+	     let content = reader.readAsText(file,'UTF-8') 
+	     console.log('writeFile : content ',content);
+	     let formData = new FormData();
+	     formData.append("file", file);
+	     console.log('writeFile : formData ',formData)
+	 }
+	 
+	 function writeOfFileOfContent(filPat, content) {
+	     console.log('writeOfFileOfContent input filPat '+filPat);
+	     console.log('writeOfFileOfContent input content '+content)
+	     
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'files/write?arg=' + filPat + '&create=1&truncate=1';
+	     console.log('writeOfFileOfContent : url '+url);
+	     return fetchPostTextForm(url, content)
+		 .then( _ => hashOfMFSFilePath(filPat) ) 
+		 .catch(logError)
+	 }
+	 
+	 function fetchPostTextForm(url, content) {
+	     console.log('fetchPostTextForm input url '+url);
+	     console.log('fetchPostTextForm input content '+content);
+	     
+	     let form = new FormData();
+	     form.append('file', content)   
+	     return fetch(url, {
+		 method: "POST",
+		 mode: 'cors',
+		 body: form
+	     })
+	 }
+	 
+	 function hashOfMFSFilePath(filPat) {
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     console.log('hashOfMFSFilePath : input filPat '+filPat);
+	     var url = api_url + 'files/stat?arg='+filPat+'&hash=true'
+	     console.log('hashOfMFSFilePath : url '+url);
+	     return fetchGetTextForm(url)
+		 .then( obj => obj.json())
+		 .then( json => { console.log('hashOfMFSFilePath : json ',json); return json.Hash} );
+	 }
+	 
+	 function fetchGetTextForm(url) {
+	     console.log('fetchGetTextForm : input url '+url);
+	     return fetch(url, { method: "GET", mode: 'cors' })
+	 }
+	 
+	 function validate(resp) {
+	     if (resp.status >= 200 && resp.status < 300) {
+		 return Promise.resolve(resp)
+	     }
+	     return Promise.reject(new Error(resp.statusText))
+	 }
+	 
+	 function logError(err) { console.log(err);
+	     document.getElementById("error").innerHTML = err.message;
+	 }
+	 
+	 function callback(tag) {
+	     const result = obj => {
+		 if (obj == undefined ) {
+		     console.log('ERROR '+tag+' is undefined');
+		     console.log('run jsm; . config.sh; ipmsd.sh');
+		 }
+		 let e = document.getElementById(tag);
+		 console.log('obj:',obj)
+		 e.innerHTML = obj;
+	     };
+	     return result
+	 }
+	 
+	 function IpfsException(message) {
+	     this.message = message;
+	     this.name = "IpfsException";
+	 }
+	 
+	</script>
+    </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<form method=POST>
+    Select a file: <input type=file>
+    <input name=mfspath type=text value="" placeholder="mfs path">
+    <input type=button onClick="writeFile(this.closest('form'))" value="Upload">
+</form>
+
+Hash: <span id="hash">hash</span>
+
+<script>
+ 
+ function writeFile(form) {
+     console.log('writeFile : form.elements ',form.elements);
+     let path = form.elements[0].value
+     console.log('writeFile : path ',path)
+     console.log('writeFile : element[0].files ',form.elements[0].files)
+     let file = form.elements[0].files[0]
+     console.log('writeFile : file',file)
+     console.log('writeFile : file.name',file.name)
+     let mfspath = form.elements[1].value
+     console.log('writeFile : mfspath ',mfspath)
+ }
+
+</script>
