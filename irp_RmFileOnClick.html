@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 Ipfs File path: <input type="text" id="path" value="some Ipfs path">
-<button onclick="myFunction()">Delete File</button>
+<button onclick="rmOfPath(document.getElementById('path').value)">Delete File</button>
 
 <pre>Ipfs File Path <b><span id=file>file</span></b> has been deleted</pre>
 
 <p id="error"></p>
 
 <script>
- function myFunction() {
-     var filPat = document.getElementById("path").value;
-     console.log('myFunctiob filPat '+filPat);
-     document.getElementById('file').innerHTML = filPat;
-     rmOfPath(filPat);
- }
  
  function rmOfPath(path) {
      console.log('rmOfPath path '+path);
+     document.getElementById('file').innerHTML = path;
      
      const webui = 'http://127.0.0.1:5001';
      const api_url = webui + '/api/v0/'

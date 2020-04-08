@@ -1,0 +1,10 @@
+<input type='file' onchange='onFilesSelected(event)' multiple>
+<script>
+  var onFilesSelected = function(event) {
+    var input = event.target;
+
+    for (var i = 0; i < input.files.length; i++) {
+      console.log(input.files[i].name);
+    }
+  };
+</script>

@@ -1,0 +1,15 @@
+<form id='form'>
+  <input name='text' value='foo'>
+  <label> <input type='radio' name='letters'>A</label>
+  <label> <input type='radio' name='letters'>B</label>
+  <label> <input type='radio' name='letters'>C</label>
+</form>
+<script>
+  var form = document.getElementById('form');
+
+  var text = form['text'];
+  console.log(text.value);
+
+  var nodeList = form['letters'];
+  console.log(nodeList.length);
+</script>
