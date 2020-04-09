@@ -1,10 +1,10 @@
-<H3>Select a file from disk space to store it in a Local IPFS directory</H3>
+<H3>Select a file from disk space and store it in a Local IPFS directory</H3>
 <html>
     <body>
 
 	<form method=POST>
-	    Select a file: <input type=file><br>
-	    Give a Local Ipfs name <input name=mfspath type=text value="" placeholder="mfs path">
+	    Select a file on disk space : <input type=file><br>
+	    Give it a local Ipfs name <input name=mfspath type=text value="" placeholder="mfs path">
 	    <input type=button onClick="writeFile(this.closest('form'))" value="Upload">
 	</form>
 	
@@ -14,12 +14,10 @@
 	
 	<script>
 	 
-	 // Improve catch errors
-	 
 	 function writeFile(form) {
 	     console.log('writeFile : form.elements ',form.elements);
-	     let path = form.elements[0].value
-	     console.log('writeFile : path ',path)
+	     let fakepath = form.elements[0].value
+	     console.log('writeFile : fakepath ',fakepath)
 	     let mfspath = form.elements[1].value
 	     console.log('writeFile : mfspath ',mfspath)
 	     let file = form.elements[0].files[0]
@@ -28,9 +26,9 @@
 	     
 	     let reader = new FileReader();
 	     reader.onload = event => {
-		 const content = event.target.result;
-		 console.log('writeFile : content ',content)
-		 writeOfFileOfContent(mfspath, content).then(callback('hash'))
+		 const content_on_load = event.target.result;
+		 console.log('writeFile : content_on_load ',content_on_load)
+		 writeOfFileOfContent(mfspath, content_on_load).then(callback('hash'))
 	     }
 	     /*
 		reader.addEventListener('load', function() {
@@ -38,8 +36,9 @@
 		});
 	      */
 	     
-	     let content = reader.readAsText(file,'UTF-8') 
-	     console.log('writeFile : content ',content);
+	     let content_on_read = reader.readAsText(file,'UTF-8') 
+	     console.log('writeFile : content_on_read ',content_on_read);
+	     
 	     let formData = new FormData();
 	     formData.append("file", file);
 	     console.log('writeFile : formData ',formData)
@@ -112,6 +111,10 @@
 		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
 		     return process.abort();
 		     break;
+		 case "Internal Server Error":
+		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     return process.abort();
+		     break;
 		 default:
 		     console.log("logError : output err '"+err+"'");
 	     } // switch
@@ -132,24 +135,24 @@
 	     const substi = obj => {
 		 let e = document.getElementById(tag);
 		 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-			 };
+	     };
 			 return substi
 		     }
 		     
-		     function callbackIpfsLocal(tag) {
-			 console.log('callbackIpfsLocal tag: '+tag)
-			 const substi = obj => {
-			     let e = document.getElementById(tag);
-			     e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-			 };
-			 return substi
-		     }
-		     
-		     function IpfsException(message) {
-			 this.message = message;
-			 this.name = "IpfsException";
-		     }
-		     
+	 function callbackIpfsLocal(tag) {
+	     console.log('callbackIpfsLocal tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+	     };
+	     return substi
+	 }
+	 
+	 function IpfsException(message) {
+	     this.message = message;
+	     this.name = "IpfsException";
+	 }
+	 
 	</script>
     </body>
 </html>
