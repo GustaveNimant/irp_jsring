@@ -13,7 +13,10 @@
 	<p style="color:red" id="error"></p>
 	
 	<script>
-	 
+
+	 //https://developer.mozilla.org/fr/docs/Web/API/FileReader/onload
+	 // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/FileReader
+
 	 function writeFile(form) {
 	     console.log('writeFile : form.elements ',form.elements);
 	     let fakepath = form.elements[0].value
@@ -36,8 +39,7 @@
 		});
 	      */
 	     
-	     let content_on_read = reader.readAsText(file,'UTF-8') 
-	     console.log('writeFile : content_on_read ',content_on_read);
+	     reader.readAsText(file,'UTF-8') 
 	     
 	     let formData = new FormData();
 	     formData.append("file", file);
@@ -136,9 +138,9 @@
 		 let e = document.getElementById(tag);
 		 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
 	     };
-			 return substi
-		     }
-		     
+	     return substi
+	 }
+	 
 	 function callbackIpfsLocal(tag) {
 	     console.log('callbackIpfsLocal tag: '+tag)
 	     const substi = obj => {
