@@ -1,10 +1,11 @@
+<h3><center>Save Spot file on disk</center></h3>
+
 <pre>Your IPaddress is : <span id=ip>ip</span></pre>
 <pre>Your PeerId is : <span id=peerid>peerid</span></pre>
 Your Spot file is :<br> <textarea cols="60" rows="4" name="spot_txt" id="spot"></textarea><br><br>
-<h3><center>Save Spot file on disk</center></h3>
 
-Spot file name : <input type="text" id="inputFileNameToSaveAs" value="spot.yml" disabled>
-<button onclick="saveTextAsFile()">Save</button>
+Your Spot file name : <input type="text" id="fileToSave" value="spot.yml" disabled>
+<button onclick="saveTextAsFile(document.getElementById('spot').value, document.getElementById('fileToSave').value)">Save</button>
 
 <script>
  const webui = 'http://127.0.0.1:5001';
@@ -119,17 +120,21 @@ Spot file name : <input type="text" id="inputFileNameToSaveAs" value="spot.yml" 
  
  function logError(err) { console.log("logError "+err); }
  
- function saveTextAsFile()
- {
-     var textToWrite = document.getElementById("spot").value;
-     var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-     var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
+ function saveTextAsFile(textToWrite, fileNameToSaveAs)
+       {
+//	var textToWrite = document.getElementById("spot").value;
+//	var fileNameToSaveAs = document.getElementById("fileToSave").value;
+	console.log("saveTextAsFile: textToWrite"+textToWrite);
+	console.log("saveTextAsFile: fileNameToSaveAs"+fileNameToSaveAs);
 
-     var downloadLink = document.createElement("a");
-     downloadLink.download = fileNameToSaveAs;
-     downloadLink.innerHTML = "Download File";
-     if (window.webkitURL != null)
-     {
+	var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+
+	var downloadLink = document.createElement("a");
+	downloadLink.download = fileNameToSaveAs;
+	downloadLink.innerHTML = "Download File";
+	
+	if (window.webkitURL != null)
+	    {
 	 // Chrome allows the link to be clicked
 	 // without actually adding it to the DOM.
 	 downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<meta charset="utf8"/>
+<h3>Get the type of an Ipfs path</h3>
+Ipfs File path: <input type="text" id="path" value="some Ipfs path">
+<button onclick="getType(document.getElementById('path').value)">Type</button>
+
+<pre>Local Ipfs Path Type is <b><span id="type">?</span></b></pre>
+
+<p id="error"></p>
+
+<script>
+ function getType(path) {
+     console.log('getType input path '+path)
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/'
+
+     var url = api_url + 'files/stat?&arg='+path+'&type=1'
+     return fetchGetJson(url)
+	 .then( obj => { return Promise.resolve(obj.Type) })
+     	 .then(callback('type'))
+	 .catch(logError)
+ }
+
+ function fetchGetJson(url) {
+     return fetch(url,
+		  { method: "GET"} )
+	 .then(validate)
+	 .then( resp => resp.json() )
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     } else {
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+
+ function callback(tag) {
+     const substi = buf => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = buf;
+     };
+     return substi
+ }
+
+function logError(err) {
+     console.log("logError : input err ",err);
+     const message = err.message;
+     console.log("logError : message '"+message+"'");
+     document.getElementById("error").innerHTML = message;
+     switch (message){
+	 case "NetworkError when attempting to fetch resource.":
+	     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+	     return process.abort();
+	     break;
+	 case "Internal Server Error":
+	     alert("Internal Server Error because ipfs file path was uncorrect");
+	     return process.abort();
+	     break;
+	 default:
+	     console.log("logError : output err '"+err+"'");
+     } // switch
+ }
+
+ 
+</script>

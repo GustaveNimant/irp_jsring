@@ -1,0 +1,18 @@
+function logError(err) {
+     console.log("logError : input err ",err);
+     const message = err.message;
+     console.log("logError : message '"+message+"'");
+     document.getElementById("error").innerHTML = message;
+     switch (message){
+	 case "NetworkError when attempting to fetch resource.":
+	     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+	     return process.abort();
+	     break;
+	 case "Internal Server Error":
+	     alert("Internal Server Error because ipfs file path was uncorrect");
+	     return process.abort();
+	     break;
+	 default:
+	     console.log("logError : output err '"+err+"'");
+     } // switch
+ }

@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <meta charset="utf8"/>
 
-<div>
-    Set a Path and Enter <input name=path type=text value="/path"
-				     onChange="getType(this.value).then(callback('hash'));"> Hash is : 
-    <span id=hash></span>
-</div>
-<br>
-This page is located at <a href=https://willforge.github.io/jsring/stat.html>
-    https://willforge.github.io/jsring/stat.html</a>
-</div>
+Ipfs File path: <input type="text" id="path" value="some Ipfs path">
+<button onclick="getHash(document.getElementById('path').value)">Hash</button>
+
+<pre>Ipfs File Hash <b><span id=hash>hash</span></b></pre>
+
+<p id="error"></p>
 
 <script>
- function getType(path) {
-     console.log('getType input path '+path)
+ function getHash(path) {
+     console.log('getHash input path '+path)
      const webui = 'http://127.0.0.1:5001';
      const api_url = webui + '/api/v0/'
 
-     var url = api_url + 'files/stat?&arg='+path+'&type=1'
+     var url = api_url + 'files/stat?&arg='+path+'&hash=1'
      return fetchGetJson(url)
-	 .then( obj => { return Promise.resolve(obj.Type) })
+	 .then( obj => { return Promise.resolve(obj.Hash) })
+	 .then(callback('hash'))
 	 .catch(logError)
  }
 
  function fetchGetJson(url) {
+     console.log('fetchGetJson input url '+url)
      return fetch(url,
 		  { method: "GET"} )
 	 .then(validate)
@@ -39,9 +38,9 @@ This page is located at <a href=https://willforge.github.io/jsring/stat.html>
  }
 
  function callback(tag) {
-     const substi = buf => {
+     const substi = obj => {
 	 let e = document.getElementById(tag);
-	 e.innerHTML = buf;
+	 e.innerHTML = obj;
      };
      return substi
  }

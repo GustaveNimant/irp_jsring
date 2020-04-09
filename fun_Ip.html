@@ -3,9 +3,6 @@
 <pre>Your IPaddress is : <span id=ip>ip</span></pre>
 
 <script>
- const webui = 'http://127.0.0.1:5001';
- const api_url = webui + '/api/v0/'
- 
  getIp().then(callback('ip'))
  
  function getIp() {
@@ -13,12 +10,12 @@
      var result = fetchJsonCors(url)
 	 .then( obj => { return Promise.resolve(obj.ip) })
 	 .catch(logError)
-     console.log('getIp result '+result);
+     console.log('getIp : result '+result);
      return result
  }
  
  function fetchJsonCors(url) {
-     console.log('fetchJson url '+url)
+     console.log('fetchJsonCors : url '+url)
      return fetch(url, {mode: "cors"} ).then(validate)
 				       .then( resp => resp.json() )
  }
