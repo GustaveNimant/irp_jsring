@@ -13,7 +13,8 @@
     <br><button type=button onclick="console.log('Content '+document.getElementsByName('spot_txt')[0].value)">filecontent</button>
     <br><button type=button onclick="console.log(this.parentNode.elements[0].value)">elements (works only w/ forms)</button>
     <br><button type=button onclick="console.log('Filename '+this.parentNode.childNodes[7].value)">filename</button>
-    <br><button type=button onclick="console.log('Parent Node '+this.parentNode)">parentNode</button>
+    <br><button type=button onclick="console.log('Filename '+this.parentNode.children.fileToSave.value)">filename</button>
+    <br><button type=button onclick="console.dir('Parent Node Children ',this.parentNode.childNodes)">parentNodeChildNodes</button>
 </div>
 
 <script>

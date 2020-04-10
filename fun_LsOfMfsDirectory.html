@@ -1,29 +1,36 @@
-<H3>Check if an Hash exists on IPFS</H3>
+<h3>List of a MFS Directory</h3>
 <html>
     <body>
 
 	<form method=POST>
-	    Ipfs Hash <input name=hash type=text value="" placeholder="some hash">
-	    <input type=button onClick="checkHash(this.closest('form'))" value="Check">
+	    Local Ipfs path <input name=mfspath type=text value="" placeholder="mfs path">
+	    <input type=button onClick="filesList(this.closest('form'))" value="Check">
 	</form>
-
-	<p style="color:green" id="result"></p>
+			
         <p style="color:red" id="error"></p>
-	
+	    
 	<script>
 
-	 function checkHash(form) {
-	     console.log("checkHash : form.elements ",form.elements);
-	     let hash = form.elements[0].value;
-	     console.log("checkHash : hash '"+hash+"'");
+	 function filesList(form) {
+	     console.log("filesList : form.elements ",form.elements);
+	     let mfspath = form.elements[0].value;
+	     console.log("filesList : mfspath '"+mfspath+"'");
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'file/ls?arg=' + hash
+	     var url = api_url + 'files/ls?arg=' + mfspath  + '&l=true'
 	     console.log("writeOfFileOfContent : url '"+url+"'");
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
-		 .then (resp => displayByIdOfTagOfValue('result', resp.statusText))
+	     	 .then (resp => resp.json())
+		 .then (body => {return body.Entries})
+		 .then (displayJson)
 		 .catch(logError)
+	 }
+
+	 function displayJson(json) {
+	     for (i=0; i<json.length; i++) {
+		 console.log(json[i].Name);
+	     }
 	 }
 	 
 	 function validate(resp) {
@@ -36,7 +43,7 @@
 	 function displayByIdOfTagOfValue(tag, value) {
 	     document.getElementById(tag).innerHTML = value
 	 }
-	 
+
 	 function logError(err) {
 	     console.log("logError : input err ",err);
 	     const message = err.message;
