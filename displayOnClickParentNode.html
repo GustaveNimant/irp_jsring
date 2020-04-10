@@ -1,0 +1,17 @@
+<h3><center>Save Spot file on disk</center></h3>
+<div>
+
+    <pre>Your IPaddress is : <span id=ip>ip</span></pre>
+    <pre>Your PeerId is : <span id=peerid>peerid</span></pre>
+    
+    
+    Your Spot file content :<br> <textarea id="spot" cols="60" rows="4" name="spot_txt"></textarea><br><br>
+    
+    Your Spot file name : <input id="fileToSave" type="text" value="spot.yml" disabled>
+    <button onclick="saveTextAsFile(document.getElementById('spot').value, document.getElementById('fileToSave').value)">Save</button>
+    <br><button type=button onclick="console.log('Content '+document.getElementsByName('spot_txt')[0].value)">filecontent</button>
+    <br><button type=button onclick="console.log(this.parentNode.elements[0].value)">elements (works only w/ forms)</button>
+    <br><button type=button onclick="console.log('Filename -7- '+this.parentNode.childNodes[7].value)">filename</button>
+    <br><button type=button onclick="console.log('Parent Node '+this.parentNode)">parentNode</button>
+</div>
+
