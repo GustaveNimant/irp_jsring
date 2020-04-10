@@ -63,7 +63,7 @@
 		 return fetchGetTextForm(url)
 		     .then( obj => obj.json())
 		     .then( json => {
-			 console.log('hashOfMFSFilePath : json ',json);
+			 console.log("hashOfMFSFilePath : json ",json);
 			 console.log("hashOfMFSFilePath : json.Type '"+json.Type+"'");
 			 if (json.Type == "error") {
 			     const message = 'Error from hashOfMFSFilePath : '+json.Message;
@@ -75,7 +75,7 @@
 	     }
 	     
 	     function fetchGetTextForm(url) {
-		 console.log('fetchGetTextForm : input url '+url);
+		 console.log("fetchGetTextForm : input url '"+url+"'");
 		 return fetch(url, { method: "GET", mode: 'cors' })
 	     }
 	     
