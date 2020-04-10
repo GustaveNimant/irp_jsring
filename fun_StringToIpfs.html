@@ -1,11 +1,11 @@
-<H3>Select a file from disk space and store it in a Local IPFS directory</H3>
+<H3>Write a text and store it in a Local IPFS directory</H3>
 <html>
     <body>
 
 	<form method=POST>
-	    write text <input type="text" id="fake" value="" placeholder="a text">
-	    Give it a local Ipfs name <input name=mfspath type=text value="" placeholder="mfs path">
-	    <input type=button onClick="writeFile(this.closest('form'))" value="Upload">
+	    Write a text <input type="text" id="fake" value="" placeholder="a text"><br>
+	    Store it in a local Ipfs file <input name=mfspath type=text value="" placeholder="mfs path">
+	    <input type=button onClick="writeFile(this.closest('form'))" value="Store">
 	</form>
 	
 	Hash: <span id="hash">hash</span>
@@ -34,7 +34,8 @@
 	     var url = api_url + 'files/write?arg=' + filPat + '&create=1&truncate=1';
 	     console.log('writeOfFileOfContent : url '+url);
 	     return fetchPostTextForm(url, content)
-		 .then( _ => hashOfMFSFilePath(filPat) ) 
+		 .then( _ => hashOfMFSFilePath(filPat) )
+		 .then(callback('hash'))
 		 .catch(logError)
 	 }
 	 
