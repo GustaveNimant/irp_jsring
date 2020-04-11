@@ -2,19 +2,17 @@
 <html>
     <body>
 
-	<form method=POST>
-	    Ipfs Hash <input name=hash type=text value="" placeholder="some hash">
-	    <input type=button onClick="checkHash(this.closest('form'))" value="Check">
-	</form>
+	<div>
+	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="some hash">
+	    <input type=button onClick="checkHash(document.getElementsByName('hash')[0].value)" value="Check">
+	</div>
 
 	<p style="color:green" id="result"></p>
         <p style="color:red" id="error"></p>
 	
 	<script>
 
-	 function checkHash(form) {
-	     console.log("checkHash : form.elements ",form.elements);
-	     let hash = form.elements[0].value;
+	 function checkHash(hash) {
 	     console.log("checkHash : hash '"+hash+"'");
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
