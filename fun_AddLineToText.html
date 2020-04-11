@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<h3>Enter the Hash to get the content</h3>
+<h3>Add a line to a text referenced by its Hash</h3>
 <h4>for example QmP9XyzoG7hHjCMvixjuFpVRJg8Q8BHi56X3YdCT7nJQg3</h4>
 <h4>for example QmUtAten38KKm8b7omXhmiJP1QT49mMWLeHJQK3yPnAmBr</h4>
 <div>
@@ -9,7 +9,7 @@
 	<p>Enter Hash <input id="hash" type="text" name="hash" size="50px">
 	    <button type="button" onclick="getHash()">Display</button>
 	    
-	    <br>File content is :<br> <span id=cat>cat</span> <br>
+	    <br>File content is :<br> <textarea cols="60" rows="20" id=cat></textarea> <br>
 </div>
 
 <script>
@@ -36,7 +36,7 @@
      }
      readTextOfHash(hash)
 	 .then( obj => { return Promise.resolve(obj) })
-     	 .then( obj => { return (obj + "\n" + line)})
+     	 .then( obj => { return (obj + line)})
 	 .then( callback('cat'))
  } 
 
