@@ -35,7 +35,6 @@
 	 return false;
      }
      readTextOfHash(hash)
-	 .then( obj => { return Promise.resolve(obj) })
      	 .then( obj => { return (obj + line)})
 	 .then( callback('cat'))
  } 
