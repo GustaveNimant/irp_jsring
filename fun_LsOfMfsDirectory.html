@@ -18,7 +18,7 @@
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url = api_url + 'files/ls?arg=' + mfspath  + '&l=true'
-	     console.log("writeOfFileOfContent : url '"+url+"'");
+	     console.log("filesList : url '"+url+"'");
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
 	     	 .then (resp => resp.json())
@@ -27,75 +27,85 @@
 		 .catch(logError)
 	 }
 
-	 function displayJson(json) {
+	 function fileInfosOfJson(json) {
+	     var result = [];
 	     for (i=0; i<json.length; i++) {
-		 console.log(json[i].Name);
+		 var info = json[i].Hash + " " + json[i].Name + " " + json[i].Type;
+		 result.push(info);
 	     }
+	     return result;
 	 }
 	 
-	 function validate(resp) {
-	     if (resp.status >= 200 && resp.status < 300) {
-		 return Promise.resolve(resp)
+	 function displayJson(json) {
+	     var infos = fileInfosOfJson(json);
+		 for (i=0; i<infos.length; i++) {
+		     console.log(infos[i]); 
+		 }
 	     }
-	     return Promise.reject(new Error(resp.statusText))
-	 }
+	     
+	     function validate(resp) {
+		 if (resp.status >= 200 && resp.status < 300) {
+		     return Promise.resolve(resp)
+		 }
+		 return Promise.reject(new Error(resp.statusText))
+	     }
 
-	 function displayByIdOfTagOfValue(tag, value) {
-	     document.getElementById(tag).innerHTML = value
-	 }
+	     function displayByIdOfTagOfValue(tag, value) {
+		 document.getElementById(tag).innerHTML = value
+	     }
 
-	 function logError(err) {
-	     console.log("logError : input err ",err);
-	     const message = err.message;
-	     console.log("logError : message '"+message+"'");
-	     document.getElementById("error").innerHTML = message;
-	     switch (message){
-		 case "NetworkError when attempting to fetch resource.":
-		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
-		     return process.abort();
-		     break;
-		 case "Internal Server Error":
-		     alert("Internal Server Error because ipfs file path was uncorrect");
-		     return process.abort();
-		     break;
-		 default:
-		     console.log("logError : output err '"+err+"'");
-	     } // switch
-	 }
-	 
-	 function callback(tag) {
-	     console.log('callback tag: '+tag)
-	     const result = obj => {
-		 let e = document.getElementById(tag);
-		 console.log("callback obj:",obj)
-		 e.innerHTML = obj;
-	     };
-	     return result
-	 }
-	 
-	 function callbackIpfsIo(tag) {
-	     console.log('callbackIpfsIo tag: '+tag)
-	     const substi = obj => {
-		 let e = document.getElementById(tag);
-		 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-	     };
-	     return substi
-	 }
-	 
-	 function callbackIpfsLocal(tag) {
-	     console.log('callbackIpfsLocal tag: '+tag)
-	     const substi = obj => {
-		 let e = document.getElementById(tag);
-		 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-	     };
-	     return substi
-	 }
-	 
-	 function IpfsException(message) {
-	     this.message = message;
-	     this.name = "IpfsException";
-	 }
-	 
+	     function logError(err) {
+		 console.log("logError : input err ",err);
+		 const message = err.message;
+		 console.log("logError : message '"+message+"'");
+		 document.getElementById("error").innerHTML = message;
+		 switch (message){
+		     case "NetworkError when attempting to fetch resource.":
+			 alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+			 return process.abort();
+			 break;
+		     case "Internal Server Error":
+			 alert("Internal Server Error because ipfs file path was uncorrect");
+			 return process.abort();
+			 break;
+		     default:
+			 console.log("logError : output err '"+err+"'");
+		 } // switch
+	     }
+	     
+	     function callback(tag) {
+		 console.log('callback tag: '+tag)
+		 const result = obj => {
+		     let e = document.getElementById(tag);
+		     console.log("callback obj:",obj)
+		     e.innerHTML = obj;
+		 };
+		 return result
+	     }
+	     
+	     function callbackIpfsIo(tag) {
+		 console.log('callbackIpfsIo tag: '+tag)
+		 const substi = obj => {
+		     let e = document.getElementById(tag);
+		     e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+		 };
+		 return substi
+	     }
+	     
+	     function callbackIpfsLocal(tag) {
+		 console.log('callbackIpfsLocal tag: '+tag)
+		 const substi = obj => {
+		     let e = document.getElementById(tag);
+		     e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+		 };
+		 return substi
+	     }
+	     
+	     function IpfsException(message) {
+		 this.message = message;
+		 this.name = "IpfsException";
+	     }
+	     
 	</script>
     </body>
 </html>

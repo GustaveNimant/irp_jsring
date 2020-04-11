@@ -2,15 +2,12 @@
 
 <pre>Your IPaddress is : <span id=ip>ip</span></pre>
 <pre>Your PeerId is : <span id=peerid>peerid</span></pre>
-Your Spot file is :<br> <textarea cols="60" rows="4" name="spot_txt" id="spot"></textarea><br><br>
+
 
 Your Spot file name : <input type="text" id="fileToSave" value="spot.yml" disabled>
 <button onclick="saveTextAsFile(document.getElementById('spot').value, document.getElementById('fileToSave').value)">Save</button>
 
 <script>
- const webui = 'http://127.0.0.1:5001';
- const api_url = webui + '/api/v0/'
-
  getPeerID().then(callback('peerid'));
  getIp().then(callback('ip'));
  getSpot().then(callback('spot'));
@@ -27,9 +24,11 @@ Your Spot file name : <input type="text" id="fileToSave" value="spot.yml" disabl
  }
  
  function spotOfData(data) {
+     console.log('spotOfData input data ',data);
+     
      const [ip, peeId] = data;
-     console.log('spotOfIpOfPeerId input ip '+ip)
-     console.log('spotOfIpOfPeerId input peeId '+peeId)
+     console.log('spotOfData input ip '+ip)
+     console.log('spotOfData input peeId '+peeId)
      const tic = getTic();
      var ipInt = dot2Int(ip);
      var spot = (tic ^ +ipInt)>>>0;
@@ -39,8 +38,10 @@ Your Spot file name : <input type="text" id="fileToSave" value="spot.yml" disabl
 	 result += "tic: "+tic+"\n";
 	 result += "ip: "+ipInt+"\n";
 	 result += "spot: "+spot;
-	 console.log('spotOfIpOfPeerId result '+result);
+	 
+	 console.log('spotOfData result '+result);
 	 resolve(result)
+	 createTextarea (result)
      });
  } 
  
@@ -54,7 +55,11 @@ Your Spot file name : <input type="text" id="fileToSave" value="spot.yml" disabl
  }
 
  function getPeerID() {
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/'
+
      let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
+
      console.log('getPeerID url '+url);
      var result = fetchJsonGet(url)
 	 .then( obj => { return Promise.resolve(obj.Value) })
@@ -117,24 +122,36 @@ Your Spot file name : <input type="text" id="fileToSave" value="spot.yml" disabl
 	 return Promise.reject(new Error(resp.statusText))
      }
  }
- 
+
  function logError(err) { console.log("logError "+err); }
  
+ function createTextarea (value) {
+     console.log("createTextarea: input value"+value);
+
+     let div_tit = document.createElement('div')
+     div_tit.innerHTML = 'Your Spot file is : ';
+     document.body.appendChild(div_tit);
+     let txt_are = document.createElement('textarea');
+     txt_are.id = 'spot';
+     txt_are.cols = '60';
+     txt_are.rows = '4';
+     txt_are.innerHTML = value;
+     document.body.appendChild(txt_are)
+ }
+ 
  function saveTextAsFile(textToWrite, fileNameToSaveAs)
-       {
-//	var textToWrite = document.getElementById("spot").value;
-//	var fileNameToSaveAs = document.getElementById("fileToSave").value;
-	console.log("saveTextAsFile: textToWrite"+textToWrite);
-	console.log("saveTextAsFile: fileNameToSaveAs"+fileNameToSaveAs);
+ {
+     console.log("saveTextAsFile: textToWrite"+textToWrite);
+     console.log("saveTextAsFile: fileNameToSaveAs"+fileNameToSaveAs);
 
-	var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+     var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
 
-	var downloadLink = document.createElement("a");
-	downloadLink.download = fileNameToSaveAs;
-	downloadLink.innerHTML = "Download File";
-	
-	if (window.webkitURL != null)
-	    {
+     var downloadLink = document.createElement("a");
+     downloadLink.download = fileNameToSaveAs;
+     downloadLink.innerHTML = "Download File";
+     
+     if (window.webkitURL != null)
+     {
 	 // Chrome allows the link to be clicked
 	 // without actually adding it to the DOM.
 	 downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);

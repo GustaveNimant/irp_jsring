@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<h3>Enter the Hash to get the content</h3>
+<h4>for example QmP9XyzoG7hHjCMvixjuFpVRJg8Q8BHi56X3YdCT7nJQg3</h4>
+<h4>for example QmUtAten38KKm8b7omXhmiJP1QT49mMWLeHJQK3yPnAmBr</h4>
+<div>
+    <p>Enter a new line <input id="line" type="text" name="line" size="95%">
+	<button type="button" onclick="readLine()">Read</button>
+	
+	<p>Enter Hash <input id="hash" type="text" name="hash" size="50px">
+	    <button type="button" onclick="getHash()">Display</button>
+	    
+	    <br>File content is :<br> <span id=cat>cat</span> <br>
+</div>
+
+<script>
+
+ function readTextOfHash(hash) {
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/'
+
+     var url = api_url + 'cat?&arg='+hash
+     console.log('url '+url);
+     return fetchTextGetCors(url)
+	 .then( obj => { return Promise.resolve(obj) })
+	 .catch(logError)
+ }
+
+ function getHash() {
+     const line = readLine();
+     console.log("getHash line '"+line+"'")
+     const hash = document.getElementById("hash").value;
+     console.log('getHash hash '+hash)
+     if (hash == "") {
+	 alert("Name must be filled out");
+	 return false;
+     }
+     readTextOfHash(hash)
+	 .then( obj => { return Promise.resolve(obj) })
+     	 .then( obj => { return (obj + "\n" + line)})
+	 .then( callback('cat'))
+ } 
+
+ function readLine() {
+     const line = document.getElementById('line').value
+     console.log("readLine line '"+line+"'")
+     if (line == "") {
+	 alert("Line must be filled out");
+	 return false;
+     }
+     return line;     
+ } 
+
+ function callback(tag) {
+     console.log('callback tag '+tag)
+     const substi = buf => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = buf;
+     };
+     return substi
+ }
+
+ function fetchTextGetCors(url) {
+     return fetch(url, { method: "GET", mode: "cors"} )
+	 .then(validate)
+	 .then( resp => resp.text())
+     
+ }
+
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     }
+     return Promise.reject(new Error(resp.statusText))
+ }
+
+ function logError(err) { console.log(err); }
+</script>
