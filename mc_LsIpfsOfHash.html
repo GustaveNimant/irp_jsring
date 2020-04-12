@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<script>
+// let ipfs_path = '/ipfs/QmcNcC7sxk15xyFN5cK3kmxe2wDAvWMn865u6LemkB4na7';
+ let ipfs_path = '/ipfs/QmSYQqCHX9LBbvfY86oBQGjCPpok4EAjPxUy7wrCWn8tuV';
+ let url = 'http://127.0.0.1:5001/api/v0/ls?arg='+ipfs_path;
+ console.log('url:'+url);
+
+ fetch(url, { method: "POST", mode: 'cors'})
+     .then (resp => {return resp.json()})
+     .then (json => json.Objects)
+     .then (readObj)
+
+ function readObj(obj) {
+     console.dir(obj);
+     for (let i=0; i<obj[0].Links.length; i++) {
+	 let file=obj[0].Links[i];
+	 console.log('// file '+i+':')
+	 console.log('name: '+file.Name);
+	 console.log('hash: '+file.Hash);
+	 console.log('size: '+file.Size);
+	 console.log('.')
+     }
+     
+ }
+</script>

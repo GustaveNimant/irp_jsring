@@ -1,4 +1,5 @@
-<H3>Given the Hash of a Directory provides the information of all included files</H3>
+<h3>Given the Hash of a Directory provides the information of all included files</h3>
+<h4>Example QmSYQqCHX9LBbvfY86oBQGjCPpok4EAjPxUy7wrCWn8tuV </h4>
 <html>
     <body>
 
@@ -16,25 +17,37 @@
 	     console.log("fileListOfHashDirectory : hash '"+hash+"'");
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'file/ls?arg=' + hash
+	     var url = api_url + 'ls?arg=' + '/ipfs/' + hash
 	     console.log("fileListOfHashDirectory : url '"+url+"'");
 	     const result = fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
 		 .then (resp => {return resp.json()})
 		 .then (json => json.Objects)
-	     	 .then (objs => console.log('fileListOfHashDirectory objs ',objs))
-		 .catch(logError);
-	     console.log('fileListOfHashDirectory result ',result)
-	     return result 
+		 .then (readObj);
+	     console.log('fileListOfHashDirectory result ',result);
+	     return result;
 	 }
-	 
+
+	 function readObj(obj) {
+	     console.dir('readObj : Directory IpfsHash',obj[0].Hash);
+	     console.dir('readObj : obj',obj);
+	     for (let i=0; i<obj[0].Links.length; i++) {
+		 let file=obj[0].Links[i];
+		 console.log('// file '+i+':')
+		 console.log('name: '+file.Name);
+		 console.log('hash: '+file.Hash);
+		 console.log('size: '+file.Size);
+		 console.log('.')
+	     }
+	 }
+
 	 function validate(resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
 	     }
 	     return Promise.reject(new Error(resp.statusText))
 	 }
-
+	 
 	 function displayByIdOfTagOfValue(tag, value) {
 	     document.getElementById(tag).innerHTML = value
 	 }
