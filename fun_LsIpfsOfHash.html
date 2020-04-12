@@ -23,7 +23,8 @@
 		 .then (validate)
 		 .then (resp => {return resp.json()})
 		 .then (json => json.Objects)
-		 .then (readObj);
+		 .then (obj => {return Promise.resolve(readObj(obj))})
+		 .then (printLines)
 	     console.log('fileListOfHashDirectory result ',result);
 	     return result;
 	 }
@@ -31,13 +32,20 @@
 	 function readObj(obj) {
 	     console.dir('readObj : Directory IpfsHash',obj[0].Hash);
 	     console.dir('readObj : obj',obj);
+	     var result = [];
 	     for (let i=0; i<obj[0].Links.length; i++) {
-		 let file=obj[0].Links[i];
-		 console.log('// file '+i+':')
-		 console.log('name: '+file.Name);
-		 console.log('hash: '+file.Hash);
-		 console.log('size: '+file.Size);
-		 console.log('.')
+		 let file = obj[0].Links[i];
+		 var line = file.Hash + " " + file.Name + " " + file.Size;
+		 result.push(line);
+	     }
+	     console.log('readObj : result ',result);
+	     return result
+	 }
+
+	 function printLines(lines) {
+	     console.log('List of files');
+	     for (let i=0; i<lines.length; i++) {
+		 console.log(lines[i]);
 	     }
 	 }
 
