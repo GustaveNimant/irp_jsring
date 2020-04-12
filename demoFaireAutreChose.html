@@ -22,13 +22,11 @@
 	     })
 	 }
 
-	 const result = faireQqc()
+	 faireQqc()
 	     .then(res => {console.log('res 1 '+res); return faireUneChose(res)})
 	     .then(res => {console.log('res 2 '+res); return faireAutreChose(res)})
 	     .then(res => {console.log('res 3 '+res); successCallback(res)})
 	     .catch(failureCallback);
-
-	 console.log("Main : result ",result);
 	 
 	 function faireUneChose(résultat) {
 	     return "L'opération a réussi avec le message : " + résultat;
@@ -44,7 +42,7 @@
 	 }
 
 	 function successCallback(res) {
-	     console.log("successCallback : résultat "+res);
+	     console.log("successCallback : résultat '"+res+"'");
 	 }
 
 	 function validate(resp) {

@@ -1,23 +1,27 @@
 <!DOCTYPE html>
+<meta charset="utf8"/>
+
 <h2>Create folder in Local IPFS</h2>
 <form>
   Name of folder : <input type="text" value="/" name="mfspath" id="mfspath">
-  <button onclick="createDirectory()">Create folder</button>
+    <button type="button" onclick="createDirectory()">Create folder</button>
+</form>
+
+<p style="color:red" id="error"></p>
 
 <script>
- const api_url = 'http://127.0.0.1:5001/api/v0/'
-
  
  function createDirectory() {
- let path =  document.getElementById('mfspath').value;
+     let path =  document.getElementById('mfspath').value;
      console.log('createDirectory mfs path '+path);
-
-     var url = api_url + 'files/mkdir?arg=' + path;
+     
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/mkdir?arg=' + path ;
      console.log('createDirectory : url '+url);
-
+     
      return fetchPostTextForm(path, url)
-	 .then( obj => obj.json() )
-     	 .then( json => {return json.Hash} )
+	 .then( obj => obj.text() )
+         .then( tex => console.log("tex '"+tex+"'"))
          .catch(logError)
  }
  
@@ -30,8 +34,8 @@
 	 method: "POST",
 	 mode: 'cors',
 	 body: form
- })
- return result;
+     })
+     return result;
  }
  
  function callback(tag) {
@@ -67,6 +71,22 @@
      return Promise.reject(new Error(resp.statusText))
  }
  
- function logError(err) { console.log(err); }
-
+ function logError(err) {
+     console.log("logError : input err ",err);
+     const message = err.message;
+     console.log("logError : message '"+message+"'");
+     document.getElementById("error").innerHTML = message;
+     switch (message){
+	 case "NetworkError when attempting to fetch resource.":
+	     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+	     break;
+	 case "Internal Server Error":
+	     alert("Internal Server Error because ipfs file path was uncorrect");
+	     break;
+	 default:
+	     console.log("logError : output err '"+err+"'");
+     } // switch
+ }
+ 
+ 
 </script>
