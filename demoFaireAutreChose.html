@@ -1,0 +1,115 @@
+<h3></h3>
+<!-- https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Utiliser_les_promesses-->
+<html>
+    <meta charset="utf8"/>
+
+    <body>
+	<div>
+	    <input type=button onClick="faireQqc()" value="Go">
+	</div>
+	<script>
+
+	 function faireQqc() {
+	     return new Promise((resolve, reject) => {
+		 const value = Math.random();
+		 console.log("faireQqc : value ",value);
+
+		 if (value > .5) {
+		     resolve("Réussite");
+		 } else {
+		     reject("Échec");
+		 }
+	     })
+	 }
+
+	 const result = faireQqc()
+	     .then(res => {console.log('res 1 '+res); return faireUneChose(res)})
+	     .then(res => {console.log('res 2 '+res); return faireAutreChose(res)})
+	     .then(res => {console.log('res 3 '+res); successCallback(res)})
+	     .catch(failureCallback);
+
+	 console.log("Main : result ",result);
+	 
+	 function faireUneChose(résultat) {
+	     return "L'opération a réussi avec le message : " + résultat;
+	 }
+	 
+	 function failureCallback(erreur) {
+	     console.error("L'opération a échoué avec le message : " + erreur);
+	 }
+	 
+	 function faireAutreChose(res) {
+	     const result = res + " Autre chose";
+	     return result;
+	 }
+
+	 function successCallback(res) {
+	     console.log("successCallback : résultat "+res);
+	 }
+
+	 function validate(resp) {
+	     if (resp.status >= 200 && resp.status < 300) {
+		 return Promise.resolve(resp)
+	     }
+	     return Promise.reject(new Error(resp.statusText))
+	 }
+
+	 function displayByIdOfTagOfValue(tag, value) {
+	     document.getElementById(tag).innerHTML = value
+	 }
+	 
+	 function logError(err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     document.getElementById("error").innerHTML = message;
+	     switch (message){
+		 case "NetworkError when attempting to fetch resource.":
+		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+		     return process.abort();
+		     break;
+		 case "Internal Server Error":
+		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     return process.abort();
+		     break;
+		 default:
+		     console.log("logError : output err '"+err+"'");
+	     } // switch
+	 }
+	 
+	 function callback(tag) {
+	     console.log('callback tag: '+tag)
+	     const result = obj => {
+		 let e = document.getElementById(tag);
+		 console.log("callback obj:",obj)
+		 e.innerHTML = obj;
+	     };
+	     return result
+	 }
+	 
+	 function callbackIpfsIo(tag) {
+	     console.log('callbackIpfsIo tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+	 };
+		 return substi
+	 }
+		 
+		 function callbackIpfsLocal(tag) {
+		     console.log('callbackIpfsLocal tag: '+tag)
+		     const substi = obj => {
+			 let e = document.getElementById(tag);
+			 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+		     };
+		     return substi
+		 }
+		 
+		 function IpfsException(message) {
+		     this.message = message;
+		     this.name = "IpfsException";
+		 }
+		 
+	</script>
+    </body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<h2>Create folder in Local IPFS</h2>
+<form>
+  Name of folder : <input type="text" value="/" name="mfspath" id="mfspath">
+  <button onclick="createDirectory()">Create folder</button>
+
+<script>
+ const api_url = 'http://127.0.0.1:5001/api/v0/'
+
+ 
+ function createDirectory() {
+ let path =  document.getElementById('mfspath').value;
+     console.log('createDirectory mfs path '+path);
+
+     var url = api_url + 'files/mkdir?arg=' + path;
+     console.log('createDirectory : url '+url);
+
+     return fetchPostTextForm(path, url)
+	 .then( obj => obj.json() )
+     	 .then( json => {return json.Hash} )
+         .catch(logError)
+ }
+ 
+ function fetchPostTextForm(path, url) {
+     console.log('fetchPostTextForm input url '+url);
+     
+     let form = new FormData();
+     form.append('file', path)   
+     const result = fetch(url, {
+	 method: "POST",
+	 mode: 'cors',
+	 body: form
+ })
+ return result;
+ }
+ 
+ function callback(tag) {
+     const result = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return result
+ }
+ 
+ function callbackIpfsIo(tag) {
+     console.log('callback tag: '+tag)
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+     };
+     return substi
+ }
+
+ function callbackIpfsLocal(tag) {
+     console.log('callback tag: '+tag)
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+     };
+     return substi
+ }
+
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     }
+     return Promise.reject(new Error(resp.statusText))
+ }
+ 
+ function logError(err) { console.log(err); }
+
+</script>

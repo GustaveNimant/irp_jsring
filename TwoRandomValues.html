@@ -21,10 +21,11 @@
      const promises = [promise_1(), promise_2()];
      console.log('sumOfPromises promises '+promises);
      
-     return Promise.all(promises).then(data => {
-	 console.log('sumOfPromises data '+data)
-	 return sumOfData(data)
-     });
+     return Promise.all(promises)
+		   .then(data => {
+		       console.log('sumOfPromises data '+data)
+		       return sumOfData(data)
+		   });
  }
  
  function sumOfData(data) {
