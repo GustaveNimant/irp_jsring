@@ -5,7 +5,7 @@
 
 	<div>
 	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="some hash">
-	    <input type=button onClick="fileListOfHashDirectory(document.getElementsByName('hash')[0].value)" value="Check">
+	    <input type=button onClick="main(document.getElementsByName('hash')[0].value)" value="Check">
 	</div>
 
 	<p style="color:green" id="result"></p>
@@ -13,6 +13,12 @@
 	
 	<script>
 
+	 function main (hash) {
+	     const promise = fileListOfHashDirectory(hash);
+	     promise
+		    .then (lines => printLines(lines))	     
+	 }
+	 
 	 function fileListOfHashDirectory(hash) {
 	     console.log("fileListOfHashDirectory : hash '"+hash+"'");
 	     
@@ -24,7 +30,6 @@
 		 .then (resp => {return resp.json()})
 		 .then (json => json.Objects)
 		 .then (obj => readObj(obj))
-		 .then (lines => printLines(lines))
 		 .catch(logError)
 
 	     console.log('fileListOfHashDirectory result ',result);
@@ -104,14 +109,14 @@
 		 let e = document.getElementById(tag);
 		 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
 	     };
-		 return substi
+	     return substi
 	 }
 	 
 	 function IpfsException(message) {
 	     this.message = message;
 	     this.name = "IpfsException";
 	 }
-	     
+	 
 	</script>
     </body>
 </html>
