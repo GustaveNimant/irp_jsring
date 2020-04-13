@@ -52,6 +52,11 @@
 	     }
 	 }
 	 
+	 function bufferOfLines(lines) {
+	     let buf = lines.join("\n");
+	     return buf;
+	 }
+	 
 	 function validate(resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
