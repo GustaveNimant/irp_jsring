@@ -1,0 +1,120 @@
+<h3>Given the Hash of a Directory provides the information of all included files</h3>
+<h4>Example QmSYQqCHX9LBbvfY86oBQGjCPpok4EAjPxUy7wrCWn8tuV </h4>
+<html>
+    <body>
+	<div>
+	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="some hash">
+	    <input type="button" onClick="main(document.getElementsByName('hash')[0].value)" value="Check">
+	</div>
+
+	<p style="color:green" id="result"></p>
+        <p style="color:red" id="error"></p>
+	
+	<script>
+
+	 function main (hash) {
+	     const promise = fileListOfHashDirectory(hash);
+	     promise
+		 .then (lines => printLines(lines))	     
+	 }
+	 
+	 function fileListOfHashDirectory(hash) {
+	     console.log("fileListOfHashDirectory : hash '"+hash+"'");
+	     
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'file/ls?arg=' + '/ipfs/' + hash
+	     console.log("fileListOfHashDirectory : url '"+url+"'");
+	     const result = fetch(url, { method: "POST", mode: 'cors'})
+		 .then (resp => {return resp.json()})
+		 .then (json => readJson(json, hash))
+		 .catch(logError)
+
+	     console.log('fileListOfHashDirectory result ',result);
+	     return result;
+	 }
+
+	 function readJson(json, hash) {
+	     console.log('readJson json');
+	     console.dir(json);
+	     console.log('readJson hash: ',hash);
+	     let links = json.Objects[hash].Links;
+	     let names = links.map ( e => e.Name );
+	     console.log('readJson names: ',names);
+	     let lines = links.map ( e => {return (e.Name + " " + e.Hash + " " + e.Size)} );
+	     console.log('readJson lines: ',lines);
+	     return lines
+	 }
+
+	 function printLines(lines) {
+	     console.log('List of files');
+	     for (let i=0; i<lines.length; i++) {
+		 console.log(lines[i]);
+	     }
+	 }
+	 
+	 function validate(resp) {
+	     if (resp.status >= 200 && resp.status < 300) {
+		 return Promise.resolve(resp)
+	     }
+	     return Promise.reject(new Error(resp.statusText))
+	 }
+	 
+	 function displayByIdOfTagOfValue(tag, value) {
+	     document.getElementById(tag).innerHTML = value
+	 }
+	 
+	 function logError(err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     document.getElementById("error").innerHTML = message;
+	     switch (message){
+		 case "NetworkError when attempting to fetch resource.":
+		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+		     return process.abort();
+		     break;
+		 case "Internal Server Error":
+		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     return process.abort();
+		     break;
+		 default:
+		     console.log("logError : output err '"+err+"'");
+	     } // switch
+	 }
+	 
+	 function callback(tag) {
+	     console.log('callback tag: '+tag)
+	     const result = obj => {
+		 let e = document.getElementById(tag);
+		 console.log("callback obj:",obj)
+		 e.innerHTML = obj;
+	     };
+	     return result
+	 }
+	 
+	 function callbackIpfsIo(tag) {
+	     console.log('callbackIpfsIo tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+	     };
+	     return substi
+	 }
+	 
+	 function callbackIpfsLocal(tag) {
+	     console.log('callbackIpfsLocal tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+	     };
+	     return substi
+	 }
+	 
+	 function IpfsException(message) {
+	     this.message = message;
+	     this.name = "IpfsException";
+	 }
+	 
+	</script>
+    </body>
+</html>
