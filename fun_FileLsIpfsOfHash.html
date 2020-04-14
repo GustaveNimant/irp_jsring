@@ -38,6 +38,7 @@
 	     console.dir(json);
 	     console.log('readJson hash: ',hash);
 	     let links = json.Objects[hash].Links;
+//	     let links = json.Objects[hash]['Links'];
 	     let names = links.map ( e => e.Name );
 	     console.log('readJson names: ',names);
 	     let lines = links.map ( e => {return (e.Name + " " + e.Hash + " " + e.Size)} );
