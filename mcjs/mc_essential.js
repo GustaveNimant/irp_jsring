@@ -89,12 +89,26 @@ function fetchGetJson(url) {
 	.then( resp => resp.json() )
 }
 
+function launchIpfsDaemon() {
+//    document.write("NetworkError occurred because ipfs has not been launched yet")
+    var doc = document.createElement('div')
+    var tex = document.createTextNode ("run : jsm; . config.sh; ipmsd.sh");
+    doc.appendChild(tex);
+}
 function getPeerId() {
     let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
     return fetch(url,{ method: "GET"} )
 	.then( resp => resp.json() )
 	.then( obj => { return obj.Value })
-	.catch(logError)
+	.catch( err => {
+	    console.log("getPeerId : err ",err);
+	    const message = err.message;
+	    console.log("getPeerId : message '"+message+"'");
+	    
+	    if (message == "NetworkError when attempting to fetch resource.") {
+		launchIpfsDaemon()
+	    } else {logError}
+	})
 	    }
 
 function getIp() {
