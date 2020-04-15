@@ -90,10 +90,16 @@ function fetchGetJson(url) {
 }
 
 function launchIpfsDaemon() {
-//    document.write("NetworkError occurred because ipfs has not been launched yet")
-    var doc = document.createElement('div')
-    var tex = document.createTextNode ("run : jsm; . config.sh; ipmsd.sh");
-    doc.appendChild(tex);
+
+    let doc = document.createElement('div');
+    let b = document.createElement('br');
+
+    doc.innerText = "NetworkError occurred because ipfs has not been launched yet";
+    document.body.appendChild(b);
+    document.body.appendChild(doc);
+    doc.innerText = "blabla";
+    document.body.appendChild(b);
+    document.body.appendChild(doc);
 }
 function getPeerId() {
     let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
