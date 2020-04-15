@@ -8,13 +8,14 @@ let promises = [
     getPeerId().then( resolve(myform,'peerid') )
 ];
 
-Promise.all(promises).then(
-    _  => {
-	[ip,peerid] = _
-	console.log('ip: '+ip);
-	console.log('peerid: '+peerid);
-    }
-)
+Promise.all(promises)
+    .then(
+	x => {
+	    [ip, peerid] = x
+	    console.log('Promise.all : ip '+ip);
+	    console.log('Promise.all : peerid '+peerid);
+	}
+    )
 
 function process(form) { // onclick 
     let query = getQuery(form);
