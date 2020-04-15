@@ -1,8 +1,17 @@
 var form = document.getElementsByTagName('form')[0]
 
-getCfIp()
-    .then(callback(form))
-    .catch(logError);
+var promises = [getQuery(form), getCfIp()
+		.then(callback(form))
+		.catch(logError)];
+
+function append(promises) {
+    const [que, ip] = promises;
+    return Promise.all(promises)
+	.then (([que, ip]) => {
+	    console.log("append input que ",que)
+	    console.log("append input ip ",ip)
+	});
+} 
 
 function callback(form) {
     const substi = obj => {
@@ -17,7 +26,7 @@ function callback(form) {
 	    i.setAttribute('value',obj);
 	    i.disabled = true;
 	    
-	    form.appendChild(i); // Q: replaceNode
+	    form.appendChild(i); 
 	}
     };
     return substi
@@ -29,10 +38,15 @@ function process(form) {
     var inputs = Array.from(form.elements)
     console.log(inputs);
     let names = inputs.map( e => e.name )
-    let query = serialize(form);
-    
     console.log("process : names ",names)
-    console.log("process : query ",query)
+}
+
+function getQuery(form) {
+    return new Promise((resolve) => {
+	let query = serialize(form);
+	console.log("getQuery : query ",query)
+	resolve (query)
+    })
 }
 
 function serialize(form) {
