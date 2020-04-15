@@ -12,13 +12,14 @@ function query2json(q) {
 }
 
 function getQuery(form) {
+    console.log("getQuery input form:")
     console.dir(form)
     var inputs = Array.from(form.elements)
     console.log(inputs);
     let names = inputs.map( e => e.name )
     let query = serialize(form);
     console.log(names)
-    console.log('query: '+query)
+    console.log("getQuery : query "+query)
     return(query)
 }
 

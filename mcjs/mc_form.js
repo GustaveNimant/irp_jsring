@@ -8,6 +8,7 @@ let promises = [
     getPeerId().then( resolve(myform,'peerid') )
 ];
 
+// fill myform with ip and peerid
 Promise.all(promises)
     .then(
 	x => {
