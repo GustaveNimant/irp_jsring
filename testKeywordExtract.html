@@ -6,8 +6,8 @@
     <body>
 
 	<form method=POST>
-	    Select a file on disk space : <input type=file><br>
-	    Give it a local Ipfs name <input name=mfspath type=text value="" placeholder="mfs path">
+	    Select a file on disk space : <input type="file"><br>
+	    Give it a local Ipfs name <input name="mfspath" id="mfspath" type="text" value="" placeholder="mfs path">
 	    <input type=button onClick="writeFile(this.closest('form'))" value="Upload">
 	</form>
 	
@@ -24,7 +24,7 @@
 	     console.log('writeFile : form.elements ',form.elements);
 	     let fakepath = form.elements[0].value
 	     console.log('writeFile : fakepath ',fakepath)
-	     let mfspath = form.elements[1].value
+	     var mfspath = form.elements[1].value
 	     console.log('writeFile : mfspath ',mfspath)
 	     let file = form.elements[0].files[0]
 	     console.log('writeFile : element[0].files ',form.elements[0].files)
@@ -34,13 +34,13 @@
 	     reader.onload = event => {
 		 const content_on_load = event.target.result;
 		 console.log('writeFile : content_on_load ',content_on_load)
-		 writeOfFileOfContent(mfspath, content_on_load).then(callback('hash'))
+
+		 mfspath = '/my/chose' // getSourceOfContent
+		 form.elements[1].value = mfspath;
+		 
+		 writeOfFileOfContent(mfspath, content_on_load)
+		     .then(callback('hash'))
 	     }
-	     /*
-		reader.addEventListener('load', function() {
-		console.log('Contenu du fichier "' + file.name + '" :\n\n' + reader.result);
-		});
-	      */
 	     
 	     reader.readAsText(file,'UTF-8') 
 	     

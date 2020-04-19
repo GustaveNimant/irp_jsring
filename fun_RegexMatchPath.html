@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+	<p>Click the button to perfom matche on a file Path.</p>
+
+	<button onclick="myFunction()">Try it</button>
+
+	<p id="demoa"></p>
+	<p id="demob"></p>
+
+	<script>
+	 function myFunction() {
+	     var str = '/192.168.0.1/folder/file.pdf';
+	     var rex = /(\/[a-z0-9\.]+)((\/[a-z]+)+)\.([a-z]+)$/;
+	     var res_a = str.match(rex);
+
+	     console.log("myFunction res_a ",res_a);
+	     document.getElementById("demoa").innerHTML = res_a;
+
+	     var str = 'c:/folder/file.pdf';
+	     var rex = /^(?:[\w]\:)(\/[a-z0-9\.]+)((\/[a-z]+)+)\.([a-z]+)$/;
+	     var res_b = str.match(rex);
+
+	     console.log("myFunction res_b ",res_b);
+	     document.getElementById("demob").innerHTML = res_b;
+	 }
+	</script>
+
+    </body>
+</html>

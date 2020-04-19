@@ -1,6 +1,10 @@
 const gw='http://127.0.0.1:8080'
 let tic = getTic();
 
+let pee = existsPeerId()
+    .then(res => {console.log('res ',res); return res});
+console.log('pee ',pee);
+
 const myform = document.getElementsByTagName('form')[0]
 
 let promises = [

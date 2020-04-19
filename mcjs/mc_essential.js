@@ -91,16 +91,19 @@ function fetchGetJson(url) {
 
 function launchIpfsDaemon() {
 
-    let doc = document.createElement('div');
+    let eleDiv1 = document.createElement('div');
+    console.log("launchIpfsDaemon : eleDiv1",eleDiv1);
     let b = document.createElement('br');
 
-    doc.innerText = "NetworkError occurred because ipfs has not been launched yet";
+    eleDiv1.innerText = "A Network Error occurred probably because Ipfs has not been launched yet";
+    document.body.appendChild(eleDiv1);
+    let eleDiv2 = document.createElement('div');
+    console.log("launchIpfsDaemon : eleDiv2",eleDiv2);
+    eleDiv2.innerText = "To launch Ipfs run : jsm; . config.sh ; ipmsd.sh";
     document.body.appendChild(b);
-    document.body.appendChild(doc);
-    doc.innerText = "blabla";
-    document.body.appendChild(b);
-    document.body.appendChild(doc);
+    document.body.appendChild(eleDiv2);
 }
+
 function getPeerId() {
     let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
     return fetch(url,{ method: "GET"} )
@@ -114,6 +117,21 @@ function getPeerId() {
 	    if (message == "NetworkError when attempting to fetch resource.") {
 		launchIpfsDaemon()
 	    } else {logError}
+	})
+	    }
+
+function existsPeerId() {
+    let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
+    return fetch(url,{ method: "GET"} )
+	.then( resp => {return "YES"} )
+	.catch( err => {
+	    console.log("existsPeerId : err ",err);
+	    const message = err.message;
+	    console.log("existsPeerId : message '"+message+"'");
+	    
+	    if (message == "NetworkError when attempting to fetch resource.") {
+		return "NO"	
+	    } 
 	})
 	    }
 

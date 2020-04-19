@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+	<p>Click the button to perfom a global search for the letters "ain" in a string, and display the matches.</p>
+
+	<button onclick="myFunction()">Try it</button>
+
+	<p id="demo"></p>
+
+	<script>
+	 function myFunction() {
+	     var str = '/192.168.0.1/folder/file.pdf';
+	     var rex = /(\/[a-z0-9\.]+)((\/[a-z]+)+)\.([a-z]+)$/;
+	     var res = str.match(rex);
+
+	     console.log("myFunction res ",res);
+	     document.getElementById("demo").innerHTML = res;
+	 }
+	</script>
+
+    </body>
+</html>

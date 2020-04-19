@@ -3,7 +3,7 @@
 <script>
 
  var url = 'http://127.0.0.1:5001/api/v0/files/write?arg='
- return fetchTextPost(url)
+ fetchTextPost(url)
      .then( obj => { return Promise.resolve(obj) })
      .catch(logError)
  
@@ -17,6 +17,23 @@
      })
 	 .then( res => {console.log(res)} )
 	 .catch( res => {console.log(res)} )
+ }
+
+ function logError(err) {
+     console.log("logError : input err ",err);
+     const message = err.message;
+     console.log("logError : message '"+message+"'");
+     document.getElementById("error").innerHTML = message;
+     switch (message){
+	 case "NetworkError when attempting to fetch resource.":
+	     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+	     break;
+	 case "Internal Server Error":
+	     alert("Internal Server Error because ipfs file path was uncorrect");
+	     break;
+	 default:
+	     console.log("logError : output err '"+err+"'");
+     } // switch
  }
 
 </script>
