@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html>
+    <meta charset="utf8"/>
     <body>
-
-	<p>Click the button to perfom a global search for the letters "ain" in a string, and display the matches.</p>
-
-	<button onclick="getSource()">Get</button>
-
+	<h3>Click the button to Get the Source Keyword.</h3>
+	<button onclick="getSource()">Get Source</button>
 	<p id="demo"></p>
 
 	<script>
 	 function extractSource() {
-	     var str = "The $Source: /etc/myfiles/foo.txt,v$bla";
-	     //let rex = /\$Source: (.*)\$/;
-	     var rex = /\$Source: (((\/[a-z]+)+)\.([a-z]+(,[a-z])?))\$/;
+	     var str = "The $Source: /etc/other/myfiles/foo.txt,v$bla..";
+	     let rex = /\$Source: ((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?\$/;
 	     
 	     var res = str.match(rex);
 	     console.log("extractSource res ",res);
-	     let result = res[1]
+	     let dir = res[1]
+	     let bas = res[3]
+	     let result = dir + "/" + bas;
 	     return result
 	 }
 

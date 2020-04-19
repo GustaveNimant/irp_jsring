@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+<h3>Need to push twice on button to get both values</h3>
 <meta charset="utf-8">
 <html>
     <body>
 	<input type="file" onchange="readFile(this)">
+	<p id="content"></p>
+	
 	<script>
 
 	 var content = ""
@@ -14,7 +17,8 @@
 	     reader.readAsText(file);
 	     
 	     reader.onload = function() {
-		 content = content + reader.result;
+		 content = reader.result;
+		 document.getElementById("content").innerHTML = content
 	     };
 
 	     reader.onerror = function() {
