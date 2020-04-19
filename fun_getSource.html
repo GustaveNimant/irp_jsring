@@ -11,9 +11,11 @@
 	<script>
 	 function extractSource() {
 	     var str = "The $Source: /etc/myfiles/foo.txt,v$bla";
-	     let rex = /\$Source: (.*)\$/;
+	     //let rex = /\$Source: (.*)\$/;
+	     var rex = /\$Source: (((\/[a-z]+)+)\.([a-z]+(,[a-z])?))\$/;
+	     
 	     var res = str.match(rex);
-	     console.log("extractSource res '"+res[1]+"'");
+	     console.log("extractSource res ",res);
 	     let result = res[1]
 	     return result
 	 }

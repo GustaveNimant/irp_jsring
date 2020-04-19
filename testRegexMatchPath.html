@@ -2,20 +2,22 @@
 <html>
     <body>
 
-	<p>Click the button to perfom a global search for the letters "ain" in a string, and display the matches.</p>
+	<p>Click the button to get the Souve file.</p>
 
-	<button onclick="myFunction()">Try it</button>
+	<button onclick="myFunction()">Get</button>
 
-	<p id="demo"></p>
+	<p id="demo_c"></p>
+	<p id="source"></p>
 
 	<script>
 	 function myFunction() {
-	     var str = '/192.168.0.1/folder/file.pdf';
-	     var rex = /(\/[a-z0-9\.]+)((\/[a-z]+)+)\.([a-z]+)$/;
-	     var res = str.match(rex);
+	     var str = '$Source: /var/folder/file.pdf,v$';
+	     var rex = /\$Source: (((\/[a-z]+)+)\.([a-z]+(,v)?))\$/;
+	     var res_c = str.match(rex);
 
-	     console.log("myFunction res ",res);
-	     document.getElementById("demo").innerHTML = res;
+	     console.log("myFunction res_c ",res_c);
+	     document.getElementById("demo_c").innerHTML = res_c;
+	     document.getElementById("source").innerHTML = res_c[1];
 	 }
 	</script>
 

@@ -8,6 +8,8 @@
 
 	<p id="demoa"></p>
 	<p id="demob"></p>
+	<p id="democ"></p>
+	<p id="demod"></p>
 
 	<script>
 	 function myFunction() {
@@ -24,6 +26,21 @@
 
 	     console.log("myFunction res_b ",res_b);
 	     document.getElementById("demob").innerHTML = res_b;
+
+	     var str = '/var/folder/file.pdf';
+	     var rex = /(\/[a-z0-9\.]+)((\/[a-z]+)+)\.([a-z]+)$/;
+	     var res_c = str.match(rex);
+
+	     console.log("myFunction res_c ",res_c);
+	     document.getElementById("democ").innerHTML = res_c;
+
+	     var str = '/var/folder/500765.pdf';
+	     var rex = /(.+)\/([^/]+)$/;
+	     var res_d = str.match(rex);
+
+	     console.log("myFunction res_d ",res_d);
+	     document.getElementById("demod").innerHTML = res_d;
+
 	 }
 	</script>
 

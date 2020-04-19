@@ -13,7 +13,7 @@
 	     var str = "The $Source: /etc/myfiles/foo.txt,v$bla";
 	     let rex = /\$Source: (.*)\$/;
 	     var res = str.match(rex);
-	     console.log("extractSource res '"+res[1]+"'");
+	     console.log("extractSource res ",res);
 	     let result = res[1]
 	     return result
 	 }
