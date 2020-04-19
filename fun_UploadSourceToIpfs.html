@@ -42,6 +42,8 @@
 	     console.log('writeFile : file',file)
 	     
 	     let reader = new FileReader();
+	     reader.readAsText(file,'UTF-8') 
+
 	     reader.onload = event => {
 		 const content_on_load = event.target.result;
 		 console.log('writeFile : content_on_load ',content_on_load)
@@ -55,11 +57,13 @@
 		     .then(callback('hash'))
 	     }
 	     
-	     reader.readAsText(file,'UTF-8') 
 	     
-	     let formData = new FormData();
-	     formData.append("file", file);
-	     console.log('writeFile : formData ',formData)
+	     /* Improve no use ?
+		let formData = new FormData();
+		formData.append("file", file);
+		console.log('writeFile : formData ',formData)
+	      */
+	     
 	 }
 	 
 	 function writeOfFileOfContent(filPat, content) {
