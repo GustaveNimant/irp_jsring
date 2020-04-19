@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<h3>Need to push twice on button to get both values</h3>
 <meta charset="utf-8">
 <html>
     <body>
 	<input type="file" onchange="readFile(this)">
-	<p id="content"></p>
-	
 	<script>
 
-	 var content = ""
 	 function readFile(input) {
 	     let file = input.files[0];
 	     
@@ -16,17 +12,18 @@
 	     
 	     reader.readAsText(file);
 	     
-	     reader.onload = function() {
-		 content = reader.result;
-		 document.getElementById("content").innerHTML = content
-	     };
-
+	     reader.onload = () =>
+		 storeResult(reader.result);
+	     
 	     reader.onerror = function() {
 		 console.log(reader.error);
 	     };
-	     
-	     console.log('content is ',content);
 	 }
+
+	 function storeResult(res) {
+	     console.log("storeResult res",res);
+	 }
+	 
 	</script>
     </body>
 </html>
