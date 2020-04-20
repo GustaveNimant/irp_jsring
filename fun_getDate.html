@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Date Keyword.</h3>
+	<button onclick="getDate()">Get Date</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractDate() {
+	     const str = "truc  $Date: 12/12/19$blabla";
+
+	     let rex = /\$Date: (([1-3][0-9])\/([0-1][1-9])\/([1-9][0-9]))\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractDate res ",res);
+	     let dat = res[1];
+	     let day = res[2];
+	     let mon = res[3];
+	     let yea = res[4];
+	     let result = dat;
+	     return result
+	 }
+
+	 function getDate() {
+	     document.getElementById("demo").innerHTML = extractDate();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

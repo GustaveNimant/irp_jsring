@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Qm Keyword.</h3>
+	<button onclick="getQm()">Get Qm</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractQm() {
+	     const str = "truc  $qm: z6t$bla";
+
+	     let rex = /\$qm: (z([a-zA-Z0-9]+))\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractQm res ",res);
+	     let result = res[1]
+	     return result
+	 }
+
+	 function getQm() {
+	     document.getElementById("demo").innerHTML = extractQm();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

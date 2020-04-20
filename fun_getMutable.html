@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Mutable Keyword.</h3>
+	<button onclick="getMutable()">Get Mutable</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractMutable() {
+	     const str = "truc  $mutable: /.brings/system/truc/bin/kwextract.pl$bla"
+
+	     let rex = /\$mutable: ((\/(?:\.)?[a-z]+)+)\/([a-z]+\.[a-z]+)\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractMutable res ",res);
+	     let dir = res[1];
+	     let bas = res[3];
+	     let result = dir + "/" + bas;
+	     return result
+	 }
+
+	 function getMutable() {
+	     document.getElementById("demo").innerHTML = extractMutable();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

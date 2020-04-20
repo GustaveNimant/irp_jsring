@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Tic Keyword.</h3>
+	<button onclick="getTic()">Get Tic</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractTic() {
+	     const str = "<!-- $tic: 1576163731$ -->";
+
+	     let rex = /\$tic: (\d{10})\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractTic res ",res);
+	     let tic = res[1];
+	     let result = tic;
+	     return result
+	 }
+
+	 function getTic() {
+	     document.getElementById("demo").innerHTML = extractTic();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Text Keyword.</h3>
+	<button onclick="getText()">Get Text</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractText() {
+	     const str_a =[
+		 "blaval$Source: /etc/myfiles/foo.txt$truc",
+		 "truc  $Date: 12/12/19$",
+		 "<!-- $tic: 1576163731$ -->",
+		 "machin $mutable: /.brings/system/bin/kwextract.pl$",
+		 "chose $qm: z6t$ bla",
+		 "$Previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$",
+		 "un texte  ",  
+		 "                     ",
+		 "1. load file with  reader.readAsText(file,'UTF-8')",
+		 "2. recupere contenu de $Source",
+		 "3. afficher dans Input Value"];
+
+	     console.log("extractText str_a",str_a);
+	     
+	     let rex1 = /\$Date: (([1-3][0-9])\/([0-1][1-9])\/([1-9][0-9]))\$/;
+	     let rex2 = /\$mutable: ((\/(?:\.)?[a-z]+)+)\/([a-z]+\.[a-z]+)\$/;
+	     let rex3 = /\$Previous: (Qm([a-zA-Z0-9]+))\$/;
+	     let rex4 = /\$qm: (z([a-zA-Z0-9]+))\$/;
+	     let rex5 = /\$Source: ((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?\$/;
+	     let rex6 = /\$tic: (\d{10})\$/;
+
+	     result = [];
+	     for (let i=0; i < str_a.length; i++) {
+		 var line = str_a[i];
+		 if (rex1.test(line)
+		     || rex2.test(line)
+		     || rex3.test(line)
+		     || rex4.test(line)
+		     || rex5.test(line)
+		     || rex6.test(line)
+
+		 ){
+		     console.log("skipping line",line); 
+		 }
+		 else {
+		     result.push(line);
+		 }
+	     }
+	     
+	     console.log("extractText result",result);
+	     return result
+	 }
+	 
+	 function getText() {
+	     document.getElementById("demo").innerHTML = extractText();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

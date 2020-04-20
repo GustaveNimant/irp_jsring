@@ -1,9 +1,9 @@
 blaval$Source: /etc/myfiles/foo.txt$
 truc  $Date: 12/12/19$
-<!--$tic: 1576163731$-->
+<!-- $tic: 1576163731$ -->
+  $mutable: /.brings/system/bin/kwextract.pl$
   $qm: z6t$
   $Previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$
-
 un texte  
 
 1. load file with  reader.readAsText(file,'UTF-8')
