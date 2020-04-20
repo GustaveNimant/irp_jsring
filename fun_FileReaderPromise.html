@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+    <body>
+	<input type="file" id="file" onchange="processFile()">
+	<pre id="result"></pre>
+	<pre id="error"></pre>
+	<script>
+
+	 function readFileAsync(file) {
+	     console.log("readFileAsync input file",file)
+	     
+	     return new Promise((resolve, reject) => {
+		 let reader = new FileReader();
+		 reader.readAsText(file);
+		 
+		 reader.onload = () => {
+		     console.log("readFileAsync reader.result",reader.result)
+		     resolve(reader.result);
+		 };
+		 
+		 reader.onerror = reject;
+		 
+	     })
+	 }
+	 
+	 function processFile() {
+	     let file = document.getElementById('file').files[0];
+	     console.log("processFile file",file)
+	     
+	     readFileAsync(file)
+		    .then (res => {console.log("processFile res",res); 
+			document.getElementById('result').innerHTML = res})
+		    .catch(err => logError(err)) 
+	 }
+	 
+	 function logError(err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     document.getElementById("error").innerHTML = message;
+	     switch (message){
+		 case "NetworkError when attempting to fetch resource.":
+		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+		     break;
+		 case "Internal Server Error":
+		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     break;
+		 default:
+		     console.log("logError : output err '"+err+"'");
+	     } // switch
+	 }
+	 
+	</script>
+    </body>
+</html>
