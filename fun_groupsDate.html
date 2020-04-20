@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<button onclick="getDate()">Get Date</button>
+	<script>
+	 function getDate() {
+	     const re = /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/
+	     const result = re.exec('2015-01-02')
+	     console.log(result);
+	     console.log('year', result.groups.year);
+	     console.log('month',result.groups.month);
+	     console.log('day',result.groups.day);
+	 }
+	</script>
+
+    </body>
+</html>
