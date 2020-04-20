@@ -43,11 +43,12 @@
 		reader.addEventListener('load', function() {
 		console.log('Contenu du fichier "' + file.name + '" :\n\n' + reader.result);
 		});
+		
+		let formData = new FormData();
+		formData.append("file", file);
+		console.log('writeFile : formData ',formData)
 	      */
-	     
-	     let formData = new FormData();
-	     formData.append("file", file);
-	     console.log('writeFile : formData ',formData)
+
 	 }
 	 
 	 function writeOfFileOfContent(mfspath, content) {
