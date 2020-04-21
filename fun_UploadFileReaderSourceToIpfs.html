@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<h3>Select a file from disk space and store it in a Local IPFS directory</h3>
+<html>
+    <body>
+
+	<form method=POST>
+	    Select a file on disk space : <input type="file"><br>
+	    Give it a local Ipfs name <input name="mfspath" type=text value="" placeholder="mfs path">
+	    <input type="button" onClick="writeFile(this.closest('form'))" value="Upload">
+	</form>
+	
+	Hash: <span id="hash">hash</span>
+
+	<p style="color:red" id="error"></p>
+	<script>
+
+	 //https://developer.mozilla.org/fr/docs/Web/API/FileReader/onload
+	 // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/FileReader
+
+	 function readFileAsync(file) {
+	     console.log("readFileAsync input file",file)
+	     
+	     return new Promise((resolve, reject) => {
+		 let reader = new FileReader();
+		 reader.readAsText(file);
+		 
+		 reader.onload = () => {
+		     console.log("readFileAsync reader.result",reader.result)
+		     resolve(reader.result);
+		 };
+		 
+		 reader.onerror = reject;
+		 
+	     })
+	 }
+
+	 function extractSourceOfString(str) {
+	     var rex = /\$Source: (((\/[a-z]+)+)\.([a-z]+(,[a-z])?))\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractSourceOfString res ",res);
+	     let result = res[1]
+	     console.log("extractSourceOfString result ",result);
+	     return result
+	 }
+
+	 function writeFile(form) {
+	     console.log("writeFile : form.elements ",form.elements);
+	     let fakepath = form.elements[0].value
+	     console.log("writeFile : fakepath '",fakepath,"'")
+	     let mfspath = form.elements[1].value
+	     console.log("writeFile : mfspath '",mfspath,"'")
+	     let file = form.elements[0].files[0]
+	     console.log("writeFile : element[0].files '",form.elements[0].files,"'")
+	     console.log("writeFile : file ",file)
+
+	     readFileAsync(file)
+			    .then(content => writeOfFileOfContent(form, mfspath, content))
+			    .then(callback('hash'))
+
+	 }
+	 
+	 function writeOfFileOfContent(form, mfspath, content) {
+	     console.log("writeOfFileOfContent input mfspath '",mfspath,"'");
+	     console.log("writeOfFileOfContent input content '",content,"'")
+
+	     if (mfspath == "") {
+		 mfspath = extractSourceOfString(content);
+		 form.elements[1].value = mfspath;
+		 console.log("writeOfFileOfContent extracted mfspath '",mfspath,"'");
+	     }
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'files/write?arg=' + mfspath + '&create=1&truncate=1';
+	     console.log('writeOfFileOfContent : url '+url);
+	     return fetchPostTextForm(url, content)
+		 .then( _ => hashOfMFSFilePath(mfspath) ) 
+		 .catch(logError)
+	 }
+	 
+	 function fetchPostTextForm(url, content) {
+	     console.log('fetchPostTextForm input url '+url);
+	     console.log('fetchPostTextForm input content '+content);
+	     
+	     let form = new FormData();
+	     form.append('file', content)   
+	     const result = fetch(url, {
+		 method: "POST",
+		 mode: 'cors',
+		 body: form
+	     })
+	     return result;
+	 }
+	 
+	 function hashOfMFSFilePath(mfspath) {
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     console.log('hashOfMFSFilePath : input mfspath '+mfspath);
+	     var url = api_url + 'files/stat?arg='+mfspath+'&hash=true'
+	     console.log('hashOfMFSFilePath : url '+url);
+	     return fetchGetTextForm(url)
+		 .then( obj => obj.json())
+		 .then( json => {
+		     console.log('hashOfMFSFilePath : json ',json);
+		     console.log("hashOfMFSFilePath : json.Type '"+json.Type+"'");
+		     if (json.Type == "error") {
+			 const message = 'Error from hashOfMFSFilePath : '+json.Message;
+			 console.log("hashOfMFSFilePath : message '"+message+"'")
+			 alert(message);
+		     }
+		     return json.Hash} )
+	 }
+	 
+	 function fetchGetTextForm(url) {
+	     console.log('fetchGetTextForm : input url '+url);
+	     return fetch(url, { method: "GET", mode: 'cors' })
+	 }
+	 
+	 function validate(resp) {
+	     if (resp.status >= 200 && resp.status < 300) {
+		 return Promise.resolve(resp)
+	     }
+	     return Promise.reject(new Error(resp.statusText))
+	 }
+	 
+	 function logError(err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     document.getElementById("error").innerHTML = message;
+	     switch (message){
+		 case "NetworkError when attempting to fetch resource.":
+		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+		     break;
+		 case "Internal Server Error":
+		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     break;
+		 default:
+		     console.log("logError : output err '"+err+"'");
+	     } // switch
+	 }
+	 
+	 function callback(tag) {
+	     console.log('callback tag: '+tag)
+	     const result = obj => {
+		 let e = document.getElementById(tag);
+		 console.log('obj:',obj)
+		 e.innerHTML = obj;
+	     };
+	     return result
+	 }
+	 
+	 function callbackIpfsIo(tag) {
+	     console.log('callbackIpfsIo tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+	     };
+	     return substi
+	 }
+	 
+	 function callbackIpfsLocal(tag) {
+	     console.log('callbackIpfsLocal tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+	     };
+	     return substi
+	 }
+	 
+	 function IpfsException(message) {
+	     this.message = message;
+	     this.name = "IpfsException";
+	 }
+	 
+	</script>
+    </body>
+</html>
