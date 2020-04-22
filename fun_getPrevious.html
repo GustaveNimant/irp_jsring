@@ -8,8 +8,8 @@
 
 	<script>
 	 function extractPrevious() {
-	     const str = "truc  $Previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$bla"
-	     let rex = /\$Previous: (Qm([a-zA-Z0-9]+))\$/;
+	     const str = "truc  $previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$bla"
+	     let rex = /\$previous: (Qm([a-zA-Z0-9]+))\$/;
 	     
 	     var res = str.match(rex);
 	     console.log("extractPrevious res ",res);

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Author Keyword.</h3>
+	<button onclick="getAuthor()">Get Author</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractAuthor() {
+	     const str = "truc  $Author: michel Combes_5$bla"
+	     let rex = /\$Author: ([a-zA-Z][a-zA-Z0-9]+(?:[\. ])?[a-zA-Z0-9_]+)\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractAuthor res ",res);
+	     let result = res[1]
+	     return result
+	 }
+
+	 function getAuthor() {
+	     document.getElementById("demo").innerHTML = extractAuthor();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

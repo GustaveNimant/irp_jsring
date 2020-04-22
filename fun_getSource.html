@@ -8,10 +8,10 @@
 
 	<script>
 	 function extractSource() {
-	     var str = "The $Source: /etc/other/myfiles/foo.txt,v$bla..";
+	     const str = "The $Source: /etc/other/myfiles/foo.txt,v$bla..";
 	     let rex = /\$Source: ((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?\$/;
 	     
-	     var res = str.match(rex);
+	     const res = str.match(rex);
 	     console.log("extractSource res ",res);
 	     let dir = res[1]
 	     let bas = res[3]

@@ -9,11 +9,17 @@
 	<script>
 	 function extractText() {
 	     const str_a =[
-		 "blaval$Source: /etc/myfiles/foo.txt$truc",
-		 "truc  $Date: 12/12/19$",
-		 "machin $mutable: /.brings/system/bin/kwextract.pl$",
-		 "chose $qm: z6t$ bla",
-		 "$Previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$",
+		 "trac  $Author: michel Combes_5$bla",
+		 "trec  $Date: 12/02/19$blabla",
+		 "tric  $mutable: /.brings/system/truc/bin/kwextract.pl$bla",
+		 "troc  $next: unknown$bla",
+		 "tryc  $parents: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$bla",
+		 "trwc  $previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$bla",
+		 "trxc  $qm: z6t$bla",
+		 "trzc  $Signature: n/a$bla",
+		 "The $Source: /etc/other/myfiles/foo.txt,v$bla..",
+		 "truc  $spot: 1550712774$bla",
+		 "<!-- $tic: 1576163731$ -->",
 		 "un texte  ",  
 		 "                     ",
 		 "1. load file with  reader.readAsText(file,'UTF-8')",
@@ -21,30 +27,39 @@
 		 "3. afficher dans Input Value",
 		 "<!-- $tic: 1576163731$ -->"]
 
-		   console.log("extractText str_a",str_a);
-	     
-	     let rex1 = /\$Date: (([1-3][0-9])\/([0-1][1-9])\/([1-9][0-9]))\$/;
-	     let rex2 = /\$mutable: ((\/(?:\.)?[a-z]+)+)\/([a-z]+\.[a-z]+)\$/;
-	     let rex3 = /\$Previous: (Qm([a-zA-Z0-9]+))\$/;
-	     let rex4 = /\$qm: (z([a-zA-Z0-9]+))\$/;
-	     let rex5 = /\$Source: ((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?\$/;
-	     let rex6 = /\$tic: (\d{10})\$/;
+	     console.log("extractText str_a",str_a);
 
+	     let rex0 = /\$Author: ([a-zA-Z][a-zA-Z0-9]+(?:[\. ])?[a-zA-Z0-9_]+)\$/;
+	     let rex1 = /\$Date: (([0-3][0-9])\/([0-1][0-9])\/([0-9][0-9]))\$/;
+	     let rex2 = /\$mutable: ((\/(?:\.)?[a-z]+)+)\/([a-z]+\.[a-z]+)\$/;
+	     let rex3 = /\$next: (\w+)\$/;
+	     let rex4 = /\$parents: (Qm([a-zA-Z0-9]+))\$/;
+	     let rex5 = /\$previous: (Qm([a-zA-Z0-9]+))\$/;
+	     let rex6 = /\$qm: (z([a-zA-Z0-9]+))\$/;
+	     let rex7 = /\$Signature: ([a-zA-Z][a-zA-Z0-9]*(?:[\/])?[a-zA-Z0-9])\$/;
+	     let rex8 = /\$Source: ((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?\$/;
+	     let rex9 = /\$spot: (\d+)\$/;
+	     let rex10 = /\$tic: (\d{10})\$/;
+	     
 	     result = [];
 	     for (let i=0; i < str_a.length; i++) {
 		 var line = str_a[i];
-		 if (rex1.test(line)
+		 if (rex0.test(line)
+		     || rex1.test(line)
 		     || rex2.test(line)
 		     || rex3.test(line)
 		     || rex4.test(line)
 		     || rex5.test(line)
 		     || rex6.test(line)
-
+		     || rex7.test(line)
+		     || rex8.test(line)
+		     || rex9.test(line)
+		     || rex10.test(line)
 		 ){
 		     console.log("skipping line",line); 
 		 }
 		 else {
-		     result.push(line);
+			 result.push(line);
 		 }
 	     }
 	     

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Next Keyword.</h3>
+	<button onclick="getNext()">Get Next</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractNext() {
+	     const str = "truc  $next: unknown$bla"
+	     let rex = /\$next: (\w+)\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractNext res ",res);
+	     let result = res[1]
+	     return result
+	 }
+
+	 function getNext() {
+	     document.getElementById("demo").innerHTML = extractNext();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

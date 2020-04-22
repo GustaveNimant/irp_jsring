@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Parents Keyword.</h3>
+	<button onclick="getParents()">Get Parents</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractParents() {
+	     const str = "truc  $parents: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$bla"
+	     let rex = /\$parents: (Qm([a-zA-Z0-9]+))\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractParents res ",res);
+	     let result = res[1]
+	     return result
+	 }
+
+	 function getParents() {
+	     document.getElementById("demo").innerHTML = extractParents();
+	 }
+	 
+	</script>
+
+    </body>
+</html>

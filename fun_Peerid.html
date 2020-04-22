@@ -8,7 +8,8 @@
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
- getPeerID().then(callback('peerid'))
+ getPeerID()
+     .then(callback('peerid'))
 
  function getPeerID() {
      var url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
@@ -21,7 +22,9 @@
  }
 
  function fetchJsonGet(url) {
-     return fetch(url, { method: "GET"} ).then(validate).then( resp => resp.json() )
+     return fetch(url, { method: "GET"} )
+	 .then(validate)
+	 .then( resp => resp.json() )
  }
 
  function validate(resp) {

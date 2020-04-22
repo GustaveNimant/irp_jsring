@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf8"/>
+    <body>
+	<h3>Click the button to Get the Spot Keyword.</h3>
+	<button onclick="getSpot()">Get Spot</button>
+	<p id="demo"></p>
+
+	<script>
+	 function extractSpot() {
+	     const str = "truc  $spot: 1550712774$bla"
+	     let rex = /\$spot: (\d+)\$/;
+	     
+	     var res = str.match(rex);
+	     console.log("extractSpot res ",res);
+	     let result = res[1]
+	     return result
+	 }
+
+	 function getSpot() {
+	     document.getElementById("demo").innerHTML = extractSpot();
+	 }
+	 
+	</script>
+
+    </body>
+</html>
