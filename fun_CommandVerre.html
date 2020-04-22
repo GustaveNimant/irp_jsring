@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+	<meta charset="utf-8">
+    </head>
+    <body>
+	<div id="result">Promise.race</div>
+	<input type="text" id="boisson" value="">
+	<input type="button" value="Click" onclick="commandeVerre(document.getElementById('boisson').value)">
+	<script>
+	 
+	 function commandeVerre(maBoisson){
+	     console.log("commandeVerre input maBoisson",maBoisson);
+	     return new Promise( 
+		 function(resolve, reject) { 
+		     resolve ('Je commande du '+maBoisson);
+		 })
+		 .then(boi => {console.log('boi',boi); return jeTrinque(boi)})
+		 .then(res => {console.log('res',res); jeBois(res)})
+		 }
+	     
+	     function jeTrinque(boisson){
+		 console.log("jeTrinque input boisson '",boisson,"'");
+		 return new Promise( 
+		     function(resolve, reject) { 
+			 console.log("Je trinque avec du " + boisson);
+			 resolve ('Je trinque avec du '+boisson);
+		     }
+		 )}
+	     
+	     function jeBois(boisson){
+		 console.log("je bois le " + boisson);
+	     }
+	     
+	</script>
+	
+    </body>
+
+</html>
+
+  
