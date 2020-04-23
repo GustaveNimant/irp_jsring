@@ -1,11 +1,17 @@
-blaval$Source: /etc/myfiles/foo.txt$
-truc  $Date: 12/12/19$
+trac  $Author: michel Combes_5$bla
+trec  $Date: 12/02/19$blabla
+tric  $mutable: /.brings/system/truc/bin/kwextract.pl$bla
+troc  $next: unknown$bla
+tryc  $parents: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$bla
+trwc  $previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$bla
+trxc  $qm: z6t$bla
+trzc  $Signature: n/a$bla
+The $Source: /etc/other/myfiles/foo.txt$bla..
+truc  $spot: 1550712774$bla
 <!-- $tic: 1576163731$ -->
-  $mutable: /.brings/system/bin/kwextract.pl$
-  $qm: z6t$
-  $Previous: QmUmeXP7TdYQGMnL7GddRUQRHyrYwkPvAHTDx7rFvaCCaN$
-un texte  
-
+un texte    
+                     
 1. load file with  reader.readAsText(file,'UTF-8')
 2. recupere contenu de $Source
 3. afficher dans Input Value
+<!-- $tic: 1576163731$ -->
