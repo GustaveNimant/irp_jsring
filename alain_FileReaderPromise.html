@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+    <body>
+	<input type="file" id="file" onchange="processFile()">
+	<pre id="result"></pre>
+	<pre id="demo"></pre>
+	<pre id="error"></pre>
+	<script>
+
+	 function readFileAsync(file) {
+	     console.log("readFileAsync input file",file)
+	     
+	     return new Promise((resolve, reject) => {
+		 let reader = new FileReader();
+		 reader.readAsText(file);
+		 
+		 reader.onload = () => {
+		     console.log("readFileAsync reader.result",reader.result)
+		     resolve(reader.result);
+		 };
+		 
+		 reader.onerror = reject;
+		 
+	     })
+	 }
+	 
+	 function processFile() {
+	     let file = document.getElementById('file').files[0];
+	     console.log("processFile file",file)
+	     
+	     readFileAsync(file)
+		    .then (res => {console.log("processFile res",res); 
+			document.getElementById('result').innerHTML = res;
+			/* str = res.replace("<[^>]*>", "");
+			   console.log('res no balises '+ str); */
+			var str_a = res.split("\n");
+			//console.log ("processFile str_a : "+ str_a);
+			getText(str_a);
+		    })
+		    .catch(err => logError(err)); 
+	 }
+
+	 function extractText(str_a) {
+	     
+	     let rex0 = /\$Author: ([a-zA-Z][a-zA-Z0-9]+(?:[\. ])?[a-zA-Z0-9_]+)\$/;
+	     let rex1 = /\$Date: (([0-3][0-9])\/([0-1][0-9])\/([0-9][0-9]))\$/;
+	     let rex2 = /\$mutable: ((\/(?:\.)?[a-z]+)+)\/([a-z]+\.[a-z]+)\$/;
+	     let rex3 = /\$next: (\w+)\$/;
+	     let rex4 = /\$parents: (Qm([a-zA-Z0-9]+))\$/;
+	     let rex5 = /\$previous: (Qm([a-zA-Z0-9]+))\$/;
+	     let rex6 = /\$qm: (z([a-zA-Z0-9]+))\$/;
+	     let rex7 = /\$Signature: ([a-zA-Z][a-zA-Z0-9]*(?:[\/])?[a-zA-Z0-9])\$/;
+	     let rex8 = /\$Source: ((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?\$/;
+	     let rex9 = /\$spot: (\d+)\$/;
+	     let rex10 = /\$tic: (\d{10})\$/;
+	     
+	     result = [];
+	     for (let i=0; i < str_a.length; i++) {
+		 var line = str_a[i];
+		 if (rex0.test(line)
+		     || rex1.test(line)
+		     || rex2.test(line)
+		     || rex3.test(line)
+		     || rex4.test(line)
+		     || rex5.test(line)
+		     || rex6.test(line)
+		     || rex7.test(line)
+		     || rex8.test(line)
+		     || rex9.test(line)
+		     || rex10.test(line)
+		 ){
+		     console.log("skipping line",line); 
+		 }
+		 else {
+		     result.push(line);
+		 }
+	     }
+	     
+	     console.log("extractText result",result);
+	     return result
+	 }
+
+	 function getText(str_a) {
+	     document.getElementById("demo").innerHTML = extractText(str_a);
+	 }
+	 
+	 
+	 function logError(err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     document.getElementById("error").innerHTML = message;
+	     switch (message){
+		 case "NetworkError when attempting to fetch resource.":
+		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+		     break;
+		 case "Internal Server Error":
+		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     break;
+		 default:
+		     console.log("logError : output err '"+err+"'");
+	     } // switch
+	 }
+	 
+	</script>
+    </body>
+</html>
