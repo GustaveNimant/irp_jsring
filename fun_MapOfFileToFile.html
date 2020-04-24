@@ -20,6 +20,9 @@
 	 //https://developer.mozilla.org/fr/docs/Web/API/FileReader/onload
 	 // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/FileReader
 
+	 var map_1 =""
+ 	 var map_2 =""
+	 
 	 function readFileAsync(file) {
 	     console.log("readFileAsync input file",file)
 	     
@@ -70,21 +73,21 @@
 	     let file_2 = form.elements[1].files[0]
 	     console.log("writeFile : element[1].files '",form.elements[1].files,"'")
 	     console.log("writeFile : file_2 ",file_2)
+	     
+	     let rfa_1 = readFileAsync(file_1);
+	     let rfa_2 = readFileAsync(file_2);
 
-	     readFileAsync(file_1)
-			      .then (con => {return mapOfString(con)})
-	                      .then ( map => console.log("writeFile map 1",map));
-
-	     readFileAsync(file_2)
-		 .then (con => {return mapOfString(con)})
-	         .then ( map => console.log("writeFile map 2",map));
-
+	     const promises = [rfa_1, rfa_2];
+	     return Promise.all(promises)
+			   .then(content_a => {console.log("writeFile content_a",content_a);
+			       return content_a.map(mapOfString)})
+			   .then (map_a => console.log("writeFile map_a",map_a))
 	 }
-	 
+			       
 	 function writeOfFileOfContent(form, mfspath, content) {
 	     console.log("writeOfFileOfContent input mfspath '",mfspath,"'");
 	     console.log("writeOfFileOfContent input content '",content,"'")
-
+	     
 	     let dic = mapOfString(content); 
 	     if (mfspath == "") {
 		 mfspath = dic.get('Source');
