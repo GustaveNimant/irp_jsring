@@ -8,8 +8,8 @@
 
 	<script>
 	 function extractSource() {
-	     const str = "The $Source: /etc/other/myfiles/foo.txt,v$bla..";
-	     let rex = /\$Source: ((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?\$/;
+	     const str = "The $Source: /etc/Other/myfiles/Foo.txt,v$bla..";
+	     let rex = /\$Source: ((\/[a-zA-Z]+)+)\/([A-Za-z]+\.[a-z]+)(,[a-z])?\$/;
 	     
 	     const res = str.match(rex);
 	     console.log("extractSource res ",res);

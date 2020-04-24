@@ -40,6 +40,81 @@
 	     })
 	 }
 
+	 function checkValidOfKeyOfValue(key, value) {
+	     console.log("checkValidOfKeyOfValue input key '"+key+"'");
+	     console.log("checkValidOfKeyOfValue input value '"+value+"'");
+	     switch (key){
+		 case "Author":
+		     var rex = /([a-zA-Z][a-zA-Z0-9]+(?:[\. ])?[a-zA-Z0-9_]+)/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "Date":
+		     var rex = /([0-3][0-9])\/([0-1][0-9])\/([0-9][0-9])/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "mutable":
+		     var rex = /((\/(?:\.)?[a-z]+)+)\/([a-z]+\.[a-z]+)/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "next":
+		     var rex = /(\w+)/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "parents":
+		     var rex = /Qm([a-zA-Z0-9]+)/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "previous":
+		     var rex = /Qm([a-zA-Z0-9]+)/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "qm":
+		     var rex = /z([a-zA-Z0-9]+)/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "Signature":
+		     var rex = /[a-zA-Z][a-zA-Z0-9]*(?:[\/])?[a-zA-Z0-9]/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "Source":
+		     var rex = /((\/[A-Za-z]+)+)\/([A-Za-z]+\.[a-z]+)(,[a-z])?/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "spot":
+		     var rex = /\d+/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 case "tic":
+		     var rex = /\d+/;
+		     if(!rex.test(value)) {
+			 alert("key '"+key+"' has an invalid value "+value);
+		     }
+		     break;
+		 default:
+		     console.log("checkValidOfKeyOfValue : Unkown key '"+key+"'");
+	     } // switch
+	 }
+	 
 	 function mapOfString(str) {
 	     console.log("mapOfString input str",str);
 	     var dic = new Map();
@@ -53,12 +128,15 @@
 		 var keyVal = mat.match(/\$(.+): (.+)\$/);
 		 var key = keyVal[1];
 		 var value = keyVal[2];
+
+		 checkValidOfKeyOfValue(key, value);
+		 
 		 console.log("mapOfString : "+ key + " => " + value);
 		 dic.set (key, value);
 	     }
 	     return dic;
 	 }
-	 
+
 	 function writeFile(form) {
 	     console.log("writeFile : form.elements ",form.elements);
 	     let fakepath_1 = form.elements[0].value
@@ -83,7 +161,7 @@
 			       return content_a.map(mapOfString)})
 			   .then (map_a => console.log("writeFile map_a",map_a))
 	 }
-			       
+	 
 	 function writeOfFileOfContent(form, mfspath, content) {
 	     console.log("writeOfFileOfContent input mfspath '",mfspath,"'");
 	     console.log("writeOfFileOfContent input content '",content,"'")
