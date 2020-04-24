@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+    <body>
+	<script>
+	 let KeyRegExp = new Map ();
+	 KeyRegExp.set("Author", /([a-zA-Z][a-zA-Z0-9]+(?:[\. ])?[a-zA-Z0-9_]+)/);
+	 KeyRegExp.set("Date", /(([0-3][0-9])\/([0-1][0-9])\/([0-9][0-9]))/);
+	 KeyRegExp.set("mutable", /((\/(?:\.)?[a-z]+)+)\/([a-z]+\.[a-z]+)/);
+	 KeyRegExp.set("next", /(\w+)/);
+	 KeyRegExp.set("parents", /(Qm([a-zA-Z0-9]+))/);
+	 KeyRegExp.set("previous", /(Qm([a-zA-Z0-9]+))/);
+	 KeyRegExp.set("qm", /(z([a-zA-Z0-9]+))/);
+	 KeyRegExp.set("Signature", /([a-zA-Z][a-zA-Z0-9]*(?:[\/])?[a-zA-Z0-9])/);
+	 KeyRegExp.set("Source", /((\/[a-z]+)+)\/([a-z]+\.[a-z]+)(,[a-z])?/);
+	 KeyRegExp.set("spot", /(\d+)/);
+	 KeyRegExp.set("tic", /(\d+)/);
+
+	 for (const key of KeyRegExp.keys()){
+	     var value = KeyRegExp.get(key);
+	     console.log(`${key} => ${value}`);
+	 }
+	</script>
+    </body>
+</html>
