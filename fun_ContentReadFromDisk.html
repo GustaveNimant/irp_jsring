@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<h3>Select a file from disk space and output its Content</h3>
+<html>
+    <body>
+
+	<form method=POST>
+	    Select a file on disk space : <input type="file"><br>
+	    <input type="button" onClick="readFile(this.closest('form'))" value="Read">
+	</form>
+	
+	<script>
+
+	 function readFileAsync(file) {
+	     console.log("readFileAsync input file",file)
+	     
+	     return new Promise((resolve, reject) => {
+		 let reader = new FileReader();
+		 reader.readAsText(file);
+		 reader.onload = () => {
+		     console.log("readFileAsync reader.result",reader.result)
+		     resolve(reader.result);
+		 };
+		 reader.onerror = reject;
+	     })
+	 }
+
+	 function readFile(form) {
+	     let file = form.elements[0].files[0]
+	     console.log("readFile : element[0].files '",form.elements[0].files,"'")
+	     console.log("readFile : file ",file)
+	     
+	     readFileAsync(file)
+			    .then(content => console.log("readFile content",content))
+	 }
+	 
+	</script>
+    </body>
+</html>
