@@ -4,32 +4,31 @@
 <h2>Create folder in Local IPFS</h2>
 <form>
   Name of folder : <input type="text" value="/" name="mfspath" id="mfspath">
-    <button type="button" onclick="createDirectory()">Create folder</button>
+    <button type="button" onclick="createDirectory(document.getElementById('mfspath').value)">Create folder</button>
 </form>
 
 <p style="color:red" id="error"></p>
 
 <script>
  
- function createDirectory() {
-     let path =  document.getElementById('mfspath').value;
-     console.log('createDirectory mfs path '+path);
+ function createDirectory(mfspath) {
+     console.log("createDirectory input mfspath ",mfspath);
      
      const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'files/mkdir?arg=' + path ;
+     var url = api_url + 'files/mkdir?arg=' + mfspath + '&parents=true';
      console.log('createDirectory : url '+url);
      
-     return fetchPostTextForm(path, url)
-	 .then( obj => obj.text() )
-         .then( tex => console.log("tex '"+tex+"'"))
-         .catch(logError)
+     return fetchPostTextForm(mfspath, url)
+     	 .then(validate)
+	 .then( obj => {console.log("createDirectory obj",obj); obj.text()})
+
  }
  
- function fetchPostTextForm(path, url) {
+ function fetchPostTextForm(mfspath, url) {
      console.log('fetchPostTextForm input url '+url);
      
      let form = new FormData();
-     form.append('file', path)   
+     form.append('file', mfspath)   
      const result = fetch(url, {
 	 method: "POST",
 	 mode: 'cors',
@@ -46,25 +45,8 @@
      return result
  }
  
- function callbackIpfsIo(tag) {
-     console.log('callback tag: '+tag)
-     const substi = obj => {
-	 let e = document.getElementById(tag);
-	 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-     };
-     return substi
- }
-
- function callbackIpfsLocal(tag) {
-     console.log('callback tag: '+tag)
-     const substi = obj => {
-	 let e = document.getElementById(tag);
-	 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-     };
-     return substi
- }
-
  function validate(resp) {
+     console.error("validate input resp",resp);
      if (resp.status >= 200 && resp.status < 300) {
 	 return Promise.resolve(resp)
      }
@@ -72,9 +54,9 @@
  }
  
  function logError(err) {
-     console.log("logError : input err ",err);
+     console.error("logError input err ",err);
      const message = err.message;
-     console.log("logError : message '"+message+"'");
+     console.error("logError : message '"+message+"'");
      document.getElementById("error").innerHTML = message;
      switch (message){
 	 case "NetworkError when attempting to fetch resource.":
