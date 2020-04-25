@@ -20,6 +20,17 @@
 	     var value = KeyRegExp.get(key);
 	     console.log(`${key} => ${value}`);
 	 }
+
+	 const str = "The $Source: /etc/other/myfiles/foo.txt,v$bla..";
+	 let rex = KeyRegExp.get("Source");
+	 
+	 const res = str.match(rex);
+	 console.log("res ",res);
+	 let dir = res[1]
+	 let bas = res[3]
+	 let result = dir + "/" + bas;
+	 console.log("result ",result);
+	 
 	</script>
     </body>
 </html>
