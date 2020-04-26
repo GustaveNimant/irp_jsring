@@ -101,6 +101,10 @@
 		 console.log("writeOfFileOfContent extracted mfspath '",mfspath,"'");
 	     }
 
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'files/write?arg=' + mfspath + '&create=true&truncate=true';
+	     console.log('writeOfFileOfContent : url '+url);
+	     
 	     // Empty qm
 	     let noQmContent = replaceQmOfContent(content);
 	     let noQmHash = getContentHash(noQmContent)
@@ -108,15 +112,7 @@
 	         .then(hash => newQmContentOfHashOfContent(hash, noQmContent))
 	         .then(newQmContent => fetchPostTextForm(url, newQmContent));
 
-		     console.log("writeOfFileOfContent noQmHash",noQmHash);
-
-	     
-	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'files/write?arg=' + mfspath + '&create=true&truncate=true';
-	     console.log('writeOfFileOfContent : url '+url);
-	     return fetchPostTextForm(url, newQmContent)
-		 .then( _ => hashOfMFSFilePath(mfspath) )
-		 .catch(logError)
+	     console.log("writeOfFileOfContent noQmHash",noQmHash);
 	 }
 	 
 	 function fetchPostTextForm(url, content) {
