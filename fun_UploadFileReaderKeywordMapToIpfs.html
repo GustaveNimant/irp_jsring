@@ -108,7 +108,10 @@
 	     // Empty qm
 	     let noQmContent = replaceQmOfContent(content);
 	     let noQmHash = getContentHash(noQmContent)
-		 .then(hash => {console.log("From getContentHash hash",hash); return hash})
+		 .then(hash => {
+		     console.log("From getContentHash hash",hash);
+		     document.getElementById("hash").innerHTML = hash;
+		     return hash})
 	         .then(hash => newQmContentOfHashOfContent(hash, noQmContent))
 	         .then(newQmContent => fetchPostTextForm(url, newQmContent));
 
