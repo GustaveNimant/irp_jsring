@@ -95,7 +95,7 @@
 
 	 function getContentHash(buf) {
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     url = api_url + 'add?file=bidon.blob&cid-version=0&only-hash=0'
+	     url = api_url + 'add?file=bidon.blob&cid-version=0&only-hash=true'
 	     return fetchPostTextForm(url, buf)
 		 .then( resp => resp.json() )
 		 .then( json => json.Hash )
