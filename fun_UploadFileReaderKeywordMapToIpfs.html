@@ -107,6 +107,7 @@
 	     
 	     // Empty qm
 	     let noQmContent = replaceQmOfContent(content);
+	     // Replace qm with its own Hash
 	     let noQmHash = getContentHash(noQmContent)
 		 .then(hash => {
 		     console.log("From getContentHash hash",hash);
