@@ -105,10 +105,9 @@
 	     let noQmContent = replaceQmOfContent(content);
 	     let noQmHash = getContentHash(noQmContent)
 		 .then(hash => {console.log("noQmContent hash",hash); return hash})
-	         .then(hash => newQmContentOfHashOfContent(hash, noQmContent))
-	         .then(newQmContent => fetchPostTextForm(url, newQmContent));
-
-		     console.log("writeOfFileOfContent noQmHash",noQmHash);
+	         .then(hash => newQmContentOfHashOfContent(hash, noQmContent));
+		     
+	     console.log("writeOfFileOfContent noQmHash",noQmHash);
 
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
