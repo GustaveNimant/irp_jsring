@@ -16,6 +16,13 @@
 	<p style="color:red" id="error"></p>
 	<script>
 
+	 function getTic() {
+	     var date = new Date();
+	     var result =parseInt (date.getTime() / 1000);
+	     console.log('getTic result '+result)
+	     return result
+	 }
+
 	 function readFileAsync(file) {
 	     console.log("readFileAsync input file",file)
 	     
@@ -66,6 +73,13 @@
 			    .then(callback('hash'))
 	 }
 
+	 function replaceTicOfContent(content){
+	     let tic = getTic();
+	     let result = content.replace (/\$tic: (.*)\$/, '$tic: '+tic+'$');
+	     console.log("replaceQmOfContent result ",result);
+	     return result;
+	 }
+
 	 function replaceQmOfContent(content){
 	     let result = content.replace (/\$qm: (.*)\$/, '$qm: Empty$');
 	     console.log("replaceQmOfContent result ",result);
@@ -104,9 +118,11 @@
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url = api_url + 'files/write?arg=' + mfspath + '&create=true&truncate=true';
 	     console.log('writeOfFileOfContent : url '+url);
-	     
+
+	     // New Tic
+	     let newTicContent = replaceTicOfContent(content);
 	     // Empty qm
-	     let noQmContent = replaceQmOfContent(content);
+	     let noQmContent = replaceQmOfContent(newTicContent);
 	     // Replace qm with its own Hash
 	     let noQmHash = getContentHash(noQmContent)
 		 .then(hash => {

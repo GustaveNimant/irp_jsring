@@ -8,7 +8,6 @@ trxc  $qm: z6t$bla
 trzc  $Signature: n/a$bla
 The $Source: /etc/other/myfiles/foo.txt$bla..
 truc  $spot: 1550712774$bla
-<!-- $tic: 1576163731$ -->
 un texte    
                      
 1. load file with  reader.readAsText(file,'UTF-8')
