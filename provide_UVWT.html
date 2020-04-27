@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+    <body>
+	<h3>Give 3 data values to calculate T </h3>
+	<h3> T = U  + V</h3>
+	<h3> U = d1 + 2*d2</h3>
+	<h3> V = U  + W </h3>
+	<h3> W = 3*d3</h3>
+	<form method=POST>
+	    <input type="button" onClick="provideT()" value="Provide T"><br>
+	    d1: <input id="d1" type="number" value=""><br>
+	    d2: <input id="d2" type="number" value=""><br>
+	    d3: <input id="d3" type="number" value=""><br>
+	</form>
+
+	<script>
+	 var Register = new Map();
+	 
+	 async function getD1() {
+	     return new Promise(
+		 res => {
+		     let d1 = parseInt(document.getElementById("d1").value);
+		     setTimeout(() => {res(d1)}, 3000);})
+	 }
+	 
+	 async function getD2() {
+	     return new Promise(
+		 res => {
+		     let d2 = parseInt(document.getElementById("d2").value);
+		     setTimeout(() => {res(d2)}, 2000);})
+	 }
+
+	 async function getD3() {
+	     return new Promise(
+		 res => {
+		     let d3 = parseInt(document.getElementById("d3").value);
+		     setTimeout(() => {res(d3)}, 1000);})
+	 }
+
+	 function isStoredOfKey(key) {
+	     let result = Register.has(key);
+	     console.log("isStoredOfKey Key '",key,"' is stored ?",result);
+	     return result;
+	 }
+	 
+	 function retrieveOfKey(key) {
+	     if (isStoredOfKey(key)) {
+		 let result = Register.get(key);
+		 console.log("retrieveOfKey Key '",key,"' has value ",result);
+		 return result;
+	     } else {
+		 throw "retrieveOfKey Key '"+key+"' has no value";
+	     }
+	 }	 
+	 
+	 function storeOfKeyOfValue(key, value) {
+	     if (isStoredOfKey(key)) {
+		 let stored = retrieveOfKey(key);
+		 if (stored != value) {
+		     console.error ("for key",key)
+		     console.error ("already stored with value",stored)
+		     console.error ("new value",value);
+		     throw "storeOfKeyOfValue Key '"+key+"' is already stored with a different value" 
+		 }
+		 else {
+		     console.log("storeOfKeyOfValue Key '",key,"' is stored with value ",value);
+		 }
+	     }
+	     else {
+		 Register.set(key, value);
+		 console.log ("value '",value,"' has been stored with key '",key,"'");
+	     }	 
+	 }
+
+	 async function buildU(d1, d2){
+	     let result = d1 + 2*d2;
+	     console.log("buildU result d1+ 2*d2 = U",result);
+	     return result;
+	 }
+
+	 async function buildV(u, w){
+	     let result = u + w;
+	     console.log("buildV result U + W = V",result);
+	     return result;
+	 }
+
+	 async function buildW(d3){
+	     let result = 3*d3;
+	     console.log("buildW result 3*d3 = W",result);
+	     return result;
+	 }
+
+	 async function buildAndStoreU(){
+	     
+	     const d1 = await getD1();
+	     console.log("buildAndStoreU d1",d1);
+	     const d2 = await getD2();
+	     console.log("buildAndStoreU d2",d2);
+	     
+	     let value = await buildU (d1, d2)
+	     storeOfKeyOfValue('U', value)
+	     console.log("buildandstoreU value",value);
+	     return value;
+	 }
+
+	 async function buildAndStoreV(){
+	     
+	     const u = await provideU();
+	     console.log("buildAndStoreV U",u);
+	     const w = await provideW();
+	     console.log("buildAndStoreV W",w);
+	     
+	     let value = await buildV (u, w)
+	     storeOfKeyOfValue('V', value)
+	     console.log("buildandstoreU value",value);
+	     return value;
+	 }
+
+	 async function buildAndStoreW(){
+	     
+	     const d3 = await getD3();
+	     console.log("buildAndStoreW d3",d3);
+	     
+	     let value = await buildW (d3)
+	     storeOfKeyOfValue('W', value)
+	     console.log("buildandstoreW value",value);
+	     return value;
+	 }
+
+	 async function provideU() {
+	     if (isStoredOfKey('U')) {
+		 let result = retrieveOfKey('U');
+		 return result
+	     }
+	     else {
+		 let result = buildAndStoreU();
+		 return result
+	     }
+	 }
+
+	 async function provideV() {
+	     if (isStoredOfKey('V')) {
+		 let result = retrieveOfKey('V');
+		 return result
+	     }
+	     else {
+		 let result = buildAndStoreV();
+		 return result
+	     }
+	 }
+
+	 async function provideW() {
+	     if (isStoredOfKey('W')) {
+		 let result = retrieveOfKey('W');
+		 return result
+	     }
+	     else {
+		 let result = buildAndStoreW();
+		 return result
+	     }
+	 }
+
+	 async function provideT() {
+	     const v = await provideV();
+	     console.log("provideT v",v);
+	     const u = await provideU();
+	     console.log("provideT u",u);
+	     let result = u + v
+	     console.log("result u + v = T ",result);
+	     return result;
+	 }
+	</script>
+    </body>
+</html>
