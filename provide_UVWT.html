@@ -47,14 +47,14 @@
 	 function retrieveOfKey(key) {
 	     if (isStoredOfKey(key)) {
 		 let result = Register.get(key);
-		 console.log("retrieveOfKey Key '",key,"' has value ",result);
+		 console.log("retrieveOfKey Key '",key,"' has been retrieved with value ",result);
 		 return result;
 	     } else {
 		 throw "retrieveOfKey Key '"+key+"' has no value";
 	     }
 	 }	 
 	 
-	 function storeOfKeyOfValue(key, value) {
+	 async function storeOfKeyOfValue(key, value) {
 	     if (isStoredOfKey(key)) {
 		 let stored = retrieveOfKey(key);
 		 if (stored != value) {
@@ -160,14 +160,24 @@
 		 return result
 	     }
 	 }
-
+	 
+	 async function print() {
+	     for (var key of Register.keys()){
+		 var value = Register.get(key);
+		 console.log (key+" => "+value);
+	     }
+	 }
+	 
 	 async function provideT() {
 	     const v = await provideV();
 	     console.log("provideT v",v);
-	     const u = await provideU();
+	     const u = await provideU()
 	     console.log("provideT u",u);
 	     let result = u + v
 	     console.log("result u + v = T ",result);
+
+	     console.log("provideT Register:");
+	     print();
 	     return result;
 	 }
 	</script>
