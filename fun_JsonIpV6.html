@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <body>
+	<input type=button onClick="getIp()" value="IpV6">
+	IpV6: <span id="ipv6">ipv6</span>
+
+	<script>
+	 async function getIp () {
+	     const response = await fetch('https://jsonip.com/');
+	     console.log('response', response);
+	     const json = await response.json();
+	     console.log('json', json);
+	     const ipv6 = json.ip;
+	     document.getElementById("ipv6").innerHTML = ipv6;
+	     console.log('ipv6', ipv6);
+	 }
+	</script>
+
+    </body>
+</html>
+
