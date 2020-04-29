@@ -26,7 +26,6 @@
  let peerid = getPeerId()
      .then(id => { peerid = (typeof(id) == 'undefined') ? 'QmYourIPFSisNotRunning' : id; return peerid })
      .then( id => updateContainer('peerid', id) )
- //.then( updatePeerId )
      .catch(logError);
 
 
@@ -40,28 +39,21 @@
 	 .catch(logError)
  }).catch(consLog('load'))
 
- function updateContainer(name, id) {
+ function updateContainer(name, x) {
      console.log('UpdateContainer input name',name)
-     console.log('UpdateContainer input id',id)
+     console.log('UpdateContainer input x',x)
 
      if (typeof(callback) != 'undefined') {
-	 callback(name,id)
+	 callback(name,x)
      } else {
 	 let elements = document.getElementsByClassName('container');
 	 for (let i=0; i<elements.length; i++) {
 	     let e = elements[i];
-	     e.innerHTML = e.innerHTML.replace(new RegExp(':'+name,'g'),id)
+	     e.innerHTML = e.innerHTML.replace(new RegExp(':'+name,'g'),x)
 	     console.log('updateContainer e.innerHTML', e.innerHTML)
 	 }
      }
-     return id;
- }
- function updatePeerId(id) { 
-     console.log('updatePeerId input id',id)
-     let e = document.getElementsByTagName('form')[0].elements['peerid'];
-     console.log('updatePeerId e.outerHTML',e.outerHTML)
-     e.value = e.value.replace(new RegExp(':peerid','g'),id)
-     return id
+     return x;
  }
 
  function getPeerId() {
