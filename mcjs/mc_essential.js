@@ -1,179 +1,183 @@
 // some useful js functions...
+//
+console.log('essential.js: 1.1')
 
-if (typeof(api_url) == 'undefined') {
-    var api_url = 'http://127.0.0.1:5001/api/v0/'
+function load(e) {
+    //console.log('load: ',e); 
+    return new Promise(function(resolve, reject) {
+        e.onload = resolve
+        e.onerror = reject
+    });
 }
+function readAsText(file) {
+    return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            resolve(reader.result);
+        }
+        reader.onerror = reject;
+        reader.readAsText(file);
+    });
+}
+function readAsBinaryString(file) {
+    return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            resolve(reader.result);
+        }
+        reader.onerror = reject;
+        reader.readAsBinaryString(file)
+    });
+}
+function readAsDataURL(file) {
+    return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            resolve(reader.result);
+        }
+        reader.onerror = reject;
+        reader.readAsDataURL(file)
+    });
+}
+
 
 function query2json(q) {
   let j = {}
   q.split('&').forEach( p => { let [k,v] = p.split('='); j[k] = v })
-  console.log(j)
   return j
 }
 
+
 function getQuery(form) {
-    console.log("getQuery input form:")
-    console.dir(form)
-    var inputs = Array.from(form.elements)
-    console.log(inputs);
-    let names = inputs.map( e => e.name )
-    let query = serialize(form);
-    console.log(names)
-    console.log("getQuery : query "+query)
-    return(query)
+  console.dir(form)
+  var inputs = Array.from(form.elements)
+  console.log(inputs);
+  let names = inputs.map( e => e.name )
+  let query = serialize(form);
+  console.log(names)
+  console.log('query: '+query)
+  return(query)
 }
 
+
 function serialize(form) {
-    var field, l, s = [];
-    if (typeof form == 'object' && form.nodeName == "FORM") {
-	var len = form.elements.length;
-	for (var i=0; i<len; i++) {
-            field = form.elements[i];
-            if (field.name && !field.removed && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
-		if (field.type == 'select-multiple') {
-		    l = form.elements[i].options.length; 
-		    for (var j=0; j<l; j++) {
-			if(field.options[j].selected)
-			    s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.options[j].value);
-		    }
-		} else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
-		    s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value);
-		}
+   var field, l, s = [];
+   if (typeof form == 'object' && form.nodeName == "FORM") {
+      var len = form.elements.length;
+      for (var i=0; i<len; i++) {
+         field = form.elements[i];
+         if (field.name && !field.removed && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
+            if (field.type == 'select-multiple') {
+               l = form.elements[i].options.length; 
+               for (var j=0; j<l; j++) {
+                  if(field.options[j].selected)
+                     s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.options[j].value);
+               }
+            } else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+               s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value);
             }
-	}
-    }
-    return s.join('&').replace(/%20/g, '+');
+         }
+      }
+   }
+   return s.join('&').replace(/%20/g, '+');
 }
 
 function getCfIp() {
-    let url = 'https://www.cloudflare.com/cdn-cgi/trace'
-    return fetch(url)
-	.then( resp => resp.text() )
-	.then ( d => { return log2json(d) } )
-	.then( json => {
-	    if (typeof(json.ip) != 'undefined') {
-		return json.ip
-	    } else if (typeof(json.query) != 'undefined') {
-		return json.query
-	    } else {
-		console.log('json:',json)
-		return '0.0.0.0'
-	    }
-	} )
-	.catch( logError )
+   let url = 'https://www.cloudflare.com/cdn-cgi/trace'
+   return fetch(url)
+   .then( resp => resp.text() )
+   .then ( d => { return list2json(d) } )
+   .then( json => {
+     if (typeof(json.ip) != 'undefined') {
+        return json.ip
+     } else if (typeof(json.query) != 'undefined') {
+        return json.query
+     } else {
+       console.log('json:',json)
+       return '0.0.0.0'
+     }
+   } )
+   .catch( logError )
+}
+function list2json(d) {
+  let data = d.replace(/[\r\n]+/g, '","').replace(/\=+/g, '":"');
+      data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
+  let json = JSON.parse(data);
+  return json
 }
 
-function log2json(d) {
-    let data = d.replace(/[\r\n]+/g, '","').replace(/\=+/g, '":"');
-    data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
-    let json = JSON.parse(data);
-    return json
+function fetchPostBinary(url, content) {
+     let form = new FormData();
+     form.append('file', content)
+     return fetch(url, { method: "POST", mode: 'cors', body: form })
 }
 
 function fetchPostText(url, content) {
-    let form = new FormData();
-    form.append('file', content)
-    return fetch(url, { method: "POST", mode: 'cors', body: form })
+     let form = new FormData();
+     form.append('file', content)
+     return fetch(url, { method: "POST", mode: 'cors', body: form })
+}
+
+function fetchPostJson(url, obj) {
+     let content = JSON.stringify(obj)
+     let form = new FormData();
+     form.append('file', content)
+     return fetch(url, { method: "POST", mode: 'cors', body: form })
 }
 
 function fetchGetText(url) {
-    return fetch(url, { method: "GET"} )
-	.then(validate)
-	.then( resp => resp.text() )
+   return fetch(url, { method: "GET"} )
+   .then(validate)
+   .then( resp => resp.text() )
 }
 
 function fetchGetJson(url) {
-    console.log('fetchGetJson.url: '+url)
-    return fetch(url,{ method: "GET"} )
-	.then(validate)
-	.then( resp => resp.json() )
+     console.log('fetchGetJson.url: '+url)
+     return fetch(url,{ method: "GET"} )
+   .then(validate)
+   .then( resp => resp.json() )
 }
-
-function launchIpfsDaemon() {
-
-    let eleDiv1 = document.createElement('div');
-    console.log("launchIpfsDaemon : eleDiv1",eleDiv1);
-    let b = document.createElement('br');
-
-    eleDiv1.innerText = "A Network Error occurred probably because Ipfs has not been launched yet";
-    document.body.appendChild(eleDiv1);
-    let eleDiv2 = document.createElement('div');
-    console.log("launchIpfsDaemon : eleDiv2",eleDiv2);
-    eleDiv2.innerText = "To launch Ipfs run : jsm; . config.sh ; ipmsd.sh";
-    document.body.appendChild(b);
-    document.body.appendChild(eleDiv2);
-}
-
-function getPeerId() {
-    let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
-    return fetch(url,{ method: "GET"} )
-	.then( resp => resp.json() )
-	.then( obj => { return obj.Value })
-	.catch( err => {
-	    console.log("getPeerId : err ",err);
-	    const message = err.message;
-	    console.log("getPeerId : message '"+message+"'");
-	    
-	    if (message == "NetworkError when attempting to fetch resource.") {
-		launchIpfsDaemon()
-	    } else {logError}
-	})
-	    }
-
-function existsPeerId() {
-    let url = api_url + 'config?&arg=Identity.PeerID&encoding=json';
-    return fetch(url,{ method: "GET"} )
-	.then( resp => {return "YES"} )
-	.catch( err => {
-	    console.log("existsPeerId : err ",err);
-	    const message = err.message;
-	    console.log("existsPeerId : message '"+message+"'");
-	    
-	    if (message == "NetworkError when attempting to fetch resource.") {
-		return "NO"	
-	    } 
-	})
-	    }
 
 function getIp() {
-    // let url = 'https://postman-echo.com/ip'
-    // fetch(url).then(validate)
-    let url = 'https://iph.heliohost.org/cgi-bin/jsonip.pl'
-    url = 'https://api.ipify.org/?format=json'
-    url = 'https://ipinfo.io/json'
-    fetch(url,{mode:"cors"}).then(validate)
-	.then( resp=> { return resp.json() } )
-	.then( json => {
-	    if (typeof(json.ip) != 'undefined') {
-		return json.ip
-	    } else if (typeof(json.query) != 'undefined') {
-		return json.query
-	    } else {
-		console.log('json:',json)
-		return '0.0.0.0'
-	    }
-	} )
-	.catch( logError )
-	    }
+ // let url = 'https://postman-echo.com/ip'
+ // fetch(url).then(validate)
+ let url = 'https://iph.heliohost.org/cgi-bin/jsonip.pl'
+ url = 'https://api.ipify.org/?format=json'
+ url = 'https://ipinfo.io/json'
+ fetch(url,{mode:"cors"}).then(validate)
+ .then( resp=> { return resp.json() } )
+ .then( json => {
+   if (typeof(json.ip) != 'undefined') {
+     return json.ip
+   } else if (typeof(json.query) != 'undefined') {
+     return json.query
+   } else {
+     console.log('json:',json)
+     return '0.0.0.0'
+   }
+  } )
+ .catch( logError )
+}
 
 function getTic() {
-    var dat = new Date();
-    var result = Math.floor(dat.getTime() / 1000);
-    return +result
+   var dat = new Date();
+   var result = Math.floor(dat.getTime() / 1000);
+   return +result
 }
 
 function getSpot(tic, ip, peerId, nonce) {
-    var ipInt = dot2Int(ip);
-    var idInt = qm2Int(peerId);
-    var spot = (tic ^ +ipInt ^ idInt ^ nonce)>>>0;
-    
-    var result = "--- # spot for "+peeId+"\n";
-    result += "tic: "+tic+"\n";
-    result += "ip: "+ipInt+"\n";
-    result += "spot: "+spot+"\n";
-    
-    return result;
+     var ipInt = dot2Int(ip);
+     var idInt = qm2Int(peerId);
+     var spot = (tic ^ +ipInt ^ idInt ^ nonce)>>>0;
+     
+     var result = "--- # spot for "+peeId+"\n";
+     result += "tic: "+tic+"\n";
+     result += "ip: "+ipInt+"\n";
+     result += "spot: "+spot+"\n";
+     
+     return result;
 } 
+
 
 function dot2Int(dot) {
     let d = dot.split('.');
@@ -181,14 +185,13 @@ function dot2Int(dot) {
 }
 
 function qm2Int(qm) {
-    plain = base58.decode(qm)
-    let q16 = plain.to_hex();
-    console.log('qm2Int f'+q16)
-    let d = q16.split('.');
-    console.log('qm2Int d: '+d)
-    return ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
+  plain = base58.decode(qm)
+  let q16 = plain.to_hex();
+  console.log('f'+q16)
+  let d = q16.split('.');
+  console.log('d: '+d)
+  return ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
 }
-
 function to_hex(s) {
     var r = '';
     for (var i = 0; i < s.length; i++) {
@@ -212,7 +215,7 @@ function validate(resp) {
   }
 }
 
-function consLog(data) { console.log('info:',data); return data; }
+function consLog(what) { return data => { console.log(what+': ',data); return data; } }
 function logError(err) { console.error(err); }
 
 true; // $Source:  /my/js/scripts/essential.js$
