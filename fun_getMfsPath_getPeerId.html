@@ -34,7 +34,7 @@
  
  load(window)
      .then( _ => getMfsPath ()
-	 .then (path => getMFSFileHash(path))
+	 .then(path => getMFSFileHash(path))
     	 .then(hash => updateContainer('hash',hash) )
 	 .catch(logError)
      
@@ -51,9 +51,7 @@
 	 for (let i=0; i<elements.length; i++) {
              let e = elements[i];
 	     console.log('updateContainer e', e);
-	     console.log('updateContainer 1 e.innerHTML', e.innerHTML);
              e.innerHTML = e.innerHTML.replace(new RegExp(':'+name,'g'),id);
-	     console.log('updateContainer 2 e.innerHTML', e.innerHTML);
  	 }
      }
      return id;
