@@ -33,7 +33,7 @@
  }
  
  load(window)
-     .then( _ => {getMfsPath ()
+     .then( _ => getMfsPath ()
 	 .then (path => getMFSFileHash(path))
     	 .then(hash => updateContainer('hash',hash) )
 	 .catch(logError)
@@ -41,7 +41,7 @@
 	 .then(_ => getPeerId()
 	     .then(id => { peerid = (typeof(id) == 'undefined') ? 'QmYourIPFSisNotRunning' : id; return peerid })
 	     .then( id => updateContainer ('peerid', id) )) 
- }).catch(consLog('load'))
+ ).catch(consLog('load'))
  
  function updateContainer(name, id) { 
      if (typeof(callback) != 'undefined') {
