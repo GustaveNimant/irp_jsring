@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset=utf8>
+
+<!--
+     updateContainer reinitializes the container
+     
+ REQUIREMENT:  NEED TO RUN A LOCAL IPFS DAEMON
+-->
+<div class=container>
+    <span id=core></span>
+    <form>
+	peerid: <input name=peerid value=":peerid" size=47>
+	<br>mfs: <input name=mfspath value="/my/identity/public.yml">
+	<br>hash: <input name=hash value=":hash" size=47>
+    </form>
+</div>
+<!-- --------------------------------------------------------- -->
+<script>
+ var webui = 'http://127.0.0.1:5001'
+ var qmEmpty = 'bafyaabakaieac'
+</script>
+<script src="https://cdn.jsdelivr.net/gh/michel47/snippets@6408682/js/essential.js"></script>
+<!--
+     <script src="https://cdn.jsdelivr.net/gh/willforge/jsring/js/ipfs.js"></script>
+-->
+
+<script>
+ function getMfsPath () {
+     form = document.getElementsByTagName('form')[0];
+     result = form.elements['mfspath'].value;
+     console.log('getMfsPath result',result);
+     return new Promise ( ( resolve) => resolve(result));     
+ }
+ 
+ load(window)
+     .then( _ => {getMfsPath ()
+	 .then (path => getMFSFileHash(path))
+    	 .then(hash => updateContainer('hash',hash) )
+	 .catch(logError)
+     
+	 .then(_ => getPeerId()
+	     .then(id => { peerid = (typeof(id) == 'undefined') ? 'QmYourIPFSisNotRunning' : id; return peerid })
+	     .then( id => updateContainer ('peerid', id) )) 
+ }).catch(consLog('load'))
+ 
+ function updateContainer(name, id) { 
+     if (typeof(callback) != 'undefined') {
+	 callback(name,id)
+     } else {
+	 let elements = document.getElementsByClassName('container');
+	 for (let i=0; i<elements.length; i++) {
+             let e = elements[i];
+	     console.log('updateContainer e', e);
+	     console.log('updateContainer 1 e.innerHTML', e.innerHTML);
+             e.innerHTML = e.innerHTML.replace(new RegExp(':'+name,'g'),id);
+	     console.log('updateContainer 2 e.innerHTML', e.innerHTML);
+ 	 }
+     }
+     return id;
+ }
+ 
+ function updatePeerId(id) { 
+     let e = document.getElementsByTagName('form')[0].elements['peerid'];
+     console.log('peerid: '+id)
+     console.log(e.outerHTML)
+     e.value = e.value.replace(new RegExp(':peerid','g'),id)
+     return id
+ }
+
+ function getPeerId() {
+     let url = webui + '/api/v0/config?&arg=Identity.PeerID&encoding=json';
+     return fetch(url,{ method: "GET"} )
+	 .then( resp => resp.json() )
+	 .then( obj => { return Promise.resolve(obj.Value) })
+	 .catch(logError)
+ }
+
+ function getMFSFileHash(mfspath) {
+     var url = webui + '/api/v0/files/stat?arg='+mfspath+'&hash=true'
+     return fetch(url)
+	 .then( resp => resp.json() )
+	 .then( json => {
+	     if (typeof json.Hash == 'undefined') {
+		 if (typeof(qmEmpty) != 'undefined') { return qmEmpty }
+		 else { return 'QmYYY' }
+	     } else {
+		 return json.Hash
+	     }
+	 })
+	 .catch(logError)
+ }
+
+
+
+
+</script>
