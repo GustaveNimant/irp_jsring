@@ -3,8 +3,9 @@
     <body>
 
 	<form method=POST>
-	    Local Ipfs path <input name="mfspath" type="text" value="" placeholder="mfs path">
+	    Local Ipfs path <input id="path" name=mfspath type=text placeholder="mfs path">
 	    <input type=button onClick="filesList(this.closest('form'))" value="Check">
+	    <input type=button onClick="document.location.reload(true)" value="Reload">
 	    <pre id="ls"></pre>
 	</form>
 			
@@ -28,25 +29,48 @@
 		 .catch(logError)
 	 }
 
-	 function fileInfosOfJson(json) {
-	     var result = [];
-	     console.log('fileInfosOfJson json',json);
-	     for (i=0; i<json.length; i++) {
-		 var info = json[i].Hash + " " + json[i].Name + " " + json[i].Type;
-		 result.push(info);
-	     }
-	     return result;
+	 function linkIpfsHash (hash) {
+	     let api_url = 'http://127.0.0.1:5001/ipfs/';
+	     let link = '<a href="';
+	     link += api_url;
+	     link += hash;
+	     link += '" target="_blank">';
+	     link += hash;
+	     link += '</a>';
+	     console.log ('linkIpfsHash link',link);
+	     return link;
+	 }
+
+	 function typeOfKeyOfJson (key,json) {
+	     let typ = json[key]['Type'];
+	     if (typ == 0) { return 'File'; }
+	     else { return 'Directory'; }
+	 }
+
+	 function sizeOfFile(key,json) {
+	     let siz = json[key]['Size'];
+	     if (siz > 0) { return ' ('+siz+' octets) '; }
+	     else {return "";}
 	 }
 	 
 	 function displayJson(json) {
-	     var infos = fileInfosOfJson(json);
-	     for (i=0; i<infos.length; i++) {
-		 console.log(infos[i]);
-		 create_element ('li', i, infos[i])
+	     console.log('displayJson json', json);
+	     let path = document.getElementById('path').value;
+	     createElement ('hr', '','');
+	     createElement ('h3', 'h3id', path);
+	     for (i=0; i<json.length; i++) {
+		 var hash = json[i]['Hash'];
+		 var name = json[i]['Name'];
+		 console.log('displayJson name',name);
+		 var hash_link = linkIpfsHash (hash);
+		 var fil_dir = typeOfKeyOfJson (i,json);
+		 var siz = sizeOfFile(i,json)
+		 var line = fil_dir + ' <b> ' + name + '</b> ' + siz + hash_link;
+		 createElement ('li', i, line);
 	     }
 	 }
 
-	 function create_element (balise, id, value, input_type) {
+	 function createElement (balise, id, value, input_type) {
 	     
 	     let doc_balise = document.createElement(balise);
 	     doc_balise.id = id;
@@ -56,17 +80,18 @@
 	     document.body.appendChild(doc_balise);
 	 }
 	 
+	 
 	 function validate(resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
 	     }
 	     return Promise.reject(new Error(resp.statusText))
 	 }
-	 
+
 	 function displayByIdOfTagOfValue(tag, value) {
 	     document.getElementById(tag).innerHTML = value
 	 }
-	 
+
 	 function logError(err) {
 	     console.log("logError : input err ",err);
 	     const message = err.message;
@@ -75,9 +100,11 @@
 	     switch (message){
 		 case "NetworkError when attempting to fetch resource.":
 		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+		     return process.abort();
 		     break;
 		 case "Internal Server Error":
 		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     return process.abort();
 		     break;
 		 default:
 		     console.log("logError : output err '"+err+"'");

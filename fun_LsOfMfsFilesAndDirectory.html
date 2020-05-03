@@ -4,7 +4,7 @@
 
 	<form method=POST>
 	    Local Ipfs path <input name=mfspath type=text value="" placeholder="mfs path">
-	    <input type=button onClick="filesList(this.closest('form'))" value="Check">
+	    <input type=button onClick="filesList(this.closest('form'))" value="Display">
 	</form>
 			
         <p style="color:red" id="error"></p>
@@ -21,10 +21,22 @@
 	     console.log("filesList : url '"+url+"'");
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
-	     	 .then (resp => resp.json())
-		 .then (body => {return body.Entries})
+	     	 .then (resp => {console.log('filesList resp',resp); return resp.json()})
+		 .then (obj => {console.log('filesList obj',obj);return obj.Entries})
 		 .then (json_a => {console.log('filesList json_a',json_a);displayJson(json_a)})
 		 .catch(logError)
+	 }
+
+	 function linkIpfsHash (hash) {
+	     let api_url = 'http://127.0.0.1:5001/ipfs/';
+	     let link = '<a href="';
+	     link += api_url;
+	     link += hash;
+	     link += '" target="_blank">';
+	     link += hash;
+	     link += '</a>';
+	     console.log ('linkIpfsHash link',link);
+	     return link;
 	 }
 
 	 function filesJson(json_a) {
@@ -45,7 +57,10 @@
 	     
 	     for (i=0; i<infos.length; i++) {
 		 console.log('displayJson infos[i]', infos[i]);
-		 let info = infos[i].Hash +  " " + infos[i].Name
+		 let hash = infos[i].Hash;
+		 let name = infos[i].Name;
+		 let size = infos[i].Size;
+		 let info = linkIpfsHash(hash) +  " " + name + " " + size
 		 createElement ('li', i, info, "")
 	     }
 	     createElement ('ul', '', 'list of directories', ''); 
@@ -53,7 +68,9 @@
 	     
 	     for (i=0; i<infos.length; i++) {
 	 	 console.log('displayJson infos[i]', infos[i]);
-		 let info = infos[i].Hash +  " " + infos[i].Name
+		 let hash = infos[i].Hash;
+		 let name = infos[i].Name;
+		 let info = linkIpfsHash(hash) +  " " + name
 		 createElement ('li', i, info, "")
 	     }
 	     createElement ('ul', '', '', '');
