@@ -28,25 +28,13 @@
 	 }
 
 	 function filesJson(json_a) {
-	     var result = [];
-	     for (i=0; i<json_a.length; i++) {
-		 console.log('filesJson json_a[i]', json_a[i] );
-                 if(json_a[i].Type == 0){
-                     result.push(json_a[i])
-                 }
-	     }
+	     var result = json_a.filter(e => e.Type == 0);
 	     console.log('filesJson result', result);
 	     return result;
 	 }
 
 	 function directoriesJson(json_a) {
-	     var result = [];
-	     for (i=0; i<json_a.length; i++) {
-		 console.log('filesJson json_a[i]', json_a[i] );
-                 if(json_a[i].Type == 1){
-                     result.push(json_a[i])
-                 }
-	     }
+	     var result = json_a.filter(e => e.Type == 1);
 	     console.log('filesJson result', result);
 	     return result;
 	 }
