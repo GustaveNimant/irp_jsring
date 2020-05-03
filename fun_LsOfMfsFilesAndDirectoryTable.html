@@ -3,7 +3,7 @@
     <body>
 
 	<form method=POST>
-	    Local Ipfs path <input name=mfspath type=text value="" placeholder="mfs path">
+	    Local Mfs path <input name=mfspath type=text value="" placeholder="mfs path">
 	    <input type=button onClick="filesList(this.closest('form'))" value="Display">
 	</form>
 	
@@ -49,30 +49,6 @@
 	     var result = json_a.filter(e => e.Type == 1);
 	     console.log('filesJson result', result);
 	     return result;
-	 }
-
-	 function displayJson__(json_a) {
-	     createElementList ('ul', '', 'list of files', ''); 
-	     var infos = filesJson(json_a);	     
-	     for (i=0; i<infos.length; i++) {
-		 console.log('displayJson infos[i]', infos[i]);
-		 let hash = infos[i].Hash;
-		 let name = infos[i].Name;
-		 let size = infos[i].Size;
-		 let info = linkIpfsHash(hash) +  " " + name + " " + size
-		 createElementList ('li', i, info, "")
-	     }
-	     createElementList ('ul', '', 'list of directories', ''); 
-	     var infos = directoriesJson(json_a);
-	     
-	     for (i=0; i<infos.length; i++) {
-	 	 console.log('displayJson infos[i]', infos[i]);
-		 let hash = infos[i].Hash;
-		 let name = infos[i].Name;
-		 let info = linkIpfsHash(hash) +  " " + name
-		 createElementList ('li', i, info, "")
-	     }
-	     createElementList ('ul', '', '', '');
 	 }
 
 	 function displayJson(json_a) {
