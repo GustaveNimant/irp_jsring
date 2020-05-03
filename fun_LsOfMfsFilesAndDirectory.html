@@ -71,15 +71,6 @@
 	     createElement ('ul', '', '', '');
 	 }
 	 
-	 function fileInfosOfJson(json_a) {
-	     var result = [];
-	     for (i=0; i<json_a.length; i++) {
-		 var info = json_a[i].Hash + " " + json_a[i].Name + " " + json_a[i].Type;
-		 result.push(info);
-	     }
-	     return result;
-	 }
-
 	 function createElement (tag, id, value, input_type) {
 	     let doc_tag = document.createElement(tag);
 	     doc_tag.id = id;
