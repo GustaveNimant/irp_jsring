@@ -1,0 +1,196 @@
+<h3>List of a MFS Files and Directories</h3>
+<html>
+    <body>
+
+	<form method=POST>
+	    Local Mfs path <input name=mfspath type=text value="" placeholder="mfs path">
+	    <input type=button onClick="getForm(this.closest('form'))" value="Display">
+	</form>
+
+	<pre>This Mfs <b><span id=type>type</span></b> has Hash <b><span id=hash>hash</span></b></pre>
+        <p style="color:red" id="error"></p>
+	
+	<script>
+
+	 function getForm(form) {
+	     console.log("getForm : form.elements ",form.elements);
+	     let mfspath = form.elements[0].value;
+	     console.log("getForm : mfspath '"+mfspath+"'");
+
+	     getHashAndType(mfspath);
+	     getFileList(mfspath;)
+	 }
+
+	 function getFileList(mfspath) {
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'files/ls?arg=' + mfspath  + '&l=true'
+	     console.log("getFileList : url '"+url+"'");
+	     return fetch(url, { method: "POST", mode: 'cors'})
+		 .then (validate)
+		 .then (resp => {console.log('getFileList resp',resp); return resp.json()})
+		 .then (obj => {console.log('getFileList obj',obj);return obj.Entries})
+		 .then (json_a => {console.log('getFileList json_a',json_a);displayJson(json_a)})
+		 .catch(logError)
+	 }
+	 
+	 function linkIpfsHash (hash) {
+	     let api_url = 'http://127.0.0.1:5001/ipfs/';
+	     let link = '<a href="';
+	     link += api_url;
+	     link += hash;
+	     link += '" target="_blank">';
+	     link += hash;
+	     link += '</a>';
+	     console.log ('linkIpfsHash link',link);
+	     return link;
+	 }
+
+	 function filesJson(json_a) {
+	     var result = json_a.filter(e => e.Type == 0);
+	     console.log('filesJson result', result);
+	     return result;
+	 }
+
+	 function directoriesJson(json_a) {
+	     var result = json_a.filter(e => e.Type == 1);
+	     console.log('filesJson result', result);
+	     return result;
+	 }
+
+	 function displayJson(json_a) {
+	     createElementTable ('table', '');
+	     createElementTable ('th', 'list of files'); 
+	     var infos = filesJson(json_a);	     
+	     for (i=0; i<infos.length; i++) {
+		 createElementTable ('tr', '');
+		 console.log('displayJson infos[i]', infos[i]);
+		 let hash = infos[i].Hash;
+		 let name = infos[i].Name;
+		 let size = infos[i].Size;
+		 createElementTable ('td', linkIpfsHash(hash));
+		 createElementTable ('td', name);
+		 createElementTable ('td', size);
+	     }
+	     createElementTable ('table', '');
+	     createElementTable ('th', 'list of directories'); 
+	     var infos = directoriesJson(json_a);
+	     
+	     for (i=0; i<infos.length; i++) {
+		 createElementTable ('tr', '');
+	 	 console.log('displayJson infos[i]', infos[i]);
+		 let hash = infos[i].Hash;
+		 let name = infos[i].Name;
+		 createElementTable ('td', linkIpfsHash(hash));
+		 createElementTable ('td', name);
+	     }
+	 }
+	 
+	 function createElementList (tag, id, value, input_type) {
+	     let doc_tag = document.createElement(tag);
+	     doc_tag.id = id;
+	     doc_tag.value = value;
+	     if (tag == 'input') {doc_tag.type = input_type};
+	     doc_tag.innerHTML = value;
+	     document.body.appendChild(doc_tag);
+	 }
+	 
+	 function createElementTable (tag, value) {
+	     let doc_tag = document.createElement(tag);
+	     doc_tag.style = "padding:7px";
+	     doc_tag.value = value;
+	     doc_tag.innerHTML = value;
+	     document.body.appendChild(doc_tag);
+	 }
+	 
+	 function validate(resp) {
+	     if (resp.status >= 200 && resp.status < 300) {
+		 return Promise.resolve(resp)
+	     }
+	     return Promise.reject(new Error(resp.statusText))
+	 }
+	 
+	 function displayByIdOfTagOfValue(tag, value) {
+	     document.getElementById(tag).innerHTML = value
+	 }
+	 
+	 function logError(err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     document.getElementById("error").innerHTML = message;
+	     switch (message){
+		 case "NetworkError when attempting to fetch resource.":
+		     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+		     break;
+		 case "Internal Server Error":
+		     alert("Internal Server Error because ipfs file path was uncorrect");
+		     break;
+		 default:
+		     console.log("logError : output err '"+err+"'");
+	     } // switch
+	 }
+	 
+	 function callback(tag) {
+	     console.log('callback tag: '+tag)
+	     const result = obj => {
+		 let e = document.getElementById(tag);
+		 console.log("callback obj:",obj)
+		 e.innerHTML = obj;
+	     };
+	     return result
+	 }
+	 
+	 function callbackIpfsIo(tag) {
+	     console.log('callbackIpfsIo tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+	     };
+	     return substi
+	 }
+	 
+	 function callbackIpfsLocal(tag) {
+	     console.log('callbackIpfsLocal tag: '+tag)
+	     const substi = obj => {
+		 let e = document.getElementById(tag);
+		 e.innerHTML = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+	     };
+	     return substi
+	 }
+	 
+	 function IpfsException(message) {
+	     this.message = message;
+	     this.name = "IpfsException";
+	 }
+
+	 function getHashAndType(mfspath) {
+	     console.log('getHashAndType input mfspath '+mfspath)
+	     const webui = 'http://127.0.0.1:5001';
+	     const api_url = webui + '/api/v0/'
+	     
+	     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
+	     return fetchGetJson(url)
+		 .then( obj => {console.log('getHashAndType obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+		 .then(callbackTuple('hash','type'))
+		 .catch(logError)
+	 }
+
+	 function fetchGetJson(url) {
+	     console.log('fetchGetJson input url '+url)
+	     return fetch(url, { method: "GET"} )
+		 .then(validate)
+		 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+	 }
+	 
+	 function callbackTuple(tag1, tag2) {
+	     const substi = ([obj1, obj2]) => {
+		 document.getElementById(tag1).innerHTML = obj1;
+		 document.getElementById(tag2).innerHTML = obj2;
+	     };
+	     return substi
+	 }
+
+
+	</script>
+    </body>
+</html>
