@@ -27,7 +27,7 @@
 	<script src="alain_UploadFileToIpfs.js" type='text/javascript'></script>
     </head>
     <body>
-	<div class="header">List of a MFS Files and Directories</div>
+	<div class="header">List of MFS Files and Directories</div>
 	<span id="block_right">
 	    <center>Upload file to path of MFS</center><br>
 	    <form method=POST>
@@ -63,10 +63,22 @@
 		 .then (validate)
 	     	 .then (resp => resp.json())
 		 .then (body => {return body.Entries})
-		 .then (displayJson)
+		 .then (json_a => displayJson(json_a))
 		 .catch(logError)
 	 }
-	 
+
+	 function filesJson(json_a) {
+	     var result = json_a.filter(e => e.Type == 0);
+	     console.log('filesJson result', result);
+	     return result;
+	 }
+
+	 function directoriesJson(json_a) {
+	     var result = json_a.filter(e => e.Type == 1);
+	     console.log('filesJson result', result);
+	     return result;
+	 }
+
 	 function linkIpfsHash (hash) {
 	     let api_url = 'http://127.0.0.1:5001/ipfs/';
 	     let link = '<a href="';
@@ -79,7 +91,7 @@
 	     return link;
 	 }
 
-	 function typeOfKeyOfJson (key,json) {
+	 function typeOfKeyOfJson (key, json) {
 	     let typ = json[key]['Type'];
 	     if (typ == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
 	     else { return '<img src="images/folder.png" width="25px" height="25">'; }
@@ -111,18 +123,18 @@
 	     x.value = path;
 	 }
 	 
-	 function displayJson(json) {
-	     console.log('displayJson json', json);
+	 function displayJson(json_a) {
+	     console.log('displayJson json_a', json_a);
 	     let path = document.getElementById('path').value;
 	     createElement ('hr', '','');
 	     createElement ('h3', 'h3id', path);
-	     for (i=0; i<json.length; i++) {
-		 var hash = json[i]['Hash'];
-		 var name = json[i]['Name'];
+	     for (i=0; i<json_a.length; i++) {
+		 var hash = json_a[i]['Hash'];
+		 var name = json_a[i]['Name'];
 		 console.log('displayJson name',name);
 		 var hash_link = linkIpfsHash (hash);
-		 var fil_dir = typeOfKeyOfJson (i,json);
-		 var siz = sizeOfFile(i,json)
+		 var fil_dir = typeOfKeyOfJson (i,json_a);
+		 var siz = sizeOfFile(i,json_a)
 		 var line = fil_dir + ' <b> ' + createButtonOfMfsPath(name) + '</b> ' + siz + hash_link;
 		 createElement ('li', i, line);
 	     }
@@ -229,9 +241,7 @@
 	     return substi
 	 }
 
-
 	</script>
-
 	
     </body>
 </html>

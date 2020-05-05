@@ -59,7 +59,7 @@
 	     console.log('writeOfFileOfContent input content '+content)
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'files/write?arg=' + mfspath + '&create=1&truncate=1';
+	     var url = api_url + 'files/write?arg=' + mfspath + '&create=true&truncate=true';
 	     console.log('writeOfFileOfContent : url '+url);
 	     return fetchPostTextForm(url, content)
 		 .then( _ => hashOfMFSFilePath(mfspath) ) 

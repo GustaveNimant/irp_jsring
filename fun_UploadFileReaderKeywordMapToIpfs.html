@@ -47,15 +47,20 @@
 	     var res = str.match(rex);
 	     console.log("mapOfString res ",res);
 
-	     for (let i=0; i < res.length; i++) {
-		 var mat = res[i];
-		 var keyVal = mat.match(/\$(.+): (.+)\$/);
-		 var key = keyVal[1];
-		 var value = keyVal[2];
-		 console.log("mapOfString : "+ key + " => " + value);
-		 dic.set (key, value);
+	     if (res == null) {
+		 throw "Input File has no Keyword. Use fun_UploadFileReaderToIpfs.html"
 	     }
-	     return dic;
+	     else {
+		 for (let i=0; i < res.length; i++) {
+		     var mat = res[i];
+		     var keyVal = mat.match(/\$(.+): (.+)\$/);
+		     var key = keyVal[1];
+		     var value = keyVal[2];
+		     console.log("mapOfString : "+ key + " => " + value);
+		     dic.set (key, value);
+		 }
+		 return dic;
+	     }
 	 }
 	 
 	 function writeFile(form) {
@@ -67,7 +72,7 @@
 	     let file = form.elements[0].files[0]
 	     console.log("writeFile : element[0].files '",form.elements[0].files,"'")
 	     console.log("writeFile : file ",file)
-
+	     
 	     readFileAsync(file)
 			    .then(content => writeOfFileOfContent(form, mfspath, content))
 			    .then(callback('hash'))
@@ -102,37 +107,47 @@
 		 .catch(logError)
 	 }
 
-
 	 function writeOfFileOfContent(form, mfspath, content) {
 	     console.log("writeOfFileOfContent input mfspath '",mfspath,"'");
 	     console.log("writeOfFileOfContent input content '",content,"'")
-
-	     // mfspath from Source
-	     let dic = mapOfString(content); 
-	     if (mfspath == "") {
-		 mfspath = dic.get('Source');
-		 form.elements[1].value = mfspath;
-		 console.log("writeOfFileOfContent extracted mfspath '",mfspath,"'");
-	     }
 
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url = api_url + 'files/write?arg=' + mfspath + '&create=true&truncate=true';
 	     console.log('writeOfFileOfContent : url '+url);
 
-	     // New Tic
-	     let newTicContent = replaceTicOfContent(content);
-	     // Empty qm
-	     let noQmContent = replaceQmOfContent(newTicContent);
-	     // Replace qm with its own Hash
-	     let noQmHash = getContentHash(noQmContent)
-		 .then(hash => {
-		     console.log("From getContentHash hash",hash);
-		     document.getElementById("hash").innerHTML = hash;
-		     return hash})
-	         .then(hash => newQmContentOfHashOfContent(hash, noQmContent))
-	         .then(newQmContent => fetchPostTextForm(url, newQmContent));
+	     try {
+		 let dic = mapOfString(content);
+		 
+		 // mfspath from Source
+		 if (mfspath == "") {
+		     mfspath = dic.get('Source');
+		     console.log("writeOfFileOfContent mfspath", mfspath);
 
-	     console.log("writeOfFileOfContent noQmHash",noQmHash);
+		     form.elements[1].value = mfspath;
+		     console.log("writeOfFileOfContent extracted mfspath '",mfspath,"'");
+		 }
+
+		 // New Tic
+		 let newTicContent = replaceTicOfContent(content);
+		 // Empty qm
+		 let noQmContent = replaceQmOfContent(newTicContent);
+		 // Replace qm with its own Hash
+		 let noQmHash = getContentHash(noQmContent)
+		     .then(hash => {
+			 console.log("From getContentHash hash",hash);
+			 document.getElementById("hash").innerHTML = hash;
+			 return hash})
+	             .then(hash => newQmContentOfHashOfContent(hash, noQmContent))
+	             .then(newQmContent => fetchPostTextForm(url, newQmContent));
+
+		 console.log("writeOfFileOfContent noQmHash",noQmHash);
+	     }//try
+	     catch(e) {
+		 console.error(e)
+		 return fetchPostTextForm(url, content)
+		     .then( _ => hashOfMFSFilePath(mfspath) ) 
+		     .catch(logError)
+	     }
 	 }
 	 
 	 function fetchPostTextForm(url, content) {
