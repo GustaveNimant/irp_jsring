@@ -24,12 +24,16 @@
 	     padding:5px;
 	 }
 
-	 #upload {
+	 .upload {
 	     background:#0A6BB3;
 	     color:white;
 	     font-weight: bold;
 	     text-align: center;
 	 }
+   #h3-title {
+     display: block;
+   }
+   .dbug { border: 1px dotted red }
 	</style>
 	<script src="alain_UploadFileToIpfs.js" type='text/javascript'></script>
     </head>
@@ -37,8 +41,8 @@
 	<div class="header">List of MFS Files and Directories</div>
 
 
-	<span id="block_right">
-	    <div id="upload"> Upload file to path of MFS</div><br>
+	<div id="block_right">
+	    <div class="upload"> Upload file to path of MFS</div><br>
 	    <form method=POST>
 		<input type=file><br>
 
@@ -49,7 +53,7 @@
 
 		<input type=button onclick="writeFile(this.closest('form'))" value="Upload">
 	    </form>
-	</span>
+	</div>
 
 
 
@@ -62,6 +66,12 @@
 	<div>This Mfs <b><span id=type>type</span></b> has Hash <b><span id=hash>hash</span></b></div>
         <p style="color:red" id="error"></p>
 	
+
+  <div>
+  <table id=ls-result class=dbug>
+  <tr><th colspan=4><h3 id=h3-title class=upload> ... </h3></th>
+  </table>
+  </div>
 	<script>
 
 	 function checked_radio () {
@@ -86,8 +96,8 @@
 	     console.log("getFileList : url '"+url+"'");
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
-	     	 .then (resp => resp.json())
-		 .then (body => {return body.Entries})
+	   .then (resp => resp.json())
+		 .then (body => { body.mfspath = mfspath; return body})
 		 .then (displayJson)
 		 .catch(logError)
 	 }
@@ -164,29 +174,38 @@
 	 
 	 function displayJson(json) {
 	     console.log('displayJson json', json);
+	     let mfspath = json.mfspath
+	     let entries = json.Entries
+
+	     table = document.getElementById('ls-result')
+	     for (i=1; i<table.rows.length; i++) {
+		 table.deleteRow(i);
+	     }
+	     updateElement ('h3-title', mfspath);
+	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'th', 'Type');
+	     createElementTable (tr, 'th', 'Name');
+	     createElementTable (tr, 'th', 'Hash')
 	     
-	     createElement ('table', 'table','','');
-	     //removeTable();
-	     let path = document.getElementById('path').value;
-	     createElement ('h3', 'upload', path);
-	     createElementTable ('th', 'Type');
-	     createElementTable ('th', 'Name');
-	     createElementTable ('th', 'Hash')
-	     for (i=0; i<json.length; i++) {
-		 var hash = json[i]['Hash'];
-		 var name = json[i]['Name'];
+	     for (i=0; i<entries.length; i++) {
+		 var hash = entries[i]['Hash'];
+		 var name = entries[i]['Name'];
 		 console.log('displayJson name',name);
 		 var hash_link = linkIpfsHash (hash);
-		 var fil_dir = typeOfKeyOfJson (i,json);
-		 var siz = sizeOfFile(i,json);
-		 createElementTable ('tr', '');
-		 createElementTable ('td', fil_dir);
-		 createElementTable ('td', createButtonOfMfsPath(name));
-		 //createElementTable ('td', siz);
-		 createElementTable ('td', hash_link);
+		 var fil_dir = typeOfKeyOfJson (i,entries);
+		 var siz = sizeOfFile(i,entries);
+		 let tr = createElementTable (table,'tr', '');
+		 createElementTable (tr, 'td', fil_dir);
+		 createElementTable (tr,'td', createButtonOfMfsPath(name));
+		 //createElementTable (tr,'td', siz);
+		 createElementTable (tr,'td', hash_link);
 	     }
 	 }
 	 
+	 function updateElement (id, value) {
+	     let doc_balise = document.getElementById(id);
+	     doc_balise.innerHTML = value;
+   }
 	 function createElement (balise, id, value, input_type) {
 	     
 	     let doc_balise = document.createElement(balise);
@@ -197,13 +216,13 @@
 	     document.body.appendChild(doc_balise);
 	 }
 
-	 function createElementTable (tag, value) {
+	 function createElementTable (el, tag, value) {
 	     let doc_tag = document.createElement(tag);
 	     doc_tag.style = "padding:7px";
-	     doc_tag.value = value;
+	     //doc_tag.value = value;
 	     doc_tag.innerHTML = value;
-	     document.getElementsByTagName('table')[0]
-	     document.body.appendChild(doc_tag);
+	     el.appendChild(doc_tag);
+       return doc_tag;
 	 }
 	 
 	 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!-- https://www.valentinog.com/blog/html-table/ -->
+<html lang="en">
+    <head>
+	<meta charset="UTF-8">
+	<title>Build a table</title>
+    </head>
+    <body>
+	<table>
+	    <!-- here goes our data! -->
+	</table>
+    </body>
+    <script>
+     let mountains = [
+	 { name: "Monte Falco", height: 1658, place: "Parco Foreste Casentinesi" },
+	 { name: "Monte Falterona", height: 1654, place: "Parco Foreste Casentinesi" },
+	 { name: "Poggio Scali", height: 1520, place: "Parco Foreste Casentinesi" },
+	 { name: "Pratomagno", height: 1592, place: "Parco Foreste Casentinesi" },
+	 { name: "Monte Amiata", height: 1738, place: "Siena" }
+     ];
+
+     function generateTableHead(table, data) {
+	 let thead = table.createTHead();
+	 let row = thead.insertRow();
+	 for (let key of data) {
+	     let th = document.createElement("th");
+	     let text = document.createTextNode(key);
+	     th.appendChild(text);
+	     row.appendChild(th);
+	 }
+     }
+
+     let table = document.querySelector("table");
+     console.log('table',table);
+     let data = Object.keys(mountains[0]);
+     console.log('data',data);
+     
+     function generateTable(table, data) {
+	 for (let element of data) {
+	     console.log('generateTable element',element);
+	     let row = table.insertRow();
+	     console.log('generateTable row',row);
+	     for (key in element) {
+		 console.log('generateTable key',key);
+		 let cell = row.insertCell();
+		 console.log('generateTable cell',cell);
+		 let text = document.createTextNode(element[key]);
+		 console.log('generateTable text',text);
+		 cell.appendChild(text);
+	     }
+	 }
+     }
+
+     generateTable(table, mountains);
+     generateTableHead(table, data);
+     
+    </script>
+</html>
