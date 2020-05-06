@@ -14,9 +14,10 @@ Mfs path: <input type="text" id="mfspath" value="/...">
      const webui = 'http://127.0.0.1:5001';
      const api_url = webui + '/api/v0/'
 
-     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=1'
+     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true'
      return fetchGetJson(url)
-	 .then( obj => {console.log('getHashAndType obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+	 .then( obj => {console.log('getHashAndType obj',obj);
+	     return Promise.resolve([obj.Hash, obj.Type]) })
 	 .then(callbackTuple('hash','type'))
 	 .catch(logError)
  }
