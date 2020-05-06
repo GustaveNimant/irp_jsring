@@ -6,7 +6,18 @@
 	     console.log('writeFile : mfspath ',mfspath)
 	     let file = form.elements[0].files[0]
 	     console.log('writeFile : element[0].files ',form.elements[0].files)
-	     console.log('writeFile : file',file)
+	     
+	     if (document.getElementById('other_name').checked) {
+		 var name = document.getElementById('fil_name').value;
+		 console.log('name of file',name);
+	     } else {
+		 var name = form.elements[0]['files'][0].name;
+		 console.log('name of file',name);
+	     }
+	     	 console.log('name of file X',name);
+	     mfspath += '/';
+	     mfspath += name;
+	     console.log('mfspath',mfspath);
 	     
 	     let reader = new FileReader();
 	     reader.onload = event => {

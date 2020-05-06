@@ -151,7 +151,8 @@
        let entries = json.Entries
 
        table = document.getElementById('ls-result')
-       for (i=1; i<table.rows.length; i++) {
+       
+       for (i=1; i<table.rows.length; i) {
 	   table.deleteRow(i);
        }
        updateElement ('h3-title', mfspath);
