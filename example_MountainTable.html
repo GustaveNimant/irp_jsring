@@ -7,6 +7,8 @@
     </head>
     <body>
 	<table>
+	    <caption id="caption">
+	    </caption>
 	    <!-- here goes our data! -->
 	</table>
     </body>
@@ -20,23 +22,19 @@
 	 { name: "Monte Amiata", height: 1738, place: "Siena" }
      ];
 
-     function generateTableTitle(thead, title) {
-	 let tit = thead.insertRow()
-	 console.log('generateTableTitle tit',tit);
-
-	 let th = document.createElement("th");
-	 let text = document.createTextNode(title);
-	 th.appendChild(text);
-	 let ele= tit.appendChild(th);
-	 console.log('generateTableTitle ele',ele);
-	 console.log('generateTableTitle ele.attributes',ele.attributes);
+     function generateCaption(thead, caption) {
+	 let ele = document.getElementById("caption");
+         ele.innerHTML = caption;
+	 
+	 console.log('generateCaption ele',ele);
+	 console.log('generateCaption ele.attributes',ele.attributes);
 	 ele.style.color = "blue";
-	 ele.style.border= "2px solid blue";
+	 ele.style.border = "2px solid blue";
      }
      
      function generateTableHead(table, data) {
 	 let thead = table.createTHead();
-	 generateTableTitle(thead, "The Mountains");
+	 generateCaption(thead, "The Mountains");
 	 let row = thead.insertRow();
 	 for (let key of data) {
 	     let th = document.createElement("th");
