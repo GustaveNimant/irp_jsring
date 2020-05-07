@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!-- https://www.valentinog.com/blog/html-table/ -->
+<html lang="en">
+    <head>
+	<meta charset="UTF-8">
+	<title>Build a table</title>
+    </head>
+    <body>
+	<table>
+	    <caption id="caption">
+	    </caption>
+	    <!-- here goes our data! -->
+	</table>
+    </body>
+    
+    <script>
+     let mountains = [
+	 { name: "Monte Falco", height: 1658, place: "Parco Foreste Casentinesi" },
+	 { name: "Monte Falterona", height: 1654, place: "Parco Foreste Casentinesi" },
+	 { name: "Poggio Scali", height: 1520, place: "Parco Foreste Casentinesi" },
+	 { name: "Pratomagno", height: 1592, place: "Parco Foreste Casentinesi" },
+	 { name: "Monte Amiata", height: 1738, place: "Siena" }
+     ];
+
+     function generateCaption(thead, caption) {
+	 let ele = document.getElementById("caption");
+         ele.innerHTML = caption;
+	 
+	 console.log('generateCaption ele',ele);
+	 console.log('generateCaption ele.attributes',ele.attributes);
+	 ele.style.color = "blue";
+	 ele.style.border = "2px solid blue";
+     }
+     
+     function generateTableHead(table, data) {
+	 let thead = table.createTHead();
+	 generateCaption(thead, "The Mountains");
+	 let row = thead.insertRow();
+	 for (let key of data) {
+	     let th = document.createElement("th");
+	     let text = document.createTextNode(key);
+	     th.appendChild(text);
+	     row.appendChild(th);
+	 }
+     }
+     
+     let table = document.querySelector("table");
+     console.log('table',table);
+     let data = Object.keys(mountains[0]);
+     console.log('data',data);
+     
+     function generateTable(table, data) {
+	 for (let element of data) {
+	     console.log('generateTable element',element);
+	     let row = table.insertRow();
+	     console.log('generateTable row',row);
+	     for (key in element) {
+		 console.log('generateTable key',key);
+		 let cell = row.insertCell();
+		 console.log('generateTable cell',cell);
+		 let text = document.createTextNode(element[key]);
+		 console.log('generateTable text',text);
+		 cell.appendChild(text);
+		 cell.style.border="2px solid green";
+	     }
+	 }
+     }
+     
+     generateTable(table, mountains);
+     generateTableHead(table, data);
+
+     function removeRows (table) {
+	 console.log('removeRows table',table);
+	 console.log('removeRows rows count',table.rows.length);
+	 let keepRow = table.rows[0];
+	 var i = 1;
+	 while (table.rows[i]) {
+	     console.log('removeRows Row i',i,table.rows[i].innerHTML);
+	     table.deleteRow(i);
+	 }
+	 console.log('removeRows keepRow',keepRow.innerHTML);
+	 console.log('removeRows rows count',table.rows.length);
+     }
+     removeRows (table);
+     console.log('last table',table);
+     
+    </script>
+</html>
