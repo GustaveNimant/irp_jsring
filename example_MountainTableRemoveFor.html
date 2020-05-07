@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- https://www.valentinog.com/blog/html-table/ -->
+<!-- https://www.valentinog.com/blog/html-table/ Improve -->
 <html lang="en">
     <head>
 	<meta charset="UTF-8">
@@ -80,6 +80,9 @@
 	 }
 	 console.log('removeRows keepRow',keepRow.innerHTML);
 	 console.log('removeRows rows count',table.rows.length);
+	 console.log('removeRows keepRow th',keepRow.getElementsByTagName('th'));
+	 console.log('removeRows keepRow childNodes[0]',keepRow.getElementsByTagName('th')[1].childNodes[0]);
+	 console.log('removeRows keepRow height',keepRow.getElementsByTagName('th')[1].innerHTML);
      }
      removeRows (table);
      console.log('last table',table);
