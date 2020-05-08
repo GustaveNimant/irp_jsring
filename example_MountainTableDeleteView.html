@@ -100,6 +100,7 @@
 		 text += '</b> deleted';
 		 appendBodyElement('div', '', text) 
 	     }
+	     
 	     table.deleteRow(r);
 	 }
      }
@@ -118,7 +119,13 @@
 		 console.log('row #',r, ' td #',c);
 		 var val_cel = table.getElementsByTagName('tr')[r].cells[c].innerHTML;
 		 console.log('val_cel',val_cel);
-		 appendBodyElement('div', '', 'ROW #'+r+' - CELL #'+c+' - Value : <b>'+val_cel+ '</b>');
+		 
+		 let text = 'ROW #' + r;
+		 text += ' - CELL #' + c;
+		 text += ' - Value : <b>';
+		 text += val_cel
+		 text += '</b>';
+		 appendBodyElement('div', '', text) 
 	     }
 	 }
 	 appendBodyElement('hr','','');	 

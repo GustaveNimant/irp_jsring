@@ -68,60 +68,53 @@
 	 }
      }
      
-     generateTable(table, mountains); // keep this order
+     generateTable(table, mountains);
      generateTableHead(table, data);
 
-     function appendBodyElement (tag, id, value) {
-	 let ele = document.createElement (tag);
-	 ele.id = id;
-	 ele.innerHTML = value;
-	 document.body.appendChild (ele);
+    function createElement (tag, id, value, input_type) {
+       let doc_tag = document.createElement (tag);
+       doc_tag.id = id;
+       doc_tag.value = value;
+       if (tag == 'input') {doc_tag.type = input_type};
+       doc_tag.innerHTML = value;
+       document.body.appendChild (doc_tag);
      }
      
      function deleteAllRows(table) {
-	 console.log('deleteAllRows input table', table);
-	 console.log('deleteAllRows table rows', table.rows.length); // 6
+     console.log('deleteAllRows input table', table);
+     console.log('table rows', table.rows.length); // 6
 
-	 var r = 0;  // Be careful with deleteRow : rows.length is modified.
-	 while (table.rows[r]) {
-	     console.log('deleteAllRows Row r',r,table.rows[r].innerHTML);
-
-	     let cellCount = table.getElementsByTagName('tr')[r].cells.length;
-	     console.log('deleteAllRows cellCount', cellCount);
+     for (i=0; i<table.rows.length; i){
+	 console.log('row #',i);
+	 
+	 for (x=0; x<3; x++){
+	     console.log('row #',i, ' td #',x);
+	     var val_cel = document.getElementsByTagName('table')[0].getElementsByTagName('tr')[i].cells[x];
+	     console.log('val_cel',val_cel.innerHTML);
+	     createElement('div', '', 'ROW #'+i+' - CELL #'+x+' - Value : <b>'+val_cel.innerHTML + '</b> deleted');
 	     
-	     for (c=0; c < cellCount; c++){
-		 console.log('row #',r, ' td #',c);
-		 var val_cel = table.getElementsByTagName('tr')[r].cells[c].innerHTML;
-		 console.log('val_cel',val_cel);
-		 let text = 'ROW #' + r;
-		 text += ' - CELL #' + c;
-		 text += ' - Value : <b>';
-		 text += val_cel
-		 text += '</b> deleted';
-		 appendBodyElement('div', '', text) 
-	     }
-	     table.deleteRow(r);
+	 }
+	 
+	 table.deleteRow(i);
+     }
+     }
+
+     function viewAllRows(table) {
+     console.log('table elements', table);
+     console.log('table rows', table.rows.length); // 6
+
+     for (i=0; i<table.rows.length; i++){
+	 console.log('row #',i);
+	 
+	 for (x=0; x<3; x++){
+	     console.log('row #',i, ' td #',x);
+	     var val_cel = document.getElementsByTagName('table')[0].getElementsByTagName('tr')[i].cells[x];
+	     console.log('val_cel',val_cel.innerHTML);
+	     createElement('div', '', 'ROW #'+i+' - CELL #'+x+' - Value : <b>'+val_cel.innerHTML + '</b>');
+	     
 	 }
      }
-     
-     function viewAllRows(table) {
-	 console.log('table elements', table);
-	 console.log('table rows', table.rows.length); // 6
-	 
-	 for (let r=0; r < table.rows.length; r++) {
-	     console.log('deleteAllRows Row r',r,table.rows[r].innerHTML);
-
-	     let cellCount = table.getElementsByTagName('tr')[r].cells.length;
-	     console.log('deleteAllRows cellCount', cellCount);
-	     
-	     for (c=0; c < cellCount; c++){
-		 console.log('row #',r, ' td #',c);
-		 var val_cel = table.getElementsByTagName('tr')[r].cells[c].innerHTML;
-		 console.log('val_cel',val_cel);
-		 appendBodyElement('div', '', 'ROW #'+r+' - CELL #'+c+' - Value : <b>'+val_cel+ '</b>');
-	     }
-	 }
-	 appendBodyElement('hr','','');	 
+	 createElement('hr','','','');	 
      }
      
     </script>

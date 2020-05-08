@@ -45,14 +45,15 @@
 		<input type=file><br>
 		<input type="radio" name="nameoffile" id="same_name" checked>Upload with the same name<br>
 		<input type="radio" name="nameoffile" id="other_name">
-		<input type="text" onchange="checked_radio()" name="nameoffile" id="fil_name" placeholder="Upload with an other name"><br>
+		<input type="text" onchange="checkRadio()" name="nameoffile" id="fil_name" placeholder="Upload with an other name"><br>
 		<input type=button onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload">
 	    </form>
 	</div>
 
 	<form method=POST>
-	    Local Ipfs path <input id="path" name=mfspath type=text placeholder="mfs path">
+	    Local Ipfs path <input id="path" name="mfspath" type="text" placeholder="mfs path">
 	    <input type=button onClick="getForm(this.closest('form'))" value="Display">
+	    <input type=button onClick="removeElement(this.closest('form'))" value="Remove">
 	    <input type=button onClick="document.location.reload(true)" value="Reset page">
 	    <pre id="ls"></pre>
 	</form>
@@ -66,13 +67,35 @@
 	
 	<script>
 
-	 function checked_radio () {
+	 function checkRadio () {
 	     let rad = document.getElementById('other_name');
 	     console.log ('rad',rad);
 	     rad.checked = true;
 	     updateElementOfIdOfValue ("other_name", rad);
 	 }
 	 
+	 function removeElement (form) {
+	     console.log("removeElement : form.elements ",form.elements);
+	     let mfspath = form.elements[0].value;
+	     console.log("removeElement : mfspath '"+mfspath+"'");
+
+	     removeFileOfMfsPath (mfspath)
+	 }
+	 
+	 function removeFileOfMfsPath(mfspath) {
+	     console.log('removeFileOfPath input mfspath',mfspath);
+	     
+	     const webui = 'http://127.0.0.1:5001';
+	     const api_url = webui + '/api/v0/'
+
+	     var url = api_url + 'files/rm?&arg='+mfspath
+	     console.log('removeFileOfPath url '+url);
+	     return fetch(url, { method: "POST", mode: 'cors'})
+	     	 .then (validate)
+	     	 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
+		 .catch(err => logError(err))
+	 }
+
 	 function getForm (form) {
 	     console.log("getForm : form.elements ",form.elements);
 	     let mfspath = form.elements[0].value;
@@ -153,13 +176,11 @@
 	     table = document.getElementById('ls-result')
 	     console.log('displayJson table',table);
 
-	     let keepRow = table.rows[0];
 	     var i = 1;  // Be careful with deleteRow : length is modified.
 	     while (table.rows[i]) {
 		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
 		 table.deleteRow(i);
 	     }
-	     console.log('displayJson keepRow',keepRow.innerHTML);
 	     console.log('displayJson rows count',table.rows.length);
 
 	     updateElementOfIdOfValue ('h3-title', mfspath);
@@ -186,15 +207,6 @@
 	     doc.innerHTML = value;
 	 }
 
-	 function createElement (tag, id, value, input_type) {
-	     let doc_tag = document.createElement (tag);
-	     doc_tag.id = id;
-	     doc_tag.value = value;
-	     if (tag == 'input') {doc_tag.type = input_type};
-	     doc_tag.innerHTML = value;
-	     document.body.appendChild (doc_tag);
-	 }
-
 	 function createElementTable (ele, tag, value) {
 	     let doc = document.createElement (tag);
 	     doc.style = "padding:7px";
@@ -203,6 +215,12 @@
 	     return doc;
 	 }
 	 
+	 function fetchTextGetCors(url) {
+	     return fetch(url, { method: "GET", mode: "cors"} )
+		 .then(validate)
+		 .then( resp => resp.text() )
+	 }
+
 	 function validate (resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
@@ -210,24 +228,20 @@
 	     return Promise.reject(new Error(resp.statusText))
 	 }
 
-	 function displayByIdOfTagOfValue (tag, value) {
-	     document.getElementById(tag).innerHTML = value
-	 }
-	 
 	 function logError (err) {
 	     console.log("logError : input err ",err);
 	     const message = err.message;
 	     console.log("logError : message '"+message+"'");
-	     displayByIdOfTagOfValue("error", message);
+	     updateElementOfIdOfValue("error", message);
 
 	     switch (message){
 		 case "NetworkError when attempting to fetch resource.":
 		     var text = "NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh";
-		     displayByIdOfTagOfValue("error", text); 
+		     updateElementOfIdOfValue("error", text); 
 		     break;
 		 case "Internal Server Error":
 		     var text = "Internal Server Error because ipfs file path was uncorrect";
-		     displayByIdOfTagOfValue("error", text); 
+		     updateElementOfIdOfValue("error", text); 
 		     break;
 		 default:
 		     console.log("logError : output err '"+err+"'");
@@ -237,7 +251,7 @@
 	 function callback (tag) {
 	     console.log('callback tag: '+tag)
 	     const result = obj => {
-		 displayByIdOfTagOfValue(tag, obj); 
+		 updateElementOfIdOfValue(tag, obj); 
 	     };
 	     return result
 	 }
@@ -246,7 +260,7 @@
 	     console.log('callbackIpfsIo tag: '+tag)
 	     const substi = obj => {
 		 let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-		 displayByIdOfTagOfValue(tag, text);
+		 updateElementOfIdOfValue(tag, text);
 	     };
 	     return substi
 	 }
@@ -255,7 +269,7 @@
 	     console.log('callbackIpfsLocal tag: '+tag)
 	     const substi = obj => {
 		 let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-		 displayByIdOfTagOfValue(tag, text);
+		 updateElementOfIdOfValue(tag, text);
 	     };
 	     return substi
 	 }
@@ -327,8 +341,8 @@
 	 }
 	 
 	 function hashOfMFSFilePath(mfspath) {
-	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     console.log('hashOfMFSFilePath : input mfspath '+mfspath);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url = api_url + 'files/stat?arg='+mfspath+'&hash=true'
 	     console.log('hashOfMFSFilePath : url '+url);
 	     return fetchGetTextForm(url)
@@ -351,7 +365,8 @@
 	     
 	     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
 	     return fetchGetJson(url)
-		 .then( obj => {console.log('getHashAndType obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+		 .then( obj => {console.log('getHashAndType obj',obj);
+		     return Promise.resolve([obj.Hash, obj.Type]) })
 		 .then(callbackTuple ('hash', 'type'))
 		 .catch(logError)
 	 }
@@ -369,6 +384,9 @@
 	 }
 	 
 	 function callbackTuple (tag1, tag2) {
+	     console.log('callbackTuple input tag1 '+tag1)
+	     console.log('callbackTuple input tag2 '+tag2)
+	     
 	     const substi = ([obj1, obj2]) => {
 		 let url = linkIpfsHash (obj1);
 		 updateElementOfIdOfValue(tag1, url);

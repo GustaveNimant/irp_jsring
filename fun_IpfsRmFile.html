@@ -18,7 +18,8 @@ Ipfs File path: <input type="text" id="path" value="some Ipfs path">
      var url = api_url + 'files/rm?&arg='+path
      console.log('rmOfPath url '+url);
      return fetchTextGetCors(url)
-	 .then( obj => { console.log("rmOfPath : obj '"+obj+"'"); return Promise.resolve(obj) })
+	 .then( obj => { console.log("rmOfPath : obj ",obj);
+	     return Promise.resolve(obj) })
 	 .catch(err => logError(err))
  }
 
