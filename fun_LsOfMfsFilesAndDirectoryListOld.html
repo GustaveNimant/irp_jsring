@@ -67,7 +67,7 @@
 	<script>
 
 	 function checked_radio () {
-	     let rad = document.getElementById('other_name');
+	     let  rad = document.getElementById('other_name');
 	     console.log ('rad',rad);
 	     rad.checked = true;
 	     updateElementOfIdOfValue ("other_name", rad);
@@ -96,7 +96,6 @@
 	 }
 	 
 	 function linkIpfsHash (hash) {
-	     console.log ('linkIpfsHash input hash',hash);
 	     let api_url = 'http://127.0.0.1:5001/ipfs/';
 	     let link = '<a href="';
 	     link += api_url;
@@ -121,7 +120,7 @@
 	 }
 
 	 function createButtonOfMfsPath (mfspath) {
-	     console.log ('createButtonOfMfsPath input mfspath', mfspath);
+	     console.log ('createButtonOfMfsPath mfspath', mfspath);
 	     let but = '<input type="button" id="name_link" value="';
 	     but += mfspath;
 	     but += '" onclick="addNameOnInputMfsPath(this.value)"';
@@ -130,7 +129,7 @@
 	 }
 
 	 function addNameOnInputMfsPath (mfspath) {
-	     console.log ('addNameOnInputMfsPath input mfspath', mfspath);
+	     console.log ('addNameOnInputMfsPath mfspath', mfspath);
 	     let old_path = document.getElementById('path').value;
 	     console.log ('addNameOnInputMfsPath old path', old_path);
 	     let path = old_path;
@@ -146,7 +145,7 @@
 	 }
 
 	 function displayJson (json) {
-	     console.log('displayJson input json', json);
+	     console.log('displayJson json', json);
 	     let mfspath = json.mfspath
 	     let entries = json.Entries
 

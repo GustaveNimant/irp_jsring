@@ -88,7 +88,7 @@
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
 
-	     var url = api_url + 'files/rm?&arg='+mfspath
+	     var url = api_url + 'files/rm?arg='+mfspath+'&force=true';
 	     console.log('removeFileOfPath url '+url);
 	     return fetch(url, { method: "POST", mode: 'cors'})
 	     	 .then (validate)
