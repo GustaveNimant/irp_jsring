@@ -1,12 +1,14 @@
 <html>
     <head>
-	<title>Ls and upload</title>
+	<title>Mfs Files Management</title>
     	<style type="text/css">
-	 #name_link {
+	 
+	 #nameButton { 
 	     background-color:lightcyan;
 	     color:#0000FF;
 	     cursor: pointer;
 	 }
+	 
 	 .header {
 	     border-radius: 15px;
 	     padding: 10px;
@@ -44,6 +46,7 @@
 	     font-weight: bold;
 	     text-align: center;
 	 }
+	 
 	 #h3-title {
 	     display: block;
 	 }
@@ -110,7 +113,7 @@
 	<form method=POST>
 	    <center>
 		<span class="title">
-		    Local Ipfs directories <input id="path" name=mfspath type=text value="/">
+		    Mfs directories <input id="path" name=mfspath type=text value="/">
 		    <input type=button onClick="getForm(this.closest('form'))" id="validateClic" value="Display">
 		    <input type=button onClick="document.location.reload(true)" value="Reset page">
 		</span>
@@ -267,7 +270,7 @@
 	 function createButtonOfMfsPath (mfspath,name,typ,hash) {
 	     console.log('createButtonOfMfsPath hash',hash);
 	     console.log('createButtonOfMfsPath mfspath',mfspath);
-	     let but = '<input type="button" id="name_link" value="';
+	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
 	     if (typ == 1){
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
