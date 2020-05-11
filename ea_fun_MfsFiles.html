@@ -140,6 +140,80 @@
 	     document.getElementById('validateClick').click();
 	 }
 	 
+	 function displayJson (json) {
+	     console.log('displayJson input json', json);
+	     
+	     updateElementOfIdOfValue ('fileUploaded', '');
+	     updateElementOfIdOfValue ('error', '');
+	     updateElementOfIdOfValue ('catOfHash', '');
+	     updateElementOfIdOfValue ('fileRemoved', '');
+	     
+	     let mfspath = json.mfspath
+	     let entries = json.Entries
+	     console.log('displayJson mfspath', mfspath);
+	     console.log('displayJson entries', entries);
+	     
+	     table = document.getElementById('ls-result')
+	     console.log('displayJson table',table);
+
+	     var i = 1;  // Be careful with deleteRow : length is modified.
+	     while (table.rows[i]) {
+		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
+		 table.deleteRow(i);
+	     }
+	     console.log('displayJson rows count',table.rows.length);
+
+	     updateElementOfIdOfValue ('h3-title', mfspath);
+	     let tr = createElementTable (table,'tr', '');
+
+	     var ent_len = entries.length;
+	     try {
+		 if (entries == null) throw "entries is null"		 
+	     } catch (e) {
+		 logError(e);
+	     }
+	     
+	     console.log('displayJson ent_len',ent_len);
+	     if (ent_len != 0){
+		 createElementTable (tr, 'th', 'Type');
+		 createElementTable (tr, 'th', 'Name');
+		 createElementTable (tr, 'th', 'Hash')
+	     }
+	     for (i=0; i<entries.length; i++) {
+		 var hash = entries[i]['Hash'];
+		 var name = entries[i]['Name'];
+		 var hash_link = linkIpfsHash (hash);
+		 
+		 console.log('displayJson hash',hash);
+		 console.log('displayJson name',name);
+		 console.log('displayJson hash_link',hash_link);
+		 
+		 var fil_dir = typeOfJsonOfKey (entries, i);
+		 let type = entries[i]['Type'];
+		 console.log('displayJson type',type);
+		 
+		 let tr = createElementTable (table,'tr', '');
+		 createElementTable (tr, 'td', fil_dir);
+		 createElementTable (tr,'td', createButtonOfMfsPath(mfspath,name,type,hash));
+		 console.log('displayJson hash',hash);
+		 createElementTable (tr,'td', hash_link);
+	     }
+	 }
+	 
+	 function getFileList (mfspath) {
+	     console.log("getFileList input mfspath",mfspath);
+
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'files/ls?arg=' + mfspath + '&l=true'
+	     console.log("getFileList : url '"+url+"'");
+	     return fetch(url, { method: "POST", mode: 'cors'})
+		 .then (validate)
+		 .then (resp => resp.json())
+		 .then (body => { body.mfspath = mfspath; return body})
+		 .then (displayJson)
+		 .catch(err => {console.log(err); logError(err)})
+	 }
+	 
 	 function removeElement () {
 	     let mfspath = document.getElementById('nameoffileordirectory').value;
 	     console.log("removeElement : mfspath '"+mfspath+"'");
@@ -207,20 +281,6 @@
 	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
 	     getHashAndType (mfspath);
 	     getFileList (mfspath)
-	 }
-	 
-	 function getFileList (mfspath) {
-	     console.log("getFileList input mfspath",mfspath);
-
-	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'files/ls?arg=' + mfspath + '&l=true'
-	     console.log("getFileList : url '"+url+"'");
-	     return fetch(url, { method: "POST", mode: 'cors'})
-		 .then (validate)
-		 .then (resp => resp.json())
-		 .then (body => { body.mfspath = mfspath; console.log('getFileList body',body);return body})
-		 .then (displayJson)
-		 .catch(err => {console.log(err); logError(err)})
 	 }
 	 
 	 function linkIpfsHash (hash) {
@@ -300,67 +360,6 @@
 	     document.getElementById('validateClick').click();
 	 }
 
-	 function displayJson (json) {
-	     console.log('displayJson input json', json);
-
-	     // supress inactual information from their ids
-	     updateElementOfIdOfValue ('fileUploaded', '');
-	     updateElementOfIdOfValue ('error', '');
-	     updateElementOfIdOfValue ('catOfHash', '');
-	     updateElementOfIdOfValue ('fileRemoved', '');
-	     
-	     let mfspath = json.mfspath
-	     let entries = json.Entries
-	     console.log('displayJson mfspath', mfspath);
-	     console.log('displayJson entries', entries);
-	     
-	     table = document.getElementById('ls-result')
-	     console.log('displayJson table',table);
-
-	     var i = 1;  // Be careful with deleteRow : length is modified.
-	     while (table.rows[i]) {
-		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
-		 table.deleteRow(i);
-	     }
-	     console.log('displayJson rows count',table.rows.length);
-
-	     updateElementOfIdOfValue ('h3-title', mfspath);
-	     let tr = createElementTable (table,'tr', '');
-
-	     var ent_len = entries.length;
-	     try {
-		 if (entries == null) throw "entries is null"		 
-	     } catch (e) {
-		 logError(e);
-	     }
-	     
-	     console.log('displayJson ent_len',ent_len);
-	     if (ent_len != 0){
-		 createElementTable (tr, 'th', 'Type');
-		 createElementTable (tr, 'th', 'Name');
-		 createElementTable (tr, 'th', 'Hash')
-	     }
-	     for (i=0; i<entries.length; i++) {
-		 var hash = entries[i]['Hash'];
-		 var name = entries[i]['Name'];
-		 var hash_link = linkIpfsHash (hash);
-		 
-		 console.log('displayJson hash',hash);
-		 console.log('displayJson name',name);
-		 console.log('displayJson hash_link',hash_link);
-		 
-		 var fil_dir = typeOfJsonOfKey (entries, i);
-		 let type = entries[i]['Type'];
-		 console.log('displayJson type',type);
-		 
-		 let tr = createElementTable (table,'tr', '');
-		 createElementTable (tr, 'td', fil_dir);
-		 createElementTable (tr,'td', createButtonOfMfsPath(mfspath,name,type,hash));
-		 console.log('displayJson hash',hash);
-		 createElementTable (tr,'td', hash_link);
-	     }
-	 }
-	 
 	 function updateElementOfIdOfValue (id, value) {
 	     let doc = document.getElementById(id);
 	     doc.innerHTML = value;
@@ -435,7 +434,7 @@
 	     console.log('uploadFileToCurrentMfs : formData ',formData)
 	     let val = 'File '+name+' uploaded to '+path
 	     updateElementOfIdOfValue('fileUploaded',val);
-	     console.log ('uploadFileToCurrentMfs val', val);
+	     console.log ('uploadFileToCurrentMfs txt', val);
 	     document.getElementById('validateClick').click();
 	 }
 	 
@@ -622,7 +621,7 @@
 	 }
 
 	 function fetchPostMkdirForm(mfspath, url) {
-	     console.log('fetchPostTextForm input msfpath ',msfpath);
+	     console.log('fetchPostTextForm input msfpath ',mfspath);
 	     console.log('fetchPostTextForm input url ',url);
 	     
 	     let form = new FormData();
