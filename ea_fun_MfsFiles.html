@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
     <head>
+	<meta charset="utf-8">
 	<title>Mfs Files Management</title>
     	<style type="text/css">
 	 
@@ -110,11 +112,11 @@
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
 	    </form>
 	</div>
-	<!-- Body -->
+	<!-- list of Mfs files in directory 'path' -->
 	<form>
 	    <center>
 		<span class="title">
-		    Mfs directories <input id="path" name="mfspath" type="text" value="/">
+		    Mfs directories <input id="path" name="mfsdir" type="text" value="/">
 		    <input type=button onClick="getForm(this.closest('form'))" id="validateClick" value="Display">
 		    <input type=button onClick="document.location.reload(true)" type=reset value="Reset page">
 		</span>
@@ -122,7 +124,7 @@
 	</form>
 	
 	<div class="typeAndHash">
-	    <div id="mfsTypeAndPath" value="''">This Mfs <b><span id=type>type</span></b> has Hash <b><span id=hash>hash</span></b></div>
+	    <div>This Mfs <b><span id="type">type</span></b> has Hash <b><span id="hash">hash</span></b></div>
             <span style="color:red" id="error"></span>
 	    <div>
 	    </center>	    
@@ -132,14 +134,48 @@
 	    </div>
 	</div>
 	<pre id="catOfHash" class="catOfHash"></pre>
-	<script>
 
+	<script>
+	 /**
+	  *  mfsFilePath /etc/my/directory/Z_block.txt
+	  *  mfsDirPath /etc/my/directory 
+	  *  mfsDirName /my
+	  *  basename Z_block.txt
+	  *  filename Z_block
+	  *  extension .txt
+	  */
+	 
 	 window.onload = displayDirOnLoadWindow();
 
 	 function displayDirOnLoadWindow() {
 	     document.getElementById('validateClick').click();
 	 }
 	 
+	 function getForm (form) {
+	     console.log("getForm : form.elements ",form.elements);
+	     let mfspath = form.elements[0].value;
+	     console.log("getForm : mfspath '"+mfspath+"'");
+
+	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
+	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
+	     getHashAndType (mfspath);
+	     getFileList (mfspath)
+	 }
+
+	 function getFileList (mfspath) {
+	     console.log("getFileList input mfspath",mfspath);
+
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'files/ls?arg=' + mfspath + '&l=true'
+	     console.log("getFileList : url '"+url+"'");
+	     return fetch(url, { method: "POST", mode: 'cors'})
+		 .then (validate)
+		 .then (resp => resp.json())
+		 .then (body => { body.mfspath = mfspath; return body})
+		 .then (displayJson)
+		 .catch(err => {console.log(err); logError(err)})
+	 }
+
 	 function displayJson (json) {
 	     console.log('displayJson input json', json);
 	     
@@ -200,20 +236,6 @@
 	     }
 	 }
 	 
-	 function getFileList (mfspath) {
-	     console.log("getFileList input mfspath",mfspath);
-
-	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'files/ls?arg=' + mfspath + '&l=true'
-	     console.log("getFileList : url '"+url+"'");
-	     return fetch(url, { method: "POST", mode: 'cors'})
-		 .then (validate)
-		 .then (resp => resp.json())
-		 .then (body => { body.mfspath = mfspath; return body})
-		 .then (displayJson)
-		 .catch(err => {console.log(err); logError(err)})
-	 }
-	 
 	 function removeElement () {
 	     let mfspath = document.getElementById('nameoffileordirectory').value;
 	     console.log("removeElement : mfspath '"+mfspath+"'");
@@ -272,16 +294,6 @@
 	     updateElementOfIdOfValue ("other_name", rad);
 	 }
 	 
-	 function getForm (form) {
-	     console.log("getForm : form.elements ",form.elements);
-	     let mfspath = form.elements[0].value;
-	     console.log("getForm : mfspath '"+mfspath+"'");
-
-	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
-	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
-	     getHashAndType (mfspath);
-	     getFileList (mfspath)
-	 }
 	 
 	 function linkIpfsHash (hash) {
 	     let api_url = 'http://127.0.0.1:5001/ipfs/';
