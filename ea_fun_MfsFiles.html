@@ -114,12 +114,13 @@
 	<form>
 	    <center>
 		<span class="title">
-		    Mfs directories <input id="path" name=mfspath type=text value="/">
+		    Mfs directories <input id="path" name="mfspath" type="text" value="/">
 		    <input type=button onClick="getForm(this.closest('form'))" id="validateClick" value="Display">
 		    <input type=button onClick="document.location.reload(true)" type=reset value="Reset page">
 		</span>
 		<pre id="ls"></pre>
 	</form>
+	
 	<div class="typeAndHash">
 	    <div id="mfsTypeAndPath" value="''">This Mfs <b><span id=type>type</span></b> has Hash <b><span id=hash>hash</span></b></div>
             <span style="color:red" id="error"></span>
@@ -138,9 +139,7 @@
 	 function displayDirOnLoadWindow() {
 	     document.getElementById('validateClick').click();
 	 }
-
 	 
-
 	 function removeElement () {
 	     let mfspath = document.getElementById('nameoffileordirectory').value;
 	     console.log("removeElement : mfspath '"+mfspath+"'");
@@ -351,11 +350,6 @@
 	     console.log('displayJson mfspath', mfspath);
 	     console.log('displayJson entries', entries);
 	     
-	     if (entries == null) {
-                 console.log('displayJson Error No Entries')
-		 logError("TypeError: entries is null");
-	     }
-	     
 	     table = document.getElementById('ls-result')
 	     console.log('displayJson table',table);
 
@@ -369,7 +363,13 @@
 	     updateElementOfIdOfValue ('h3-title', mfspath);
 	     let tr = createElementTable (table,'tr', '');
 
-	     let ent_len = entries.length;
+	     var ent_len = entries.length;
+	     try {
+		 if (entries == null) throw "entries is null"		 
+	     } catch (e) {
+		 logError(e);
+	     }
+	     
 	     console.log('displayJson ent_len',ent_len);
 	     if (ent_len != 0){
 		 createElementTable (tr, 'th', 'Type');
@@ -453,7 +453,7 @@
 		     break;
 
 		 case "entries is null":
-		     console.log('logError', "Cannot read property 'length' of null");
+		     console.log('logError', 'entries is null');
 		     displayByIdOfTagOfValue("error", '');
 		     var dir = document.getElementById('path').value;
 		     console.log('logError dir', dir);
@@ -461,7 +461,7 @@
 		     break;
 		     
 		 default:
-		     console.log("logError : output err '"+err+"'");
+		     console.log("logError : default err '"+err+"'");
 	     } // switch
 	     
 	 }
