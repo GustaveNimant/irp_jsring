@@ -127,7 +127,7 @@
 	    <table id=ls-result>
 		<tr><th colspan=4><h3 id=h3-title class=upload></h3></th>
 	    </table>
-	</div>
+	    </div>
 	</div>
 	<pre id="catOfHash" class="catOfHash"></pre>
 	<script>
@@ -179,31 +179,31 @@
 	     return base;
 	 }
 
-   function chopMfspath(mfspath){
-     // alias parentAndFnameAndBaseNameAndExtOfMfspath(mfspath)
-     if (mfspath.match('/./')) {
-       [parent,fname] = mfspath.split('/./')
-     } else {
-       let p = mfspath.lastIndexOf('/')
-       // console.log('p: '+p)
-       if (p != 0) {
-          parent = mfspath.substr(0,p)
-          fname = mfspath.substr(p+1)
-       } else {
-          parent = '/';
-          fname = mfspath.substr(1)
-       }
-     }
-     let d = fname.lastIndexOf('.')
-     if (d != -1) {
-       basename = fname.substr(0,d)
-       ext = fname.substr(d)
-     } else {
-       basename = fname
-       ext = ''
-     }
-     return [parent,fname,basename,ext];
-   }
+	 function chopMfspath(mfspath){
+	     // alias parentAndFnameAndBaseNameAndExtOfMfspath(mfspath)
+	     if (mfspath.match('/./')) {
+		 [parent,fname] = mfspath.split('/./')
+	     } else {
+		 let p = mfspath.lastIndexOf('/')
+		 // console.log('p: '+p)
+		 if (p != 0) {
+		     parent = mfspath.substr(0,p)
+		     fname = mfspath.substr(p+1)
+		 } else {
+		     parent = '/';
+		     fname = mfspath.substr(1)
+		 }
+	     }
+	     let d = fname.lastIndexOf('.')
+	     if (d != -1) {
+		 basename = fname.substr(0,d)
+		 ext = fname.substr(d)
+	     } else {
+		 basename = fname
+		 ext = ''
+	     }
+	     return [parent,fname,basename,ext];
+	 }
 	 
 	 function removeFileOfMfsPath(mfspath) {
 	     console.log('removeFileOfPath input mfspath',mfspath);
@@ -346,13 +346,11 @@
 	     table = document.getElementById('ls-result')
 	     console.log('displayJson table',table);
 
-	     let keepRow = table.rows[0];
 	     var i = 1;  // Be careful with deleteRow : length is modified.
 	     while (table.rows[i]) {
 		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
 		 table.deleteRow(i);
 	     }
-	     console.log('displayJson keepRow',keepRow.innerHTML);
 	     console.log('displayJson rows count',table.rows.length);
 
 	     updateElementOfIdOfValue ('h3-title', mfspath);

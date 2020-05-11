@@ -129,7 +129,7 @@
 	    <table id=ls-result>
 		<tr><th colspan=4><h3 id=h3-title class=upload></h3></th>
 	    </table>
-	</div>
+	    </div>
 	</div>
 	<pre id="catOfHash" class="catOfHash"></pre>
 	<script>
@@ -380,12 +380,15 @@
 		 var hash = entries[i]['Hash'];
 		 var name = entries[i]['Name'];
 		 var hash_link = linkIpfsHash (hash);
+		 
 		 console.log('displayJson hash',hash);
 		 console.log('displayJson name',name);
 		 console.log('displayJson hash_link',hash_link);
+		 
 		 var fil_dir = typeOfJsonOfKey (entries, i);
 		 let type = entries[i]['Type'];
-		 console.log('displayJsonTyp',type);
+		 console.log('displayJson type',type);
+		 
 		 let tr = createElementTable (table,'tr', '');
 		 createElementTable (tr, 'td', fil_dir);
 		 createElementTable (tr,'td', createButtonOfMfsPath(mfspath,name,type,hash));
