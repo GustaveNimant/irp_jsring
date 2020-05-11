@@ -87,7 +87,7 @@
 		<input type=file><br>
 		<input type="radio" name="nameoffile" id="same_name" checked>Upload with the same name<br>
 		<input type="radio" name="nameoffile" id="other_name">
-		<input type="text" onchange="checked_radio()" name="nameoffile" id="fil_name" placeholder="Upload with an other name"><br>
+		<input type="text" onchange="checkedRadio()" name="nameoffile" id="fil_name" placeholder="Upload with an other name"><br>
 		<input type=button onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
 		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
 	    </form>
@@ -167,50 +167,13 @@
 	     
 	     return fetchPostMkdirForm(path_url, url)
 		 .then(_ => {document.getElementById('validateClick').click()})
-	     /* .then( obj => obj.json() )
-     		.then( json => {return json.Hash} ) */
 		 .catch(logError)
 	 }
 
-	 function baseName(str){
-	     var base = new String(str).substring(str.lastIndexOf('/') + 1); 
-	     if(base.lastIndexOf(".") != -1)       
-		 base = base.substring(0, base.lastIndexOf("."));
-	     return base;
-	 }
-
-	 function chopMfspath(mfspath){
-	     console.log('chopMfspath input mfspath',mfspath);
-	     // alias parentAndFnameAndBaseNameAndExtOfMfspath(mfspath)
-	     if (mfspath.match('/./')) {
-		 [parent,fname] = mfspath.split('/./')
-	     } else {
-		 let p = mfspath.lastIndexOf('/')
-		 // console.log('p: '+p)
-		 if (p != 0) {
-		     parent = mfspath.substr(0,p)
-		     fname = mfspath.substr(p+1)
-		 } else {
-		     parent = '/';
-		     fname = mfspath.substr(1)
-		 }
-	     }
-	     let d = fname.lastIndexOf('.')
-	     if (d != -1) {
-		 basename = fname.substr(0,d)
-		 ext = fname.substr(d)
-	     } else {
-		 basename = fname
-		 ext = ''
-	     }
-	     let result = [parent,fname,basename,ext]; 
-	     console.log('chopMfspath result',result);
-	     return result;
-	 }
-	 
 	 function removeFileOfMfsPath(mfspath) {
 	     console.log('removeFileOfPath input mfspath',mfspath);
-	     let [parent,fil,bname,ext] = chopMfspath (mfspath);
+
+	     let [parent, filename, basename, ext] = chopMfspath (mfspath);
 	     console.log('removeFileOfMfsPath parent',parent);
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
@@ -228,7 +191,7 @@
 	     
 	 }	 
 
-	 function checked_radio () {
+	 function checkedRadio () {
 	     let  rad = document.getElementById('other_name');
 	     console.log ('rad',rad);
 	     rad.checked = true;
@@ -419,87 +382,22 @@
 	     return doc;
 	 }
 	 
-	 function validate (resp) {
-	     if (resp.status >= 200 && resp.status < 300) {
-		 return Promise.resolve(resp)
-	     }
-	     return Promise.reject(new Error(resp.statusText))
-	 }
-
 	 function displayByIdOfTagOfValue (tag, value) {
 	     document.getElementById(tag).innerHTML = value
 	 }
 	 
-	 function logError (err) {
-	     console.log("logError : input err ",err);
-	     const message = err.message;
-	     console.log("logError : message '"+message+"'");
-	     displayByIdOfTagOfValue("error", message);
-	     switch (message){
-		     
-		 case "NetworkError when attempting to fetch resource.":
-		     var text = "NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh";
-		     displayByIdOfTagOfValue("error", text); 
-		     break;
-
-		 case "Internal Server Error":
-		     var text = "Internal Server Error because ipfs file path was uncorrect";
-		     displayByIdOfTagOfValue("error", text); 
-		     break;
-		     
-		 case "Cannot read property 'length' of null":
-		     console.log('logError', "Cannot read property 'length' of null");
-		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('path').value;
-		     console.log('logError dir', dir);
-		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
-		     break;
-
-		 case "entries is null":
-		     console.log('logError', 'entries is null');
-		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('path').value;
-		     console.log('logError dir', dir);
-		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
-		     break;
-		     
-		 default:
-		     console.log("logError : default err '"+err+"'");
-	     } // switch
+	 function getCat(hash) {
+	     const webui = 'http://127.0.0.1:5001';
+	     const api_url = webui + '/api/v0/';
 	     
+	     console.log('getCat hash '+hash);
+	     var url = api_url + 'cat?&arg='+hash
+	     console.log('url '+url);
+	     return fetchGetTextCors(url)
+		 .then( obj => { return Promise.resolve(obj) })
+		 .catch(logError)
 	 }
 	 
-	 function callback (tag) {
-	     console.log('callback tag: '+tag)
-	     const result = obj => {
-		 displayByIdOfTagOfValue(tag, obj); 
-	     };
-	     return result
-	 }
-	 
-	 function callbackIpfsIo (tag) {
-	     console.log('callbackIpfsIo tag: '+tag)
-	     const substi = obj => {
-		 let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-		 displayByIdOfTagOfValue(tag, text);
-	     };
-	     return substi
-	 }
-	 
-	 function callbackIpfsLocal (tag) {
-	     console.log('callbackIpfsLocal tag: '+tag)
-	     const substi = obj => {
-		 let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-		 displayByIdOfTagOfValue(tag, text);
-	     };
-	     return substi
-	 }
-	 
-	 function IpfsException (message) {
-	     this.message = message;
-	     this.name = "IpfsException";
-	 }
-
 	 function uploadFileToCurrentMfs(form) {
 	     console.log('uploadFileToCurrentMfs : form.elements ',form.elements);
 	     let fakepath = form.elements[0].value
@@ -553,20 +451,6 @@
 		 .catch(logError)
 	 }
 	 
-	 function fetchPostTextForm(url, content) {
-	     console.log('fetchPostTextForm input url '+url);
-	     console.log('fetchPostTextForm input content '+content);
-	     
-	     let form = new FormData();
-	     form.append('file', content)   
-	     const result = fetch(url, {
-		 method: "POST",
-		 mode: 'cors',
-		 body: form
-	     })
-	     return result;
-	 }
-	 
 	 function hashOfMFSFilePath(mfspath) {
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     console.log('hashOfMFSFilePath : input mfspath '+mfspath);
@@ -597,29 +481,108 @@
 		 .catch(logError)
 	 }
 
-	 function fetchGetTextForm(url) {
-	     console.log('fetchGetTextForm : input url '+url);
-	     return fetch(url, { method: "GET", mode: 'cors' })
+	 function logError (err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     displayByIdOfTagOfValue("error", message);
+	     switch (message){
+		     
+		 case "NetworkError when attempting to fetch resource.":
+		     var text = "NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh";
+		     displayByIdOfTagOfValue("error", text); 
+		     break;
+
+		 case "Internal Server Error":
+		     var text = "Internal Server Error because ipfs file path was uncorrect";
+		     displayByIdOfTagOfValue("error", text); 
+		     break;
+		     
+		 case "Cannot read property 'length' of null":
+		     console.log('logError', "Cannot read property 'length' of null");
+		     displayByIdOfTagOfValue("error", '');
+		     var dir = document.getElementById('path').value;
+		     console.log('logError dir', dir);
+		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+		     break;
+
+		 case "entries is null":
+		     console.log('logError', 'entries is null');
+		     displayByIdOfTagOfValue("error", '');
+		     var dir = document.getElementById('path').value;
+		     console.log('logError dir', dir);
+		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+		     break;
+		     
+		 default:
+		     console.log("logError : default err '"+err+"'");
+	     } // switch
 	 }
 	 
-	 function fetchGetJson (url) {
-	     console.log('fetchGetJson input url '+url)
-	     return fetch(url, { method: "GET"} )
-		 .then(validate)
-		 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+	 // library
+	 
+	 function baseName(mfspath){
+	     console.log('baseName input mfspath',mfspath);
+	     var base = new String(mfspath).substring(mfspath.lastIndexOf('/') + 1); 
+	     if(base.lastIndexOf(".") != -1)       
+		 base = base.substring(0, base.lastIndexOf("."));
+	     return base;
 	 }
 
-	 function fetchPostMkdirForm(path, url) {
-	     console.log('fetchPostTextForm input url '+url);
-	     
-	     let form = new FormData();
-	     form.append('file', path)   
-	     const result = fetch(url, {
-		 method: "POST",
-		 mode: 'cors',
-		 body: form
-	     })
+	 function chopMfspath(mfspath){
+	     console.log('chopMfspath input mfspath',mfspath);
+	     //MfsPath is decomposed into [ParentDirectory, BaseName, Filename, Extension]
+	     // Ex.: "/my/ceci/Z_block.txt" => ["/my/ceci", "Z_block.txt", "Z_block", ".txt" ]
+	     if (mfspath.match('/./')) {
+		 [parent,basename] = mfspath.split('/./')
+	     } else {
+		 let p = mfspath.lastIndexOf('/')
+		 // console.log('p: '+p)
+		 if (p != 0) {
+		     parent = mfspath.substr(0,p)
+		     basename = mfspath.substr(p+1)
+		 } else {
+		     parent = '/';
+		     basename = mfspath.substr(1)
+		 }
+	     }
+	     let d = basename.lastIndexOf('.')
+	     if (d != -1) {
+		 filename = basename.substr(0,d)
+		 ext = basename.substr(d)
+	     } else {
+		 filename = basename
+		 ext = ''
+	     }
+	     let result = [parent,basename,filename,ext]; 
+	     console.log('chopMfspath result',result);
 	     return result;
+	 }
+
+	 function callback (tag) {
+	     console.log('callback tag: '+tag)
+	     const result = obj => {
+		 displayByIdOfTagOfValue(tag, obj); 
+	     };
+	     return result
+	 }
+	 
+	 function callbackIpfsIo (tag) {
+	     console.log('callbackIpfsIo tag: '+tag)
+	     const substi = obj => {
+		 let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+		 displayByIdOfTagOfValue(tag, text);
+	     };
+	     return substi
+	 }
+	 
+	 function callbackIpfsLocal (tag) {
+	     console.log('callbackIpfsLocal tag: '+tag)
+	     const substi = obj => {
+		 let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+		 displayByIdOfTagOfValue(tag, text);
+	     };
+	     return substi
 	 }
 	 
 	 function callbackTuple (tag1, tag2) {
@@ -640,17 +603,54 @@
 	     return substi
 	 }
 
-	 function getCat(hash) {
-	     const webui = 'http://127.0.0.1:5001';
-	     const api_url = webui + '/api/v0/';
-	     
-	     console.log('getCat hash '+hash);
-	     var url = api_url + 'cat?&arg='+hash
-	     console.log('url '+url);
-	     return fetchTextGetCors(url)
-		 .then( obj => { return Promise.resolve(obj) })
-		 .catch(logError)
+	 function IpfsException (message) {
+	     this.message = message;
+	     this.name = "IpfsException";
 	 }
+
+	 function fetchGetTextForm(url) {
+	     console.log('fetchGetTextForm : input url '+url);
+	     return fetch(url, { method: "GET", mode: 'cors' })
+	 }
+	 
+	 function fetchGetJson (url) {
+	     console.log('fetchGetJson input url '+url)
+	     return fetch(url, { method: "GET"} )
+		 .then(validate)
+		 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+	 }
+
+	 function fetchPostMkdirForm(mfspath, url) {
+	     console.log('fetchPostTextForm input msfpath ',msfpath);
+	     console.log('fetchPostTextForm input url ',url);
+	     
+	     let form = new FormData();
+	     form.append('file', mfspath)   
+	     const result = fetch(url, {
+		 method: "POST",
+		 mode: 'cors',
+		 body: form
+	     })
+	     return result;
+	 }
+	 
+	 function fetchPostTextForm(url, content) {
+	     console.log('fetchPostTextForm input url '+url);
+	     console.log('fetchPostTextForm input content '+content);
+	     
+	     let form = new FormData();
+	     form.append('file', content)   
+	     const result = fetch(url, {
+		 method: "POST",
+		 mode: 'cors',
+		 body: form
+	     })
+	     return result;
+	 }
+	 
+	 function fetchGetTextCors(url) {
+	     return fetch(url, { method: "GET", mode: "cors"} ).then(validate).then( resp => resp.text() )
+	 }	 
 	 
 	 function getHash(hash) {
 	     console.log('getHash hash '+hash)
@@ -661,10 +661,13 @@
 	     getCat(hash).then(callbackCat('catOfHash'))
 	 }
 
-	 function fetchTextGetCors(url) {
-	     return fetch(url, { method: "GET", mode: "cors"} ).then(validate).then( resp => resp.text() )
-	 }	 
-	 
+	 function validate (resp) {
+	     if (resp.status >= 200 && resp.status < 300) {
+		 return Promise.resolve(resp)
+	     }
+	     return Promise.reject(new Error(resp.statusText))
+	 }
+
 	</script>
     </body>
 </html>
