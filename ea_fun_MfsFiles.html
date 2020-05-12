@@ -89,7 +89,7 @@
 		<input type=file><br>
 		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
 		<input type="radio" name="nameoffile" id="idUploadNewName">
-		<input type="text" onchange="checkedRadio()" name="nameoffile" id="fil_name" placeholder="Upload with name changed"><br>
+		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
 		<input type=button onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
 		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
 	    </form>
@@ -108,7 +108,7 @@
 	    <div class="upload">Remove file or directory</div><br>
 	    <form method=POST>
 		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
-		<input type=button onclick="removeElement()" id="removeButton" value="Remove" disabled><br>
+		<input type=button onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
 	    </form>
 	</div>
@@ -117,7 +117,7 @@
 	    <center>
 		<span class="title">
 		    Mfs directories <input id="path" name="mfsdir" type="text" value="/">
-		    <input type=button onClick="getForm(this.closest('form'))" id="validateClick" value="Display">
+		    <input type=button onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
 		    <input type=button onClick="document.location.reload(true)" type=reset value="Reset page">
 		</span>
 		<pre id="ls"></pre>
@@ -154,7 +154,7 @@
 	 window.onload = displayDirOnLoadWindow();
 
 	 function displayDirOnLoadWindow() {
-	     document.getElementById('validateClick').click();
+	     document.getElementById('idValidateClick').click();
 	 }
 	 
 	 function getForm (form) {
@@ -164,7 +164,7 @@
 
 	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
 	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
-	     getHashAndType (mfspath);
+	     getHashAndTypeOfMfsPath (mfspath);
 	     getFileList (mfspath)
 	 }
 
@@ -255,14 +255,14 @@
 	 }
 
 	 function createDirectory() {
-	     let path =  document.getElementById('path').value;
-	     console.log('createDirectory mfspath ',path);
+	     let msfDirPath =  document.getElementById('path').value;
+	     console.log('createDirectory mfsDirPath ',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory mfsDirName',mfsDirName);
-	     if (path == '/'){
-		 var path_url = path + mfsDirName;
+	     if (msfDirPath == '/'){
+		 var path_url = msfDirPath + mfsDirName;
 	     }else {
-		 var path_url = path + '/' + mfsDirName;
+		 var path_url = msfDirPath + '/' + mfsDirName;
 	     }
 	     console.log('createDirectory path_url ',path_url);
 	     const api_url = 'http://127.0.0.1:5001/api/v0/';
@@ -270,7 +270,7 @@
 	     console.log('createDirectory : url ', url);
 	     
 	     return fetchPostMkdirForm(path_url, url)
-		 .then(_ => {document.getElementById('validateClick').click()})
+		 .then(_ => {document.getElementById('idValidateClick').click()})
 		 .catch(logError)
 	 }
 
@@ -288,7 +288,7 @@
 	     	 .then (validate)
 	     	 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
 	 	 .then (_ => {document.getElementById('path').value = parent})    
-		 .then (_ => {document.getElementById('validateClick').click()})
+		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
 		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('path').value})
 		 .catch(err => logError(err))
@@ -357,7 +357,7 @@
 		 var path = dir + fileName;
 	     }
 	     console.log('addNameOfFileOnDeleteBlock path',path);
-	     document.getElementById('removeButton').disabled = false;
+	     document.getElementById('idRemoveButton').disabled = false;
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
 	     getHash(hash);
@@ -379,8 +379,8 @@
 	     del.value = path;
 	     var x = document.getElementById('path');
 	     x.value = path;
-	     document.getElementById('removeButton').disabled = false;
-	     document.getElementById('validateClick').click();
+	     document.getElementById('idRemoveButton').disabled = false;
+	     document.getElementById('idValidateClick').click();
 	 }
 
 	 function updateElementOfIdOfValue (id, value) {
@@ -432,11 +432,11 @@
 	     console.log('uploadFileToCurrentMfs : element[0].files ',form.elements[0].files)
 	     
 	     if (document.getElementById('idUploadNewName').checked) {
-		 var name = document.getElementById('fil_name').value;
+		 var name = document.getElementById('idUploadKeptName').value;
 		 console.log('uploadFileToCurrentMfs checked name',name);
 	     } else {
 		 var name = form.elements[0]['files'][0].name;
-		 console.log('name of file',name);
+		 console.log('uploadFileToCurrentMfs name',name);
 	     }
 	     console.log('uploadFileToCurrentMfs name',name);
 	     mfspath += '/';
@@ -447,7 +447,7 @@
 	     reader.onload = event => {
 		 const content_on_load = event.target.result;
 		 console.log('uploadFileToCurrentMfs : content_on_load ',content_on_load)
-		 writeOfFileOfContent(mfspath, content_on_load).then(callback('hash'))
+		 writeOfMfsFilePathOfContent(mfspath, content_on_load).then(callback('hash'))
 	     }
 
 	     reader.readAsText(file,'UTF-8') 
@@ -458,48 +458,48 @@
 	     let val = 'File '+name+' uploaded to '+path
 	     updateElementOfIdOfValue('fileUploaded',val);
 	     console.log ('uploadFileToCurrentMfs txt', val);
-	     document.getElementById('validateClick').click();
+	     document.getElementById('idValidateClick').click();
 	 }
 	 
-	 function writeOfFileOfContent(mfspath, content) {
-	     console.log('writeOfFileOfContent input mfspath '+mfspath);
-	     console.log('writeOfFileOfContent input content '+content)
+	 function writeOfMfsFilePathOfContent(mfsFilePath, content) {
+	     console.log('writeOfMfsFilePathOfContent input mfsFilePath '+mfsFilePath);
+	     console.log('writeOfMfsFilePathOfContent input content '+content)
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'files/write?arg=' + mfspath + '&create=1';
-	     console.log('writeOfFileOfContent : url '+url);
+	     var url = api_url + 'files/write?arg=' + mfsFilePath + '&create=1';
+	     console.log('writeOfMfsFilePathOfContent : url '+url);
 	     return fetchPostTextForm(url, content)
-		 .then( _ => hashOfMFSFilePath(mfspath) )
-		 .then( _ => {document.getElementById('validateClick').click()})
+		 .then( _ => hashOfMfsFilePath(mfsFilePath) )
+		 .then( _ => {document.getElementById('idValidateClick').click()})
 		 .catch(logError)
 	 }
 	 
-	 function hashOfMFSFilePath(mfspath) {
+	 function hashOfMfsFilePath(mfsFilePath) {
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     console.log('hashOfMFSFilePath : input mfspath '+mfspath);
-	     var url = api_url + 'files/stat?arg='+mfspath+'&hash=true'
-	     console.log('hashOfMFSFilePath : url '+url);
+	     console.log('hashOfMfsFilePath : input mfsFilePath '+mfsFilePath);
+	     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
+	     console.log('hashOfMfsFilePath : url '+url);
 	     return fetchGetTextForm(url)
 		 .then( obj => obj.json())
 		 .then( json => {
-		     console.log('hashOfMFSFilePath : json ',json);
-		     console.log("hashOfMFSFilePath : json.Type '"+json.Type+"'");
+		     console.log('hashOfMfsFilePath : json ',json);
+		     console.log("hashOfMfsFilePath : json.Type '"+json.Type+"'");
 		     if (json.Type == "error") {
-			 const message = 'Error from hashOfMFSFilePath : '+json.Message;
-			 console.log("hashOfMFSFilePath : message '"+message+"'")
+			 const message = 'Error from hashOfMfsFilePath : '+json.Message;
+			 console.log("hashOfMfsFilePath : message '"+message+"'")
 			 updateElementOfIdOfValue("error", message);
 		     }
 		     return json.Hash} )
 	 }
 	 
-	 function getHashAndType (mfspath) {
-	     console.log('getHashAndType input mfspath '+mfspath)
+	 function getHashAndTypeOfMfsPath (mfspath) {
+	     console.log('getHashAndTypeOfMfsPath input mfspath '+mfspath)
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
 	     
 	     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
 	     return fetchGetJson(url)
-		 .then( obj => {console.log('getHashAndType obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+		 .then( obj => {console.log('getHashAndTypeOfMfsPath obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
 		 .then(callbackTuple ('hash', 'type'))
 		 .catch(logError)
 	 }
