@@ -14,9 +14,9 @@ hash: <input type=text name=hash onChange="getPinList(this.value)">
 function getPinList(hash) {
     var url;
     if (hash == '') {
-     url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+     url = api_url + 'pin/ls?type=direct'
     } else {
-     url = api_url + 'pin/ls?arg='&type=direct'
+     url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
     }
     return fetchGetJson(url)
     .then( json => { console.log('pin/ls: ',json); })
