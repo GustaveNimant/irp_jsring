@@ -138,15 +138,15 @@
 	<script>
 	 /**
 	  * Rules
-	  *  idName start with id, Name refers to Content 
+	  *  idName starts with id, Name refers to Content 
 	  * Glossary
 	  *  mfsPath = mfsFilePath || mfsFileDir
 	  *  mfsFilePath /etc/my/directory/Z_block.txt
 	  *  mfsDirPath /etc/my/directory 
-	  *  mfsDirName /my
-	  *  basename Z_block.txt
-	  *  filename Z_block
-	  *  name basename || mfsDirName (name of last path element) 
+	  *  mfsDirName my
+	  *  baseName Z_block.txt
+	  *  rootName Z_block
+	  *  name is baseName || mfsDirName (name of last path element) 
 	  *  extension .txt
 	  *  imagePath images/file.png
 	  */
@@ -231,7 +231,7 @@
 		 console.log('displayJson name',name);
 		 console.log('displayJson hash_link',hash_link);
 		 
-		 var imagePath = typeOfJsonOfKey (entries, i);
+		 var imagePath = imageOfJsonOfKey (entries, i);
 		 console.log('displayJson imagePath',imagePath);
 		 let type = entries[i]['Type'];
 		 console.log('displayJson type',type);
@@ -259,12 +259,14 @@
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory mfsDirName',mfsDirName);
+
 	     if (msfDirPath == '/'){
 		 var path_url = msfDirPath + mfsDirName;
 	     }else {
 		 var path_url = msfDirPath + '/' + mfsDirName;
 	     }
 	     console.log('createDirectory path_url ',path_url);
+
 	     const api_url = 'http://127.0.0.1:5001/api/v0/';
 	     var url = api_url + 'files/mkdir?arg=' + path_url;
 	     console.log('createDirectory : url ', url);
@@ -277,7 +279,7 @@
 	 function removeFileOfMfsPath(mfspath) {
 	     console.log('removeFileOfPath input mfspath',mfspath);
 
-	     let [parent, filename, basename, ext] = chopMfspath (mfspath);
+	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
 	     console.log('removeFileOfMfsPath parent',parent);
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
@@ -314,17 +316,31 @@
 	     return link;
 	 }
 
-	 function typeOfJsonOfKey (json, key) { // Improve it returns an image
-	     let type = json[key]['Type'];
-	     console.log ('typeOfJsonOfKey type', type, 'key', key, 'json',json);
-	     if (type == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
-	     else { return '<img src="images/folder.png" width="25px" height="25">'; }
-	 }
-
 	 function sizeOfJsonOfKey (json, key) {
 	     let siz = json[key]['Size']
 	     if (siz > 0) { return ' ('+siz+' octets) '; }
 	     else {return "";}
+	 }
+
+	 function typeOfJsonOfKey (json, key) {
+	     console.log ('typeOfJsonOfKey input json', json);
+	     console.log ('typeOfJsonOfKey input key', key);
+
+	     let result = json[key]['Type'];
+	     console.log ('typeOfJsonOfKey result', result);
+	     return result;
+	 }
+
+	 function imageOfType(type) {
+	     if (type == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
+	     else { return '<img src="images/folder.png" width="25px" height="25">'; }
+	 }
+
+	 function imageOfJsonOfKey (json, key) {
+	     let type = typeOfJsonOfKey (json, key);
+	     result = imageOfType(type);
+	     console.log ('imageOfJsonOfKey result', result);
+	     return result;
 	 }
 
 	 function createButtonOfMfsPath (mfspath, name, type, hash) { // Improve
@@ -345,16 +361,16 @@
 	     return but;
 	 }
 
-	 function addNameOfFileOnDeleteBlock(fileName, hash) {
-	     console.log('addNameOfFileOnDeleteBlock fileName',fileName);
+	 function addNameOfFileOnDeleteBlock(rootName, hash) {
+	     console.log('addNameOfFileOnDeleteBlock rootName',rootName);
 	     console.log('addNameOfFileOnDeleteBlock hash',hash);
 	     
 	     var dir = document.getElementById('path').value;
 	     console.log('addNameOfFileOnDeleteBlock dir',dir);
 	     if (dir != '/') {
-		 var path = dir + '/' + fileName;
+		 var path = dir + '/' + rootName;
 	     }else {
-		 var path = dir + fileName;
+		 var path = dir + rootName;
 	     }
 	     console.log('addNameOfFileOnDeleteBlock path',path);
 	     document.getElementById('idRemoveButton').disabled = false;
@@ -512,9 +528,14 @@
 	     switch (message){
 		     
 		 case "NetworkError when attempting to fetch resource.":
-		     var text = "NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh";
+		     var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
 		     displayByIdOfTagOfValue("error", text); 
 		     break;
+
+		 case "Failed to fetch":
+		     var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
+		     displayByIdOfTagOfValue("error", text); 
+		     break;	     
 
 		 case "Internal Server Error":
 		     var text = "Internal Server Error because ipfs file path was uncorrect";
@@ -554,7 +575,7 @@
 
 	 function chopMfspath(mfspath){
 	     console.log('chopMfspath input mfspath',mfspath);
-	     //MfsPath is decomposed into [ParentDirectory, BaseName, Filename, Extension]
+	     //MfsPath is decomposed into [ParentDirectory, BaseName, RootName, Extension]
 	     // Ex.: "/my/ceci/Z_block.txt" => ["/my/ceci", "Z_block.txt", "Z_block", ".txt" ]
 	     if (mfspath.match('/./')) {
 		 [parent,basename] = mfspath.split('/./')
@@ -571,13 +592,13 @@
 	     }
 	     let d = basename.lastIndexOf('.')
 	     if (d != -1) {
-		 filename = basename.substr(0,d)
+		 rootName = basename.substr(0,d)
 		 ext = basename.substr(d)
 	     } else {
-		 filename = basename
+		 rootName = basename
 		 ext = ''
 	     }
-	     let result = [parent,basename,filename,ext]; 
+	     let result = [parent, baseName, rootName, ext]; 
 	     console.log('chopMfspath result',result);
 	     return result;
 	 }
