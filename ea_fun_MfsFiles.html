@@ -84,12 +84,12 @@
 	    
 	    <!-- Bloc upload -->
 
-	    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
+    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
 	    <form method=POST>
 		<input type=file><br>
-		<input type="radio" name="nameoffile" id="same_name" checked>Upload with the same name<br>
-		<input type="radio" name="nameoffile" id="other_name">
-		<input type="text" onchange="checkedRadio()" name="nameoffile" id="fil_name" placeholder="Upload with an other name"><br>
+		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
+		<input type="radio" name="nameoffile" id="idUploadNewName">
+		<input type="text" onchange="checkedRadio()" name="nameoffile" id="fil_name" placeholder="Upload with name changed"><br>
 		<input type=button onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
 		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
 	    </form>
@@ -98,7 +98,7 @@
 
 	    <div class="upload">Create directory to <span id="currentMfsDir"></span></div><br>
 	    <form method=POST>
-		<input type="text" id="nameOfDirectory"><br>
+		<input type="text" id="idNameOfDirectory"><br>
 		<input type=button onclick="createDirectory()" id="createDirButton" value="Create"><br>
 		<div class="fileUploadedAndRemoved" id="directoryCreated"></div>
 	    </form>
@@ -256,13 +256,13 @@
 
 	 function createDirectory() {
 	     let path =  document.getElementById('path').value;
-	     console.log('createDirectory mfs path ',path);
-	     let dir_nam = document.getElementById('nameOfDirectory').value;
-	     console.log('createDirectory dir name ',dir_nam);
+	     console.log('createDirectory mfspath ',path);
+	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
+	     console.log('createDirectory mfsDirName',mfsDirName);
 	     if (path == '/'){
-		 var path_url = path + dir_nam;
+		 var path_url = path + mfsDirName;
 	     }else {
-		 var path_url = path + '/' + dir_nam;
+		 var path_url = path + '/' + mfsDirName;
 	     }
 	     console.log('createDirectory path_url ',path_url);
 	     const api_url = 'http://127.0.0.1:5001/api/v0/';
@@ -296,12 +296,11 @@
 	 }	 
 
 	 function checkedRadio () {
-	     let  rad = document.getElementById('other_name');
-	     console.log ('rad',rad);
+	     let rad = document.getElementById('idUploadNewName');
+	     console.log ('checkedRadio rad',rad);
 	     rad.checked = true;
-	     updateElementOfIdOfValue ("other_name", rad);
+	     updateElementOfIdOfValue ("idUploadNewName", rad);
 	 }
-	 
 	 
 	 function linkIpfsHash (hash) {
 	     let api_url = 'http://127.0.0.1:5001/ipfs/';
@@ -328,7 +327,7 @@
 	     else {return "";}
 	 }
 
-	 function createButtonOfMfsPath (mfspath, name, type, hash) {
+	 function createButtonOfMfsPath (mfspath, name, type, hash) { // Improve
 	     console.log('createButtonOfMfsPath mfspath',mfspath);
 	     console.log('createButtonOfMfsPath name',name);
 	     console.log('createButtonOfMfsPath type',type);
@@ -339,7 +338,6 @@
 	     if (type == 1){
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 	     } else {
-		 //but += '" onclick="getHash(' + "'" + hash + "'" + ')"';
 		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
 		 console.log('createButtonOfMfsPath but',but);
 	     }
@@ -433,7 +431,7 @@
 	     let file = form.elements[0].files[0]
 	     console.log('uploadFileToCurrentMfs : element[0].files ',form.elements[0].files)
 	     
-	     if (document.getElementById('other_name').checked) {
+	     if (document.getElementById('idUploadNewName').checked) {
 		 var name = document.getElementById('fil_name').value;
 		 console.log('uploadFileToCurrentMfs checked name',name);
 	     } else {
