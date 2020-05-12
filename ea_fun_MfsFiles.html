@@ -129,7 +129,7 @@
 	    <div>
 	    </center>	    
 	    <table id=ls-result>
-		<tr><th colspan=4><h3 id=h3-title class=upload></h3></th>
+		<tr><th colspan=4><h3 id="h3-title" class="upload"></h3></th>
 	    </table>
 	    </div>
 	</div>
@@ -137,6 +137,7 @@
 
 	<script>
 	 /**
+	  *  mfsPath = mfsFilePath || mfsFileDir
 	  *  mfsFilePath /etc/my/directory/Z_block.txt
 	  *  mfsDirPath /etc/my/directory 
 	  *  mfsDirName /my
@@ -200,6 +201,7 @@
 	     console.log('displayJson rows count',table.rows.length);
 
 	     updateElementOfIdOfValue ('h3-title', mfspath);
+
 	     let tr = createElementTable (table,'tr', '');
 
 	     var ent_len = entries.length;
@@ -225,14 +227,15 @@
 		 console.log('displayJson hash_link',hash_link);
 		 
 		 var fil_dir = typeOfJsonOfKey (entries, i);
+		 console.log('displayJson fil_dir',fil_dir);
 		 let type = entries[i]['Type'];
 		 console.log('displayJson type',type);
 		 
 		 let tr = createElementTable (table,'tr', '');
 		 createElementTable (tr, 'td', fil_dir);
-		 createElementTable (tr,'td', createButtonOfMfsPath(mfspath,name,type,hash));
+		 createElementTable (tr, 'td', createButtonOfMfsPath(mfspath,name,type,hash));
 		 console.log('displayJson hash',hash);
-		 createElementTable (tr,'td', hash_link);
+		 createElementTable (tr, 'td', hash_link);
 	     }
 	 }
 	 
@@ -307,25 +310,25 @@
 	     return link;
 	 }
 
-	 function typeOfJsonOfKey (json, key) {
-	     let typ = json[key]['Type'];
-	     console.log ('typeOfJsonOfKey type', typ, ' key',key, ' json',json);
-	     if (typ == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
+	 function typeOfJsonOfKey (json, key) { // Improve it returns an image
+	     let type = json[key]['Type'];
+	     console.log ('typeOfJsonOfKey type', type, 'key', key, 'json',json);
+	     if (type == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
 	     else { return '<img src="images/folder.png" width="25px" height="25">'; }
 	 }
 
-	 function sizeOfFile (key, json) {
+	 function sizeOfJsonOfKey (json, key) {
 	     let siz = json[key]['Size']
 	     if (siz > 0) { return ' ('+siz+' octets) '; }
 	     else {return "";}
 	 }
 
-	 function createButtonOfMfsPath (mfspath,name,typ,hash) {
+	 function createButtonOfMfsPath (mfspath,name,type,hash) {
 	     console.log('createButtonOfMfsPath hash',hash);
 	     console.log('createButtonOfMfsPath mfspath',mfspath);
 	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
-	     if (typ == 1){
+	     if (type == 1){
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 	     } else {
 		 //but += '" onclick="getHash(' + "'" + hash + "'" + ')"';
