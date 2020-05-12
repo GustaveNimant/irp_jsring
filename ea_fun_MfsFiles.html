@@ -107,7 +107,7 @@
 	    
 	    <div class="upload">Remove file or directory</div><br>
 	    <form method=POST>
-		<input type="text" id="nameoffileordirectory" disabled><br>
+		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
 		<input type=button onclick="removeElement()" id="removeButton" value="Remove" disabled><br>
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
 	    </form>
@@ -137,13 +137,18 @@
 
 	<script>
 	 /**
+	  * Rules
+	  *  idName start with id, Name refers to Content 
+	  * Glossary
 	  *  mfsPath = mfsFilePath || mfsFileDir
 	  *  mfsFilePath /etc/my/directory/Z_block.txt
 	  *  mfsDirPath /etc/my/directory 
 	  *  mfsDirName /my
 	  *  basename Z_block.txt
 	  *  filename Z_block
+	  *  name basename || mfsDirName (name of last path element) 
 	  *  extension .txt
+	  *  imagePath images/file.png
 	  */
 	 
 	 window.onload = displayDirOnLoadWindow();
@@ -226,13 +231,13 @@
 		 console.log('displayJson name',name);
 		 console.log('displayJson hash_link',hash_link);
 		 
-		 var fil_dir = typeOfJsonOfKey (entries, i);
-		 console.log('displayJson fil_dir',fil_dir);
+		 var imagePath = typeOfJsonOfKey (entries, i);
+		 console.log('displayJson imagePath',imagePath);
 		 let type = entries[i]['Type'];
 		 console.log('displayJson type',type);
 		 
 		 let tr = createElementTable (table,'tr', '');
-		 createElementTable (tr, 'td', fil_dir);
+		 createElementTable (tr, 'td', imagePath);
 		 createElementTable (tr, 'td', createButtonOfMfsPath(mfspath,name,type,hash));
 		 console.log('displayJson hash',hash);
 		 createElementTable (tr, 'td', hash_link);
@@ -240,7 +245,7 @@
 	 }
 	 
 	 function removeElement () {
-	     let mfspath = document.getElementById('nameoffileordirectory').value;
+	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
 	     console.log("removeElement : mfspath '"+mfspath+"'");
 	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
 	     var conf = confirm(conf_mess);
@@ -285,7 +290,7 @@
 	 	 .then (_ => {document.getElementById('path').value = parent})    
 		 .then (_ => {document.getElementById('validateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
-		 .then (_ => {document.getElementById('nameoffileordirectory').value = document.getElementById('path').value})
+		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('path').value})
 		 .catch(err => logError(err))
 	     
 	 }	 
@@ -323,9 +328,12 @@
 	     else {return "";}
 	 }
 
-	 function createButtonOfMfsPath (mfspath,name,type,hash) {
-	     console.log('createButtonOfMfsPath hash',hash);
+	 function createButtonOfMfsPath (mfspath, name, type, hash) {
 	     console.log('createButtonOfMfsPath mfspath',mfspath);
+	     console.log('createButtonOfMfsPath name',name);
+	     console.log('createButtonOfMfsPath type',type);
+	     console.log('createButtonOfMfsPath hash',hash);
+
 	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
 	     if (type == 1){
@@ -339,24 +347,26 @@
 	     return but;
 	 }
 
-	 function addNameOfFileOnDeleteBlock(nof,hash) {
-	     console.log('addNameOfFileOnDeleteBlock nof',nof);
+	 function addNameOfFileOnDeleteBlock(fileName, hash) {
+	     console.log('addNameOfFileOnDeleteBlock fileName',fileName);
 	     console.log('addNameOfFileOnDeleteBlock hash',hash);
+	     
 	     var dir = document.getElementById('path').value;
+	     console.log('addNameOfFileOnDeleteBlock dir',dir);
 	     if (dir != '/') {
-		 var path = dir + '/' + nof;
+		 var path = dir + '/' + fileName;
 	     }else {
-		 var path = dir + nof;
+		 var path = dir + fileName;
 	     }
 	     console.log('addNameOfFileOnDeleteBlock path',path);
 	     document.getElementById('removeButton').disabled = false;
-	     var del = document.getElementById('nameoffileordirectory');
+	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
 	     getHash(hash);
 	 }
 
 	 function addNameOnInputMfsPath (mfspath) {
-	     console.log ('addNameOnInputMfsPath name', mfspath);
+	     console.log ('addNameOnInputMfsPath mfspath', mfspath);
 	     let old_path = document.getElementById('path').value;
 	     console.log ('addNameOnInputMfsPath old path', old_path);
 	     let path = old_path;
@@ -367,7 +377,7 @@
 		 path += mfspath;
 	     }
 	     console.log ('addNameOnInputMfsPath path', path);
-	     var del = document.getElementById('nameoffileordirectory');
+	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
 	     var x = document.getElementById('path');
 	     x.value = path;
