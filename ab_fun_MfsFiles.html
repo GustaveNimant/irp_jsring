@@ -84,7 +84,7 @@
 	    
 	    <!-- Bloc upload -->
 
-    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
+	    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
 	    <form method="POST">
 		<input type="file"><br>
 		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
@@ -181,9 +181,9 @@
 	 function displayJson (json) {
 	     console.log('displayJson input json', json);
 	     
-	     let mfspath = json.mfspath
+	     let mfsDirPath = json.mfspath
 	     let entries = json.Entries
-	     console.log('displayJson mfspath', mfspath);
+	     console.log('displayJson mfsDirPath', mfsDirPath);
 	     console.log('displayJson entries', entries);
 	     
 	     table = document.getElementById('ls-result')
@@ -191,7 +191,7 @@
 	     
 	     deleteActionsAndErrorTexts();
 	     deleteAllRowsofTable (table);
-	     updateElementOfIdOfValue ('h3-title', mfspath);
+	     updateElementOfIdOfValue ('h3-title', mfsDirPath);
 
 	     try {
 		 if (entries == null) throw "entries is null"		 
@@ -204,37 +204,37 @@
 	     }
 
 	     for (i=0; i<entries.length; i++) {
-		 createTableOfEntriesOfMfspath (entries, mfspath);
+		 createTableOfEntriesOfMfspath (entries, mfsDirPath);
 	     }
 	 }
-
-	     function createHeaderOfTable (table) {
-		 let tr = createElementTable (table,'tr', '');
-		 createElementTable (tr, 'th', 'Type');
-		 createElementTable (tr, 'th', 'Name');
-		 createElementTable (tr, 'th', 'Hash')   
-	     }
-
-	     function createTableOfEntriesOfMfspath (entries, mfspath){
-
-		 var hash = entries[i]['Hash'];
-		 var name = entries[i]['Name'];
-		 var hash_link = linkIpfsHash (hash);
-		 
-		 console.log('displayJson hash',hash);
-		 console.log('displayJson name',name);
-		 console.log('displayJson hash_link',hash_link);
-		 
-		 var imagePath = imageOfJsonOfKey (entries, i);
-		 console.log('displayJson imagePath',imagePath);
-		 let type = entries[i]['Type'];
-		 console.log('displayJson type',type);
-		 
-		 let tr = createElementTable (table,'tr', '');
-		 createElementTable (tr, 'td', imagePath);
-		 createElementTable (tr, 'td', createButtonOfMfsPath(mfspath,name,type,hash));
-		 console.log('displayJson hash',hash);
-		 createElementTable (tr, 'td', hash_link);
+	 
+	 function createHeaderOfTable (table) {
+	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'th', 'Type');
+	     createElementTable (tr, 'th', 'Name');
+	     createElementTable (tr, 'th', 'Hash')   
+	 }
+	 
+	 function createTableOfEntriesOfMfspath (entries, mfsDirPath){
+	     
+	     var hash = entries[i]['Hash'];
+	     var name = entries[i]['Name'];
+	     var hash_link = linkIpfsHash (hash);
+	     
+	     console.log('displayJson hash',hash);
+	     console.log('displayJson name',name);
+	     console.log('displayJson hash_link',hash_link);
+	     
+	     var imagePath = imageOfJsonOfKey (entries, i);
+	     console.log('displayJson imagePath',imagePath);
+	     let type = entries[i]['Type'];
+	     console.log('displayJson type',type);
+	     
+	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'td', imagePath);
+	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
+	     console.log('displayJson hash',hash);
+	     createElementTable (tr, 'td', hash_link);
 	 }
 	 
 	 function removeElement () {
@@ -336,11 +336,11 @@
 	     return result;
 	 }
 
-	 function createButtonOfMfsPath (mfspath, name, type, hash) { // Improve
-	     console.log('createButtonOfMfsPath mfspath',mfspath);
-	     console.log('createButtonOfMfsPath name',name);
-	     console.log('createButtonOfMfsPath type',type);
-	     console.log('createButtonOfMfsPath hash',hash);
+	 function createButtonOfMfsDirPath (mfspath, name, type, hash) { // Improve
+	     console.log('createButtonOfMfsDirPath mfspath',mfspath);
+	     console.log('createButtonOfMfsDirPath name',name);
+	     console.log('createButtonOfMfsDirPath type',type);
+	     console.log('createButtonOfMfsDirPath hash',hash);
 
 	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
@@ -348,7 +348,7 @@
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 	     } else {
 		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
-		 console.log('createButtonOfMfsPath but',but);
+		 console.log('createButtonOfMfsDirPath but',but);
 	     }
 	     but += '>';
 	     return but;
