@@ -85,40 +85,42 @@
 	    <!-- Bloc upload -->
 
     <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
-	    <form method=POST>
-		<input type=file><br>
+	    <form method="POST">
+		<input type="file"><br>
 		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
 		<input type="radio" name="nameoffile" id="idUploadNewName">
 		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
-		<input type=button onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
+		<input type="button" onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
 		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
 	    </form>
 
 	    <!-- Bloc mkdir -->
 
 	    <div class="upload">Create directory to <span id="currentMfsDir"></span></div><br>
-	    <form method=POST>
+	    <form method="POST">
 		<input type="text" id="idNameOfDirectory"><br>
-		<input type=button onclick="createDirectory()" id="createDirButton" value="Create"><br>
+		<input type="button" onclick="createDirectory()" id="createDirButton" value="Create"><br>
 		<div class="fileUploadedAndRemoved" id="directoryCreated"></div>
 	    </form>
 	    
 	    <!-- Bloc remove -->
 	    
 	    <div class="upload">Remove file or directory</div><br>
-	    <form method=POST>
+	    <form method="POST">
 		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
-		<input type=button onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
+		<input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
 	    </form>
 	</div>
+
 	<!-- list of Mfs files in directory 'path' -->
+
 	<form>
 	    <center>
 		<span class="title">
-		    Mfs directories <input id="mfsdir" name="mfsdir" type="text" value="/">
-		    <input type=button onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
-		    <input type=button onClick="document.location.reload(true)" type=reset value="Reset page">
+		    Mfs directories <input id="idMfsDirPath" name="idMfsDirPath" type="text" value="/">
+		    <input type="button" onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
+		    <input type="button" onClick="document.location.reload(true)" value="Reset page">
 		</span>
 		<pre id="ls"></pre>
 	</form>
@@ -136,25 +138,6 @@
 	<pre id="catOfHash" class="catOfHash"></pre>
 
 	<script>
-	 /**
-	  * Rules
-	  *  id : Used in span to modify innerHTML.
-          *  name : Used in input.( No need of id).
-          *  class : Used to refer Collections of Elements. 
-          *  :keyword when substitution is done ony once. (class="keyword").
-	    
-	  * Glossary
-	  *  mfsPath = mfsFilePath || mfsFileDir
-	  *  mfsFilePath /etc/my/directory/Z_block.txt
-	  *  mfsDirPath /etc/my/directory 
-	  *  mfsDirName my
-	  *  baseName Z_block.txt
-	  *  rootName Z_block
-	  *  name is baseName || mfsDirName (name of last path element) 
-	  *  extension .txt
-	  *  imagePath images/file.png
-	  */
-	 
 	 window.onload = displayDirOnLoadWindow();
 
 	 function displayDirOnLoadWindow() {
@@ -265,7 +248,7 @@
 	 }
 
 	 function createDirectory() {
-	     let msfDirPath =  document.getElementById('mfsdir').value;
+	     let msfDirPath =  document.getElementById('idMfsDirPath').value;
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory mfsDirName',mfsDirName);
@@ -299,10 +282,10 @@
 	     return fetch(url, { method: "POST", mode: 'cors'})
 	     	 .then (validate)
 	     	 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
-	 	 .then (_ => {document.getElementById('mfsdir').value = parent})    
+	 	 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
 		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
-		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('mfsdir').value})
+		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('idMfsDirPath').value})
 		 .catch(err => logError(err))
 	     
 	 }	 
@@ -375,7 +358,7 @@
 	     console.log('addNameOfFileOnDeleteBlock rootName',rootName);
 	     console.log('addNameOfFileOnDeleteBlock hash',hash);
 	     
-	     var mfsdir = document.getElementById('mfsdir').value;
+	     var mfsdir = document.getElementById('idMfsDirPath').value;
 	     console.log('addNameOfFileOnDeleteBlock mfsdir',mfsdir);
 	     if (mfsdir != '/') {
 		 var path = mfsdir + '/' + rootName;
@@ -391,7 +374,7 @@
 
 	 function addNameOnInputMfsPath (mfspath) {
 	     console.log ('addNameOnInputMfsPath mfspath', mfspath);
-	     let oldMfsdir = document.getElementById('mfsdir').value;
+	     let oldMfsdir = document.getElementById('idMfsDirPath').value;
 	     console.log ('addNameOnInputMfsPath old path', oldMfsdir);
 	     let path = oldMfsdir;
 	     if (oldMfsdir == '/'){
@@ -403,7 +386,7 @@
 	     console.log ('addNameOnInputMfsPath path', path);
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
-	     var mfsdir = document.getElementById('mfsdir');
+	     var mfsdir = document.getElementById('idMfsDirPath');
 	     mfsdir.value = path;
 	     document.getElementById('idRemoveButton').disabled = false;
 	     document.getElementById('idValidateClick').click();
@@ -450,7 +433,7 @@
 	 function uploadFileToCurrentMfs(form) {
 	     console.log('uploadFileToCurrentMfs : form.elements ',form.elements);
 	     let fakepath = form.elements[0].value
-	     let mfsdir = document.getElementById('mfsdir').value;
+	     let mfsdir = document.getElementById('idMfsDirPath').value;
 	     console.log('uploadFileToCurrentMfs : fakepath ',fakepath)
 	     console.log('uploadFileToCurrentMfs : mfspath ',mfsdir)
 	     let path = mfsdir;
@@ -555,7 +538,7 @@
 		 case "Cannot read property 'length' of null":
 		     console.log('logError', "Cannot read property 'length' of null");
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('mfsdir').value;
+		     var dir = document.getElementById('idMfsDirPath').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;
@@ -563,7 +546,7 @@
 		 case "entries is null":
 		     console.log('logError', 'entries is null');
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('mfsdir').value;
+		     var dir = document.getElementById('idMfsDirPath').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;
