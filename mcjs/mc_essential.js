@@ -192,6 +192,7 @@ function qm2Int(qm) {
   console.log('d: '+d)
   return ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
 }
+
 function to_hex(s) {
     var r = '';
     for (var i = 0; i < s.length; i++) {
@@ -216,6 +217,56 @@ function validate(resp) {
 }
 
 function consLog(what) { return data => { console.log(what+': ',data); return data; } }
-function logError(err) { console.error(err); }
 
+function displayByIdOfTagOfValue (tag, value) {
+    document.getElementById(tag).innerHTML = value
+}
+
+function logError (err) {
+    console.log("logError : input err ",err);
+    const message = err.message;
+    console.log("logError : message '"+message+"'");
+    displayByIdOfTagOfValue("error", message);
+    switch (message){
+	
+    case "NetworkError when attempting to fetch resource.":
+	var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
+	displayByIdOfTagOfValue("error", text); 
+	break;
+	
+    case "Failed to fetch":
+	var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
+	displayByIdOfTagOfValue("error", text); 
+	break;	     
+	
+    case "Internal Server Error":
+	var text = "Internal Server Error because ipfs file path was uncorrect";
+	displayByIdOfTagOfValue("error", text); 
+	break;
+	
+    case "Cannot read property 'length' of null":
+	console.log('logError', "Cannot read property 'length' of null");
+	displayByIdOfTagOfValue("error", '');
+	var dir = document.getElementById('path').value;
+	console.log('logError dir', dir);
+	updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	break;
+	
+    case "entries is null":
+	console.log('logError', 'entries is null');
+	displayByIdOfTagOfValue("error", '');
+	var dir = document.getElementById('path').value;
+	console.log('logError dir', dir);
+	updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	break;
+
+    case "Internal Server Error because ipfs file path was uncorrect":
+	var text = "Internal Server Error because ipfs path is not pinned<br>run : ipms pin add Qm..."
+	displayByIdOfTagOfValue("error", text); 
+	break;
+	
+    default:
+	console.log("logError : default err '"+err+"'");
+    } // switch
+}
 true; // $Source:  /my/js/scripts/essential.js$

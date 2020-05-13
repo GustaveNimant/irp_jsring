@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <body>
+	<div>
+	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="some hash">
+	    <input type="button" onClick="getPinList(document.getElementsByName('hash'))" value="Pin">
+	</div>
+
+	<p style="color:green" id="result"></p>
+        <p style="color:red" id="error"></p>
+	
+	<script src="mcjs/mc_essential.js"></script>
+	<script src="mcjs/mc_ipfs.js"></script>
+
+	<script>
+
+	 function getPinList(elements) {
+	     console.log('getPinList input elements',elements);
+	     let hash = elements[0].value;
+	     console.log('getPinList input hash',hash);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+
+	     var url;
+	     if (hash == '') {
+		 url = api_url + 'pin/ls?type=direct'
+	     } else {
+		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     }
+	     console.log('getPinList url',url)
+	     return fetchGetJson(url)
+		 .then( json => { console.log('pin/ls: ',json); })
+		 .catch(logError)
+	 }
+	</script>
+    </body>
+</html>
+

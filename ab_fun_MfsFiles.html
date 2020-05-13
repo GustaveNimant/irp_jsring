@@ -86,7 +86,7 @@
 
     <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
 	    <form method=POST>
-		<input type="file"><br>
+		<input type=file><br>
 		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
 		<input type="radio" name="nameoffile" id="idUploadNewName">
 		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
@@ -112,13 +112,11 @@
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
 	    </form>
 	</div>
-	
 	<!-- list of Mfs files in directory 'path' -->
-	
 	<form>
 	    <center>
 		<span class="title">
-		    Mfs directories <input id="path" name="mfsdir" type="text" value="/">
+		    Mfs directories <input id="mfsdir" name="mfsdir" type="text" value="/">
 		    <input type=button onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
 		    <input type=button onClick="document.location.reload(true)" type=reset value="Reset page">
 		</span>
@@ -138,6 +136,25 @@
 	<pre id="catOfHash" class="catOfHash"></pre>
 
 	<script>
+	 /**
+	  * Rules
+	  *  id : Used in span to modify innerHTML.
+          *  name : Used in input.( No need of id).
+          *  class : Used to refer Collections of Elements. 
+          *  :keyword when substitution is done ony once. (class="keyword").
+	    
+	  * Glossary
+	  *  mfsPath = mfsFilePath || mfsFileDir
+	  *  mfsFilePath /etc/my/directory/Z_block.txt
+	  *  mfsDirPath /etc/my/directory 
+	  *  mfsDirName my
+	  *  baseName Z_block.txt
+	  *  rootName Z_block
+	  *  name is baseName || mfsDirName (name of last path element) 
+	  *  extension .txt
+	  *  imagePath images/file.png
+	  */
+	 
 	 window.onload = displayDirOnLoadWindow();
 
 	 function displayDirOnLoadWindow() {
@@ -169,13 +186,17 @@
 		 .catch(err => {console.log(err); logError(err)})
 	 }
 
+	 function deleteAllRowsofTable (table) {
+	     
+	     var i = 1;  // Be careful with deleteRow : length is modified.
+	     while (table.rows[i]) {
+		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
+		 table.deleteRow(i);
+	     }
+	 }
+
 	 function displayJson (json) {
 	     console.log('displayJson input json', json);
-	     
-	     updateElementOfIdOfValue ('fileUploaded', '');
-	     updateElementOfIdOfValue ('error', '');
-	     updateElementOfIdOfValue ('catOfHash', '');
-	     updateElementOfIdOfValue ('fileRemoved', '');
 	     
 	     let mfspath = json.mfspath
 	     let entries = json.Entries
@@ -184,32 +205,35 @@
 	     
 	     table = document.getElementById('ls-result')
 	     console.log('displayJson table',table);
-
-	     var i = 1;  // Be careful with deleteRow : length is modified.
-	     while (table.rows[i]) {
-		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
-		 table.deleteRow(i);
-	     }
-	     console.log('displayJson rows count',table.rows.length);
-
+	     
+	     deleteActionsAndErrorTexts();
+	     deleteAllRowsofTable (table);
 	     updateElementOfIdOfValue ('h3-title', mfspath);
 
-	     let tr = createElementTable (table,'tr', '');
-
-	     var ent_len = entries.length;
 	     try {
 		 if (entries == null) throw "entries is null"		 
 	     } catch (e) {
 		 logError(e);
 	     }
-	     
-	     console.log('displayJson ent_len',ent_len);
-	     if (ent_len != 0){
+
+	     if (entries.length != 0){
+		 createHeaderOfTable (table);
+	     }
+
+	     for (i=0; i<entries.length; i++) {
+		 createTableOfEntriesOfMfspath (entries, mfspath);
+	     }
+	 }
+
+	     function createHeaderOfTable (table) {
+		 let tr = createElementTable (table,'tr', '');
 		 createElementTable (tr, 'th', 'Type');
 		 createElementTable (tr, 'th', 'Name');
-		 createElementTable (tr, 'th', 'Hash')
+		 createElementTable (tr, 'th', 'Hash')   
 	     }
-	     for (i=0; i<entries.length; i++) {
+
+	     function createTableOfEntriesOfMfspath (entries, mfspath){
+
 		 var hash = entries[i]['Hash'];
 		 var name = entries[i]['Name'];
 		 var hash_link = linkIpfsHash (hash);
@@ -228,7 +252,6 @@
 		 createElementTable (tr, 'td', createButtonOfMfsPath(mfspath,name,type,hash));
 		 console.log('displayJson hash',hash);
 		 createElementTable (tr, 'td', hash_link);
-	     }
 	 }
 	 
 	 function removeElement () {
@@ -242,7 +265,7 @@
 	 }
 
 	 function createDirectory() {
-	     let msfDirPath =  document.getElementById('path').value;
+	     let msfDirPath =  document.getElementById('mfsdir').value;
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory mfsDirName',mfsDirName);
@@ -276,10 +299,10 @@
 	     return fetch(url, { method: "POST", mode: 'cors'})
 	     	 .then (validate)
 	     	 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
-	 	 .then (_ => {document.getElementById('path').value = parent})    
+	 	 .then (_ => {document.getElementById('mfsdir').value = parent})    
 		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
-		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('path').value})
+		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('mfsdir').value})
 		 .catch(err => logError(err))
 	     
 	 }	 
@@ -352,12 +375,12 @@
 	     console.log('addNameOfFileOnDeleteBlock rootName',rootName);
 	     console.log('addNameOfFileOnDeleteBlock hash',hash);
 	     
-	     var dir = document.getElementById('path').value;
-	     console.log('addNameOfFileOnDeleteBlock dir',dir);
-	     if (dir != '/') {
-		 var path = dir + '/' + rootName;
+	     var mfsdir = document.getElementById('mfsdir').value;
+	     console.log('addNameOfFileOnDeleteBlock mfsdir',mfsdir);
+	     if (mfsdir != '/') {
+		 var path = mfsdir + '/' + rootName;
 	     }else {
-		 var path = dir + rootName;
+		 var path = mfsdir + rootName;
 	     }
 	     console.log('addNameOfFileOnDeleteBlock path',path);
 	     document.getElementById('idRemoveButton').disabled = false;
@@ -368,10 +391,10 @@
 
 	 function addNameOnInputMfsPath (mfspath) {
 	     console.log ('addNameOnInputMfsPath mfspath', mfspath);
-	     let old_path = document.getElementById('path').value;
-	     console.log ('addNameOnInputMfsPath old path', old_path);
-	     let path = old_path;
-	     if (old_path == '/'){
+	     let oldMfsdir = document.getElementById('mfsdir').value;
+	     console.log ('addNameOnInputMfsPath old path', oldMfsdir);
+	     let path = oldMfsdir;
+	     if (oldMfsdir == '/'){
 		 path += mfspath;
 	     } else {
 		 path += '/';
@@ -380,8 +403,8 @@
 	     console.log ('addNameOnInputMfsPath path', path);
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
-	     var x = document.getElementById('path');
-	     x.value = path;
+	     var mfsdir = document.getElementById('mfsdir');
+	     mfsdir.value = path;
 	     document.getElementById('idRemoveButton').disabled = false;
 	     document.getElementById('idValidateClick').click();
 	 }
@@ -427,10 +450,10 @@
 	 function uploadFileToCurrentMfs(form) {
 	     console.log('uploadFileToCurrentMfs : form.elements ',form.elements);
 	     let fakepath = form.elements[0].value
-	     let mfspath = document.getElementById('path').value;
+	     let mfsdir = document.getElementById('mfsdir').value;
 	     console.log('uploadFileToCurrentMfs : fakepath ',fakepath)
-	     console.log('uploadFileToCurrentMfs : mfspath ',mfspath)
-	     let path = mfspath;
+	     console.log('uploadFileToCurrentMfs : mfspath ',mfsdir)
+	     let path = mfsdir;
 	     let file = form.elements[0].files[0]
 	     console.log('uploadFileToCurrentMfs : element[0].files ',form.elements[0].files)
 	     
@@ -442,15 +465,15 @@
 		 console.log('uploadFileToCurrentMfs name',name);
 	     }
 	     console.log('uploadFileToCurrentMfs name',name);
-	     mfspath += '/';
-	     mfspath += name;
-	     console.log('mfspath',mfspath);
+	     mfsdir += '/';
+	     mfsdir += name;
+	     console.log('uploadFileToCurrentMfs mfsdir',mfsdir);
 	     
 	     let reader = new FileReader();
 	     reader.onload = event => {
 		 const content_on_load = event.target.result;
 		 console.log('uploadFileToCurrentMfs : content_on_load ',content_on_load)
-		 writeOfMfsFilePathOfContent(mfspath, content_on_load).then(callback('hash'))
+		 writeOfMfsFilePathOfContent(mfsdir, content_on_load).then(callback('hash'))
 	     }
 
 	     reader.readAsText(file,'UTF-8') 
@@ -532,7 +555,7 @@
 		 case "Cannot read property 'length' of null":
 		     console.log('logError', "Cannot read property 'length' of null");
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('path').value;
+		     var dir = document.getElementById('mfsdir').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;
@@ -540,7 +563,7 @@
 		 case "entries is null":
 		     console.log('logError', 'entries is null');
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('path').value;
+		     var dir = document.getElementById('mfsdir').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;
@@ -634,6 +657,13 @@
 	     return substi
 	 }
 
+	 function deleteActionsAndErrorTexts() {
+	     updateElementOfIdOfValue ('fileUploaded', '');
+	     updateElementOfIdOfValue ('error', '');
+	     updateElementOfIdOfValue ('catOfHash', '');
+	     updateElementOfIdOfValue ('fileRemoved', '');
+	 }
+	 
 	 function IpfsException (message) {
 	     this.message = message;
 	     this.name = "IpfsException";
