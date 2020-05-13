@@ -84,43 +84,43 @@
 	    
 	    <!-- Bloc upload -->
 
-    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
-	    <form method=POST>
+	    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
+	    <form method="POST">
 		<input type="file"><br>
 		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
 		<input type="radio" name="nameoffile" id="idUploadNewName">
 		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
-		<input type=button onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
+		<input type="button" onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
 		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
 	    </form>
 
 	    <!-- Bloc mkdir -->
 
 	    <div class="upload">Create directory to <span id="currentMfsDir"></span></div><br>
-	    <form method=POST>
+	    <form method="POST">
 		<input type="text" id="idNameOfDirectory"><br>
-		<input type=button onclick="createDirectory()" id="createDirButton" value="Create"><br>
+		<input type="button" onclick="createDirectory()" id="createDirButton" value="Create"><br>
 		<div class="fileUploadedAndRemoved" id="directoryCreated"></div>
 	    </form>
 	    
 	    <!-- Bloc remove -->
 	    
 	    <div class="upload">Remove file or directory</div><br>
-	    <form method=POST>
+	    <form method="POST">
 		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
-		<input type=button onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
+		<input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
 	    </form>
 	</div>
-	
+
 	<!-- list of Mfs files in directory 'path' -->
-	
+
 	<form>
 	    <center>
 		<span class="title">
-		    Mfs directories <input id="path" name="mfsdir" type="text" value="/">
-		    <input type=button onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
-		    <input type=button onClick="document.location.reload(true)" type=reset value="Reset page">
+		    Mfs directories <input id="idMfsDirPath" name="idMfsDirPath" type="text" value="/">
+		    <input type="button" onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
+		    <input type="button" onClick="document.location.reload(true)" value="Reset page">
 		</span>
 		<pre id="ls"></pre>
 	</form>
@@ -155,94 +155,90 @@
 	     getFileList (mfspath)
 	 }
 
-	 function getFileList (mfspath) {
-	     console.log("getFileList input mfspath",mfspath);
+	 function getFileList (mfsDirPath) {
+	     console.log("getFileList input mfsDirPath",mfsDirPath);
 
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'files/ls?arg=' + mfspath + '&l=true'
+	     var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
 	     console.log("getFileList : url '"+url+"'");
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
 		 .then (resp => resp.json())
-		 .then (body => { body.mfspath = mfspath; return body})
+		 .then (body => { body.mfspath = mfsDirPath; return body})
 		 .then (displayJson)
 		 .catch(err => {console.log(err); logError(err)})
 	 }
 
-	 function displayJson (json) {
-	     console.log('displayJson input json', json);
-	     
-	     updateElementOfIdOfValue ('fileUploaded', '');
-	     updateElementOfIdOfValue ('error', '');
-	     updateElementOfIdOfValue ('catOfHash', '');
-	     updateElementOfIdOfValue ('fileRemoved', '');
-	     
-	     let mfspath = json.mfspath
-	     let entries = json.Entries
-	     console.log('displayJson mfspath', mfspath);
-	     console.log('displayJson entries', entries);
-	     
-	     table = document.getElementById('ls-result')
-	     console.log('displayJson table',table);
-
+	 function deleteAllRowsOfTable (table) {
+	     console.log('deleteAllRowsOfTable input table', table);
 	     var i = 1;  // Be careful with deleteRow : length is modified.
 	     while (table.rows[i]) {
 		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
 		 table.deleteRow(i);
 	     }
-	     console.log('displayJson rows count',table.rows.length);
+	 }
 
-	     updateElementOfIdOfValue ('h3-title', mfspath);
+	 function displayJson (json) {
+	     console.log('displayJson input json', json);
+	     
+	     let mfsDirPath = json.mfspath
+	     let entries = json.Entries
+	     console.log('displayJson mfsDirPath', mfsDirPath);
+	     console.log('displayJson entries', entries);
+	     
+	     table = document.getElementById('ls-result')
+	     console.log('displayJson table',table);
+	     
+	     deleteActionsAndErrorTexts();
+	     deleteAllRowsOfTable (table);
+	     updateElementOfIdOfValue ('h3-title', mfsDirPath);
 
-	     let tr = createElementTable (table,'tr', '');
-
-	     var ent_len = entries.length;
 	     try {
 		 if (entries == null) throw "entries is null"		 
 	     } catch (e) {
 		 logError(e);
 	     }
-	     
-	     console.log('displayJson ent_len',ent_len);
-	     if (ent_len != 0){
-		 createElementTable (tr, 'th', 'Type');
-		 createElementTable (tr, 'th', 'Name');
-		 createElementTable (tr, 'th', 'Hash')
+
+	     if (entries.length != 0){
+		 createHeaderOfTable (table);
 	     }
+
 	     for (i=0; i<entries.length; i++) {
-		 var hash = entries[i]['Hash'];
-		 var name = entries[i]['Name'];
-		 var hash_link = linkIpfsHash (hash);
-		 
-		 console.log('displayJson hash',hash);
-		 console.log('displayJson name',name);
-		 console.log('displayJson hash_link',hash_link);
-		 
-		 var imagePath = imageOfJsonOfKey (entries, i);
-		 console.log('displayJson imagePath',imagePath);
-		 let type = entries[i]['Type'];
-		 console.log('displayJson type',type);
-		 
-		 let tr = createElementTable (table,'tr', '');
-		 createElementTable (tr, 'td', imagePath);
-		 createElementTable (tr, 'td', createButtonOfMfsPath(mfspath,name,type,hash));
-		 console.log('displayJson hash',hash);
-		 createElementTable (tr, 'td', hash_link);
+		 createTableOfEntriesOfMfspath (entries, mfsDirPath);
 	     }
 	 }
 	 
-	 function removeElement () {
-	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
-	     console.log("removeElement : mfspath '"+mfspath+"'");
-	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
-	     var conf = confirm(conf_mess);
-	     if (conf == true) {
-	     	 removeFileOfMfsPath (mfspath)
-	     }		 
+	 function createHeaderOfTable (table) {
+	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'th', 'Type');
+	     createElementTable (tr, 'th', 'Name');
+	     createElementTable (tr, 'th', 'Hash')   
 	 }
-
+	 
+	 function createTableOfEntriesOfMfspath (entries, mfsDirPath){
+	     
+	     var hash = entries[i]['Hash'];
+	     var name = entries[i]['Name'];
+	     var hash_link = linkIpfsHash (hash);
+	     
+	     console.log('displayJson hash',hash);
+	     console.log('displayJson name',name);
+	     console.log('displayJson hash_link',hash_link);
+	     
+	     var imagePath = imageOfJsonOfKey (entries, i);
+	     console.log('displayJson imagePath',imagePath);
+	     let type = entries[i]['Type'];
+	     console.log('displayJson type',type);
+	     
+	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'td', imagePath);
+	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
+	     console.log('displayJson hash',hash);
+	     createElementTable (tr, 'td', hash_link);
+	 }
+	 
 	 function createDirectory() {
-	     let msfDirPath =  document.getElementById('path').value;
+	     let msfDirPath =  document.getElementById('idMfsDirPath').value;
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory mfsDirName',mfsDirName);
@@ -263,6 +259,16 @@
 		 .catch(logError)
 	 }
 
+	 function removeElement () {
+	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
+	     console.log("removeElement : mfspath '"+mfspath+"'");
+	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
+	     var conf = confirm(conf_mess);
+	     if (conf == true) {
+	     	 removeFileOfMfsPath (mfspath)
+	     }		 
+	 }
+
 	 function removeFileOfMfsPath(mfspath) {
 	     console.log('removeFileOfPath input mfspath',mfspath);
 
@@ -276,10 +282,10 @@
 	     return fetch(url, { method: "POST", mode: 'cors'})
 	     	 .then (validate)
 	     	 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
-	 	 .then (_ => {document.getElementById('path').value = parent})    
+	 	 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
 		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
-		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('path').value})
+		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('idMfsDirPath').value})
 		 .catch(err => logError(err))
 	     
 	 }	 
@@ -330,11 +336,11 @@
 	     return result;
 	 }
 
-	 function createButtonOfMfsPath (mfspath, name, type, hash) { // Improve
-	     console.log('createButtonOfMfsPath mfspath',mfspath);
-	     console.log('createButtonOfMfsPath name',name);
-	     console.log('createButtonOfMfsPath type',type);
-	     console.log('createButtonOfMfsPath hash',hash);
+	 function createButtonOfMfsDirPath (mfspath, name, type, hash) { // Improve
+	     console.log('createButtonOfMfsDirPath mfspath',mfspath);
+	     console.log('createButtonOfMfsDirPath name',name);
+	     console.log('createButtonOfMfsDirPath type',type);
+	     console.log('createButtonOfMfsDirPath hash',hash);
 
 	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
@@ -342,7 +348,7 @@
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 	     } else {
 		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
-		 console.log('createButtonOfMfsPath but',but);
+		 console.log('createButtonOfMfsDirPath but',but);
 	     }
 	     but += '>';
 	     return but;
@@ -352,12 +358,12 @@
 	     console.log('addNameOfFileOnDeleteBlock rootName',rootName);
 	     console.log('addNameOfFileOnDeleteBlock hash',hash);
 	     
-	     var dir = document.getElementById('path').value;
-	     console.log('addNameOfFileOnDeleteBlock dir',dir);
-	     if (dir != '/') {
-		 var path = dir + '/' + rootName;
+	     var mfsdir = document.getElementById('idMfsDirPath').value;
+	     console.log('addNameOfFileOnDeleteBlock mfsdir',mfsdir);
+	     if (mfsdir != '/') {
+		 var path = mfsdir + '/' + rootName;
 	     }else {
-		 var path = dir + rootName;
+		 var path = mfsdir + rootName;
 	     }
 	     console.log('addNameOfFileOnDeleteBlock path',path);
 	     document.getElementById('idRemoveButton').disabled = false;
@@ -368,10 +374,10 @@
 
 	 function addNameOnInputMfsPath (mfspath) {
 	     console.log ('addNameOnInputMfsPath mfspath', mfspath);
-	     let old_path = document.getElementById('path').value;
-	     console.log ('addNameOnInputMfsPath old path', old_path);
-	     let path = old_path;
-	     if (old_path == '/'){
+	     let oldMfsdir = document.getElementById('idMfsDirPath').value;
+	     console.log ('addNameOnInputMfsPath old path', oldMfsdir);
+	     let path = oldMfsdir;
+	     if (oldMfsdir == '/'){
 		 path += mfspath;
 	     } else {
 		 path += '/';
@@ -380,8 +386,8 @@
 	     console.log ('addNameOnInputMfsPath path', path);
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
-	     var x = document.getElementById('path');
-	     x.value = path;
+	     var mfsdir = document.getElementById('idMfsDirPath');
+	     mfsdir.value = path;
 	     document.getElementById('idRemoveButton').disabled = false;
 	     document.getElementById('idValidateClick').click();
 	 }
@@ -408,11 +414,12 @@
 	     return doc;
 	 }
 	 
-	 function displayByIdOfTagOfValue (tag, value) {
-	     document.getElementById(tag).innerHTML = value
-	 }
-	 
-	 function getCat(hash) {
+	 function getHash(hash) {
+	     console.log('getHash hash '+hash)
+	     if (hash == "") {
+		 alert("Name must be filled out");
+		 return false;
+	     }
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/';
 	     
@@ -421,16 +428,17 @@
 	     console.log('url '+url);
 	     return fetchGetTextCors(url)
 		 .then( obj => { return Promise.resolve(obj) })
+		 .then(callback('catOfHash'))
 		 .catch(logError)
 	 }
-	 
+
 	 function uploadFileToCurrentMfs(form) {
 	     console.log('uploadFileToCurrentMfs : form.elements ',form.elements);
 	     let fakepath = form.elements[0].value
-	     let mfspath = document.getElementById('path').value;
+	     let mfsdir = document.getElementById('idMfsDirPath').value;
 	     console.log('uploadFileToCurrentMfs : fakepath ',fakepath)
-	     console.log('uploadFileToCurrentMfs : mfspath ',mfspath)
-	     let path = mfspath;
+	     console.log('uploadFileToCurrentMfs : mfspath ',mfsdir)
+	     let path = mfsdir;
 	     let file = form.elements[0].files[0]
 	     console.log('uploadFileToCurrentMfs : element[0].files ',form.elements[0].files)
 	     
@@ -442,15 +450,16 @@
 		 console.log('uploadFileToCurrentMfs name',name);
 	     }
 	     console.log('uploadFileToCurrentMfs name',name);
-	     mfspath += '/';
-	     mfspath += name;
-	     console.log('mfspath',mfspath);
+	     mfsdir += '/';
+	     mfsdir += name;
+	     console.log('uploadFileToCurrentMfs mfsdir',mfsdir);
 	     
 	     let reader = new FileReader();
 	     reader.onload = event => {
 		 const content_on_load = event.target.result;
 		 console.log('uploadFileToCurrentMfs : content_on_load ',content_on_load)
-		 writeOfMfsFilePathOfContent(mfspath, content_on_load).then(callback('hash'))
+		 writeOfMfsFilePathOfContent(mfsdir, content_on_load)
+			.then(callback('hash'))
 	     }
 
 	     reader.readAsText(file,'UTF-8') 
@@ -482,6 +491,7 @@
 	     console.log('hashOfMfsFilePath : input mfsFilePath '+mfsFilePath);
 	     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
 	     console.log('hashOfMfsFilePath : url '+url);
+	     
 	     return fetchGetTextForm(url)
 		 .then( obj => obj.json())
 		 .then( json => {
@@ -532,7 +542,7 @@
 		 case "Cannot read property 'length' of null":
 		     console.log('logError', "Cannot read property 'length' of null");
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('path').value;
+		     var dir = document.getElementById('idMfsDirPath').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;
@@ -540,7 +550,7 @@
 		 case "entries is null":
 		     console.log('logError', 'entries is null');
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('path').value;
+		     var dir = document.getElementById('idMfsDirPath').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;
@@ -625,13 +635,15 @@
 	     return substi
 	 }
 
-	 function callbackCat (tag) {
-	     console.log('callbackCat tag '+tag)
-	     const substi = buf => {
-		 let e = document.getElementById(tag);
-		 e.innerHTML = buf;
-	     };
-	     return substi
+	 function deleteActionsAndErrorTexts() {
+	     updateElementOfIdOfValue ('fileUploaded', '');
+	     updateElementOfIdOfValue ('error', '');
+	     updateElementOfIdOfValue ('catOfHash', '');
+	     updateElementOfIdOfValue ('fileRemoved', '');
+	 }
+	 
+	 function displayByIdOfTagOfValue (tag, value) {
+	     document.getElementById(tag).innerHTML = value
 	 }
 
 	 function IpfsException (message) {
@@ -680,18 +692,11 @@
 	 }
 	 
 	 function fetchGetTextCors(url) {
-	     return fetch(url, { method: "GET", mode: "cors"} ).then(validate).then( resp => resp.text() )
+	     return fetch(url, { method: "GET", mode: "cors"} )
+		 .then(validate)
+		 .then( resp => resp.text() )
 	 }	 
 	 
-	 function getHash(hash) {
-	     console.log('getHash hash '+hash)
-	     if (hash == "") {
-		 alert("Name must be filled out");
-		 return false;
-	     }
-	     getCat(hash).then(callbackCat('catOfHash'))
-	 }
-
 	 function validate (resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
