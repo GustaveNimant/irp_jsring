@@ -237,16 +237,6 @@
 	     createElementTable (tr, 'td', hash_link);
 	 }
 	 
-	 function removeElement () {
-	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
-	     console.log("removeElement : mfspath '"+mfspath+"'");
-	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
-	     var conf = confirm(conf_mess);
-	     if (conf == true) {
-	     	 removeFileOfMfsPath (mfspath)
-	     }		 
-	 }
-
 	 function createDirectory() {
 	     let msfDirPath =  document.getElementById('idMfsDirPath').value;
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
@@ -267,6 +257,16 @@
 	     return fetchPostMkdirForm(path_url, url)
 		 .then(_ => {document.getElementById('idValidateClick').click()})
 		 .catch(logError)
+	 }
+
+	 function removeElement () {
+	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
+	     console.log("removeElement : mfspath '"+mfspath+"'");
+	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
+	     var conf = confirm(conf_mess);
+	     if (conf == true) {
+	     	 removeFileOfMfsPath (mfspath)
+	     }		 
 	 }
 
 	 function removeFileOfMfsPath(mfspath) {
@@ -417,7 +417,17 @@
 	 function displayByIdOfTagOfValue (tag, value) {
 	     document.getElementById(tag).innerHTML = value
 	 }
-	 
+
+	 function getHash(hash) {
+	     console.log('getHash hash '+hash)
+	     if (hash == "") {
+		 alert("Name must be filled out");
+		 return false;
+	     }
+	     getCat(hash)
+		 .then(callback('catOfHash'))
+	 }
+
 	 function getCat(hash) {
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/';
@@ -488,6 +498,7 @@
 	     console.log('hashOfMfsFilePath : input mfsFilePath '+mfsFilePath);
 	     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
 	     console.log('hashOfMfsFilePath : url '+url);
+	     
 	     return fetchGetTextForm(url)
 		 .then( obj => obj.json())
 		 .then( json => {
@@ -631,15 +642,6 @@
 	     return substi
 	 }
 
-	 function callbackCat (tag) {
-	     console.log('callbackCat tag '+tag)
-	     const substi = buf => {
-		 let e = document.getElementById(tag);
-		 e.innerHTML = buf;
-	     };
-	     return substi
-	 }
-
 	 function deleteActionsAndErrorTexts() {
 	     updateElementOfIdOfValue ('fileUploaded', '');
 	     updateElementOfIdOfValue ('error', '');
@@ -696,15 +698,6 @@
 	     return fetch(url, { method: "GET", mode: "cors"} ).then(validate).then( resp => resp.text() )
 	 }	 
 	 
-	 function getHash(hash) {
-	     console.log('getHash hash '+hash)
-	     if (hash == "") {
-		 alert("Name must be filled out");
-		 return false;
-	     }
-	     getCat(hash).then(callbackCat('catOfHash'))
-	 }
-
 	 function validate (resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
