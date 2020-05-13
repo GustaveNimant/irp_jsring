@@ -155,16 +155,16 @@
 	     getFileList (mfspath)
 	 }
 
-	 function getFileList (mfspath) {
-	     console.log("getFileList input mfspath",mfspath);
+	 function getFileList (mfsDirPath) {
+	     console.log("getFileList input mfsDirPath",mfsDirPath);
 
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'files/ls?arg=' + mfspath + '&l=true'
+	     var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
 	     console.log("getFileList : url '"+url+"'");
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
 		 .then (resp => resp.json())
-		 .then (body => { body.mfspath = mfspath; return body})
+		 .then (body => { body.mfspath = mfsDirPath; return body})
 		 .then (displayJson)
 		 .catch(err => {console.log(err); logError(err)})
 	 }
@@ -414,21 +414,12 @@
 	     return doc;
 	 }
 	 
-	 function displayByIdOfTagOfValue (tag, value) {
-	     document.getElementById(tag).innerHTML = value
-	 }
-
 	 function getHash(hash) {
 	     console.log('getHash hash '+hash)
 	     if (hash == "") {
 		 alert("Name must be filled out");
 		 return false;
 	     }
-	     getCat(hash)
-		 .then(callback('catOfHash'))
-	 }
-
-	 function getCat(hash) {
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/';
 	     
@@ -437,9 +428,10 @@
 	     console.log('url '+url);
 	     return fetchGetTextCors(url)
 		 .then( obj => { return Promise.resolve(obj) })
+		 .then(callback('catOfHash'))
 		 .catch(logError)
 	 }
-	 
+
 	 function uploadFileToCurrentMfs(form) {
 	     console.log('uploadFileToCurrentMfs : form.elements ',form.elements);
 	     let fakepath = form.elements[0].value
@@ -466,7 +458,8 @@
 	     reader.onload = event => {
 		 const content_on_load = event.target.result;
 		 console.log('uploadFileToCurrentMfs : content_on_load ',content_on_load)
-		 writeOfMfsFilePathOfContent(mfsdir, content_on_load).then(callback('hash'))
+		 writeOfMfsFilePathOfContent(mfsdir, content_on_load)
+			.then(callback('hash'))
 	     }
 
 	     reader.readAsText(file,'UTF-8') 
@@ -649,6 +642,10 @@
 	     updateElementOfIdOfValue ('fileRemoved', '');
 	 }
 	 
+	 function displayByIdOfTagOfValue (tag, value) {
+	     document.getElementById(tag).innerHTML = value
+	 }
+
 	 function IpfsException (message) {
 	     this.message = message;
 	     this.name = "IpfsException";
@@ -695,7 +692,9 @@
 	 }
 	 
 	 function fetchGetTextCors(url) {
-	     return fetch(url, { method: "GET", mode: "cors"} ).then(validate).then( resp => resp.text() )
+	     return fetch(url, { method: "GET", mode: "cors"} )
+		 .then(validate)
+		 .then( resp => resp.text() )
 	 }	 
 	 
 	 function validate (resp) {
