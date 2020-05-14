@@ -38,7 +38,7 @@
 	 let tr = createElementTable (thead,'tr', '');
 	 for (let key of data) {
 	     console.log('generateTableHead key',key);
-	     createElementTable (tr, 'th', key)
+	     createElementHeadOfTable (tr, 'th', key)
 	 }
      }
      
@@ -70,6 +70,15 @@
 	 document.body.appendChild (doc_tag);
      }
 
+     function createElementHeadOfTable (ele, tag, value) {
+	 let doc = document.createElement (tag);
+	 doc.style = "padding:7px";
+	 doc.style.border="2px solid blue";
+	 doc.innerHTML = value;
+	 ele.appendChild (doc);
+	 return doc;
+     }
+     
      function createElementTable (ele, tag, value) {
 	 let doc = document.createElement (tag);
 	 doc.style = "padding:7px";
