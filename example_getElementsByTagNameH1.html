@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<style>
+	 .democlass {
+	     color: red;
+	 }
+	</style>
+    </head>
+    <body>
+
+	<h1 class="democlass">Hello World</h1>
+	<h1 class="otherclass">Other World</h1>
+	
+	<p>Click the button to display the value of the class attribute node of the h1 element.</p>
+
+	<button onclick="myFunction(getElementOfName('h1'))">Try it</button>
+
+	<p id="attribute0">Element 0 </p>
+	<p id="attribute1"></p>
+	<p id="class0"></p>
+	<p id="class1"></p>
+
+	<script>
+         
+	 function getElementOfName(name) {
+	     console.log('getElementOfName input name',name);
+	     let elements = document.getElementsByTagName(name)
+	     console.log('getElementOfName elements',elements);
+	     let result = elements;
+	     console.log('getElementOfName result',result);
+	     return result;
+	 }
+
+	 function classOfNumberOfElement(e, element) {
+	     console.log('classOfNumberOfElement element # ',e,'is',element);
+	     let className = element.className;
+	     console.log('classOfNumberOfElement element.className',className);
+	     let attribute = element.getAttributeNode("class").value;
+	     console.log('classOfNumberOfElement attribute',attribute);
+	     document.getElementById("attribute"+e).innerHTML = attribute;
+	     document.getElementById("class"+e).innerHTML = element.className;
+	 }
+
+	 function myFunction(elements) {
+	     console.log('myFunction elements',elements);
+	     for (let e=0; e < elements.length; e++){
+		 var element = elements[e];
+		 console.log('myFunction element.className',element.className);
+		 classOfNumberOfElement(e, element);
+	     }
+	 }
+	</script>
+
+    </body>
+</html>

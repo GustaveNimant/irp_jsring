@@ -3,7 +3,7 @@
     <body>
 	<div>
 	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="some hash">
-	    <input type="button" onClick="getPinList(getValueOfName('hash'))" value="Pin">
+	    <input type="button" onClick="getPinAdd(getValueOfName('hash'))" value="Pin">
 	</div>
 
 	<p style="color:green" id="result"></p>
@@ -29,6 +29,16 @@
 	     return result;
 	 }
 	 
+	 function getPinAdd(hash) {
+	     console.log('getPinList input hash',hash);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'pin/add?arg=/ipfs/'+hash+'&progress=true'
+	     console.log('getPinList url',url)
+	     return fetchGetJson(url)
+		 .then( json => { console.log('pin/ls: ',json); })
+		 .catch(err => logErrorOfHash (err, hash))
+	 }
+
 	 function getPinList(hash) {
 	     console.log('getPinList input hash',hash);
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
