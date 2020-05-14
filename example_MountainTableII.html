@@ -56,13 +56,6 @@
 		 console.log('generateTable key',key);
 		 let text = document.createTextNode(element[key]);
 		 createElementTable (tr, 'td', text.data);
-		 /*
-		    let cell = tr.insertCell();
-		    console.log('generateTable cell',cell);
-		    console.log('generateTable text.data',text.data);
-		    cell.appendChild(text);
-		    cell.style.border="2px solid green";
-		  */
 	     }
 	 }
      }
@@ -80,6 +73,7 @@
      function createElementTable (ele, tag, value) {
 	 let doc = document.createElement (tag);
 	 doc.style = "padding:7px";
+	 doc.style.border="2px solid green";
 	 doc.innerHTML = value;
 	 ele.appendChild (doc);
 	 return doc;
