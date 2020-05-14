@@ -2,37 +2,83 @@
 <html>
     <body>
 	<div>
-	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="some hash">
-	    <input type="button" onClick="getPinList(getValueOfName('hash'))" value="Pin">
+	    Ipfs Hash <input name="hash"
+        onkeyup="callFunctionWhenEnterEvent(event,getPinStatus,this.value)"
+        type="text" value="" size="50px" placeholder="some hash">
+	    <input type="button" onClick="updatePinStatus(getValueOfName('hash'))" value="check pin">
 	</div>
 
 	<p style="color:green" id="result"></p>
-        <p style="color:red" id="error"></p>
+  <p style="color:red" id="error"></p>
 	
+<!-- if michel's -->
+	<script src="../snippets/js/mychelium.js"></script>
+	<script src="../snippets/js/essential.js"></script>
+	<script src="../jsring/js/ipfs.js"></script>
+<!-- else
 	<script src="https://michel47.github.io/snippets/js/essential.js"></script>
 	<script src="https://willforge.github.io/jsring/js/ipfs.js"></script>
+     endif -->
+
+  <!-- note: api_url is defined in ipfs.js -->
 
 	<script>
 
-	 function getValueOfName(name) {
-	     let elements = document.getElementsByName(name)
-	     console.log('getPinList input elements',elements);
-	     return elements[0].value;
-   } 
-   function getPinList(hash) {
-	     console.log('getPinList input hash',hash);
-	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url;
-	     if (hash == '') {
-		 url = api_url + 'pin/ls?type=direct'
-	     } else {
-		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
-	     }
-	     console.log('getPinList url',url)
-	     return fetchGetJson(url)
-		 .then( json => { console.log('pin/ls: ',json); })
-		 .catch(logError)
-	 }
+function updatePinStatus(hash) {
+  return getPinStatus(hash)
+  .then( status => { 
+     
+  })
+  .catch(logError)
+}
+
+function getPinStatus(hash) {
+     let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+     return fetchRespNoCatch(url)
+     .then( obj => {
+        let status;
+        if (typeof(obj.Code) == 'undefined') {
+          status = obj.Keys[hash].Type
+        } else {
+          status = 'unpinned'
+        }
+        console.log('getPinStatus: '+hash+" \u21A6",status);
+        return status
+     })
+     .catch( obj => { logError('getPinStatus.catch',obj) })
+
+}
+
+function getDirectPinList() {
+     url = api_url + 'pin/ls?type=direct'
+     return fetchResp(url)
+
+}
+
+  function getPinList(hash) {
+     console.log('getPinList.input.hash: ',hash);
+        var url;
+     if (hash == '') {
+        url = api_url + 'pin/ls?type=direct'
+     } else {
+        url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+     }
+     console.log('getPinList.url: ',url)
+     return fetchRespNoCatch(url)
+     .then( obj => {
+        if (typeof(obj.Code) == 'undefined') {
+          console.log('pin/ls.obj.Keys: ',obj.Keys);
+          console.log('pin/ls.obj.Keys[hash].Type: ',obj.Keys[hash].Type);
+          return obj.Keys
+        } else {
+          console.log('pin/ls.obj.Code: ',obj.Code,'notpinned');
+          return 'notpinned'
+        }
+      })
+     .catch( obj => { logError('getPinList.catch',obj) })
+  }
+
+
 	</script>
     </body>
 </html>

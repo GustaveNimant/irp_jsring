@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
-<form>
-hash: <input type=text name=hash onChange="getPinList(this.value)">
+<form method=none>
+hash: <input type=text name=hash onChange="getPinList(this.value)" size=47>
 <br><span id=status></span>
 </form>
 
@@ -18,9 +18,37 @@ function getPinList(hash) {
     } else {
      url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
     }
-    return fetchGetJson(url)
-    .then( json => { console.log('pin/ls: ',json); })
-    .catch(logError)
+    return fetchGetApi(url)
+    .then { obj => { console.log('obj: ',obj); }
 }
+
+fetchGetApi(url) {
+
+    return fetch(url,{ method: "GET"} )
+    .then( resp => {
+         if (resp.ok) {
+           if (1) {
+           return Promise.resolve(resp.text()); // !
+          } else {
+           return Promise.resolve(resp.json()); // !
+          }
+         } else {
+           return Promise.reject(resp.json());
+         }
+    })
+    .then( json => { console.log('pin/ls: ',json); })
+    .catch( json => {
+       let message = json.message
+       let code = json.Code
+       let type = json.Type
+       if (type == 'Error') {
+         logError('fetchGetApi: ',code,message)
+       } else {
+         console.log('fetchGetApi: ',code,message)
+       } 
+       return Promise.reject(json)
+    } )
+}
+
 </script>
 
