@@ -5,6 +5,7 @@
 	    Ipfs Hash <input name="hash"
         onkeyup="callFunctionWhenEnterEvent(event,getPinStatus,this.value)"
         type="text" value="" size="50px" placeholder="some hash">
+      <img id=pin>
 	    <input type="button" onClick="updatePinStatus(getValueOfName('hash'))" value="check pin">
 	</div>
 
@@ -27,7 +28,8 @@
 function updatePinStatus(hash) {
   return getPinStatus(hash)
   .then( status => { 
-     
+     img=getElementById('pin');
+     img.src = 'images/pinned-'+status+'-200.png';
   })
   .catch(logError)
 }
