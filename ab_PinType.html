@@ -4,16 +4,12 @@
 	<div>
 	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="">
 	    <input type="button" onClick="showPinType(getValueOfName('hash'))" value="Pin">
+	    <input type="button" onClick="showPinTypeFunction()" value="Appel dans une autre fonction">	    
 	</div>
-QmaHTHyL91mkX9yJp6pXDNeyURXPr35Ba7typ5HHDJEGGP
+	QmaHTHyL91mkX9yJp6pXDNeyURXPr35Ba7typ5HHDJEGGP
 	<p style="color:green" id="result"></p>
-        <p style="color:red" id="error"></p>
-
-	<!-- <script src="https://michel47.github.io/snippets/js/essential.js"></script> -->
-	<!-- <script src="https://willforge.github.io/jsring/js/ipfs.js"></script> -->
-
-	<script src="mcjs/mc_essential.js"></script>
-	<script src="mcjs/mc_ipfs.js"></script>
+        <span style="color:red" id="error"></span>
+<br><br><span style="background:blue;color:white" id="appel">Appel</span>
 
 	<script>
 
@@ -46,9 +42,39 @@ QmaHTHyL91mkX9yJp6pXDNeyURXPr35Ba7typ5HHDJEGGP
 	 function showPinType(hash) {
 	     getPinType(hash)
 		 .then (type => { console.log('showPinType type', type);
+		     /* if (type == undefined){
+			var type = false;
+			}else{
+			var type = true;
+			} */
 		     document.getElementById('result').innerHTML = type})
 		 .catch(err => logError(err)) 
 	 }
+	 
+	 function showPinTypeFunction() {
+	     let hash  = 'QmaHTHyL91mkX9yJp6pXDNeyURXPr35Ba7typ5HHDJEGGP';
+	     let bool = showPinType(hash);
+	     document.getElementById('appel').innerHTML = bool;
+	 }
+
+	 function fetchGetJson(url) {
+	     console.log('fetchGetJson.url: '+url)
+	     return fetch(url,{ method: "GET"} )
+		 .then(validate)
+		 .then( resp => resp.json() )
+	 }
+
+	 
+	 function validate(resp) {
+	     if (resp.status >= 200 && resp.status < 300) {
+		 return Promise.resolve(resp)
+	     } else {
+		 console.log('status:',resp.status)
+		 return Promise.reject(new Error(resp.statusText))
+	     }
+	 }
+	 function logError(err) { console.error(err); }
+	 
 	</script>
     </body>
 </html>

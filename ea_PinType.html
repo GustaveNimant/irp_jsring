@@ -44,6 +44,7 @@ QmaHTHyL91mkX9yJp6pXDNeyURXPr35Ba7typ5HHDJEGGP
 	 }
 	 
 	 function showPinType(hash) {
+	     console.log('showPinType input hash',hash);
 	     getPinType(hash)
 		 .then (type => { console.log('showPinType type', type);
 		     document.getElementById('result').innerHTML = type})
