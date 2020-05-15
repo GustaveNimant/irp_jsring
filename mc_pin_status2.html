@@ -3,80 +3,74 @@
     <body>
 	<div>
 	    Ipfs Hash <input name="hash"
-        onkeyup="callFunctionWhenEnterEvent(event,getPinStatus,this.value)"
-        type="text" value="" size="50px" placeholder="some hash">
+			     onkeyup="callFunctionWhenEnterEvent(event,getPinStatus,this.value)"
+			     type="text" value="" size="50px" placeholder="some hash">
 	    <input type="button" onClick="updatePinStatus(getValueOfName('hash'))" value="check pin">
 	</div>
 
 	<p style="color:green" id="result"></p>
-  <p style="color:red" id="error"></p>
+	<p style="color:red" id="error"></p>
 	
-<!-- if michel's -->
-	<script src="../snippets/js/mychelium.js"></script>
-	<script src="../snippets/js/essential.js"></script>
-	<script src="../jsring/js/ipfs.js"></script>
-<!-- else
 	<script src="https://michel47.github.io/snippets/js/essential.js"></script>
 	<script src="https://willforge.github.io/jsring/js/ipfs.js"></script>
-     endif -->
 
-  <!-- note: api_url is defined in ipfs.js -->
+	<!-- note: api_url is defined in ipfs.js -->
 
 	<script>
 
-function updatePinStatus(hash) {
-  return getPinStatus(hash)
-  .then( status => { 
-     
-  })
-  .catch(logError)
-}
+	 function updatePinStatus(hash) {
+	     console.log('updatePinStatus input hash',hash);
+	     return getPinStatus(hash)
+		 .then( status => { 
+		     document.getElementById('result').innerHTML = status;
+		 })
+		 .catch(logError)
+	 }
 
-function getPinStatus(hash) {
-     let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
-     return fetchRespNoCatch(url)
-     .then( obj => {
-        let status;
-        if (typeof(obj.Code) == 'undefined') {
-          status = obj.Keys[hash].Type
-        } else {
-          status = 'unpinned'
-        }
-        console.log('getPinStatus: '+hash+" \u21A6",status);
-        return status
-     })
-     .catch( obj => { logError('getPinStatus.catch',obj) })
+	 function getPinStatus(hash) {
+	     console.log('getPinStatus input hash',hash);
+	     let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     return fetchRespNoCatch(url)
+		 .then( obj => {
+		     let status;
+		     if (typeof(obj.Code) == 'undefined') {
+			 status = obj.Keys[hash].Type
+		     } else {
+			 status = 'unpinned'
+		     }
+		     console.log('getPinStatus: '+hash+" \u21A6",status);
+		     return status
+		 })
+		 .catch( obj => { logError('getPinStatus.catch',obj) })
+	 }
 
-}
-
-function getDirectPinList() {
-     url = api_url + 'pin/ls?type=direct'
-     return fetchResp(url)
-
-}
-
-  function getPinList(hash) {
-     console.log('getPinList.input.hash: ',hash);
-        var url;
-     if (hash == '') {
-        url = api_url + 'pin/ls?type=direct'
-     } else {
-        url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
-     }
-     console.log('getPinList.url: ',url)
-     return fetchRespNoCatch(url)
-     .then( obj => {
-        if (typeof(obj.Code) == 'undefined') {
-          console.log('pin/ls.obj.Keys: ',obj.Keys);
-          console.log('pin/ls.obj.Keys[hash].Type: ',obj.Keys[hash].Type);
-          return obj.Keys
-        } else {
-          console.log('pin/ls.obj.Code: ',obj.Code,'notpinned');
-          return 'notpinned'
-        }
-      })
-     .catch( obj => { logError('getPinList.catch',obj) })
-  }
+	 function getDirectPinList() {
+	     url = api_url + 'pin/ls?type=direct'
+	     return fetchResp(url)
+	 }
+	 
+	 function getPinList(hash) {
+	     console.log('getPinList.input.hash: ',hash);
+             var url;
+	     if (hash == '') {
+		 url = api_url + 'pin/ls?type=direct'
+	     } else {
+		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     }
+	     console.log('getPinList.url: ',url)
+	     return fetchRespNoCatch(url)
+		 .then( obj => {
+		     if (typeof(obj.Code) == 'undefined') {
+			 console.log('pin/ls.obj.Keys: ',obj.Keys);
+			 console.log('pin/ls.obj.Keys[hash].Type: ',obj.Keys[hash].Type);
+			 return obj.Keys
+		     } else {
+			 console.log('pin/ls.obj.Code: ',obj.Code,'notpinned');
+			 return 'notpinned'
+		     }
+		 })
+		 .catch( obj => { logError('getPinList.catch',obj) })
+	 }
 
 	</script>
     </body>

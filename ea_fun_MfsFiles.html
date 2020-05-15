@@ -17,8 +17,8 @@
 	 }
 
 	 #nameButton { 
-	     background-color:lightcyan;
-	     color:#0000FF;
+	     background-color:#0A6BB3;
+	     color:#ffffff;
 	     cursor: pointer;
 	 }
 	 
@@ -49,6 +49,10 @@
 	     color:white;
 	     font-size: 30px;
 	     font:"Fira Sans", serif;
+	 }
+
+	 .pinButton {
+	     background:#ffffff;
 	 }
 
 	 .title {
@@ -130,7 +134,7 @@
             <span style="color:red" id="error"></span>
 	    <div>
 	    </center>	    
-	    <table id="ls-result">
+	    <table id=ls-result>
 		<tr><th colspan=4><h3 id="h3-title" class="upload"></h3></th>
 	    </table>
 	    </div>
@@ -139,7 +143,7 @@
 
 	<script>
 	 window.onload = displayDirOnLoadWindow();
-
+	 
 	 function displayDirOnLoadWindow() {
 	     document.getElementById('idValidateClick').click();
 	 }
@@ -202,7 +206,7 @@
 	     if (entries.length != 0){
 		 createHeaderOfTable (table);
 	     }
-
+	     
 	     for (i=0; i<entries.length; i++) {
 		 createTableOfEntriesOfMfspath (entries, mfsDirPath);
 	     }
@@ -210,6 +214,7 @@
 	 
 	 function createHeaderOfTable (table) {
 	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'th', 'Pin');
 	     createElementTable (tr, 'th', 'Type');
 	     createElementTable (tr, 'th', 'Name');
 	     createElementTable (tr, 'th', 'Hash')   
@@ -225,16 +230,69 @@
 	     console.log('displayJson name',name);
 	     console.log('displayJson hash_link',hash_link);
 	     
-	     var imagePath = imageOfJsonOfKey (entries, i);
-	     console.log('displayJson imagePath',imagePath);
+	     var imagePathOfDirAndFile = imageOfJsonOfKey (entries, i);
+	     console.log('displayJson imagePathOfDirAndFile',imagePathOfDirAndFile);
 	     let type = entries[i]['Type'];
 	     console.log('displayJson type',type);
-	     
+	     let bool = getPinType(hash);	     
+	     /* .then(resp  => {console.log('createTableOfEntriesOfMfspath resp',resp)})  */
+	     console.log('createTableOfEntriesOfMfspath bool',bool);
 	     let tr = createElementTable (table,'tr', '');
-	     createElementTable (tr, 'td', imagePath);
+	     createElementTable (tr, 'td', createButtonOfPinBool (bool));
+	     createElementTable (tr, 'td', imagePathOfDirAndFile);
 	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
 	     console.log('displayJson hash',hash);
 	     createElementTable (tr, 'td', hash_link);
+	 }
+         /* ----- Pin functions ------ */
+	 
+ 	 function getPinType(hash) {
+	     console.log('getPinType input hash',hash);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url;
+	     if (hash == '') {
+		 url = api_url + 'pin/ls?type=direct'
+	     } else {
+		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     }
+	     console.log('getPinType url',url)
+	     return fetchGetPinned(url)
+		 .then( json => { console.log('getPinType bool: ',json);return json })
+	     /* .then( obj => { console.log('getPinType obj: ',obj);
+		return obj}) */
+	     //.catch(logError)
+	 }
+	 
+	 function showPinType(hash) {
+	     getPinType(hash)
+		 .then (type => { console.log('showPinType type', type);
+		     if (type == undefined){
+			 var type = false;
+		     }else{
+			 var type = true;
+		     };
+		     console.log('showPinType type return', type)  
+		     return type;})
+		 //.catch(err => logError(err)) 
+	 }
+
+	 function imageOfBool (bool) {
+	     console.log('imageOfBool input bool', bool);
+	     if (bool) { return '<img src="images/pinTrue.png" width="10px" height="10" title="Click to unpin hash">'; }
+	     else { return '<img src="images/pinFalse.png" width="10px" height="10" title="Click to pin hash">'; }
+	 }
+
+	 function createButtonOfPinBool (bool) {
+	     console.log('createButtonOfPinBool bool',bool);
+
+	     if (bool) {
+		 var but = '<button type="submit" class="pinButton" onclick="">';
+	     } else {
+		 var but = '<button type="submit" class="pinButton" onclick="">';
+	     }
+	     but += imageOfBool(bool);
+	     but += '</button>';
+	     return but;
 	 }
 	 
 	 function createDirectory() {
@@ -242,14 +300,14 @@
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory mfsDirName',mfsDirName);
-
+	     
 	     if (msfDirPath == '/'){
 		 var path_url = msfDirPath + mfsDirName;
 	     }else {
 		 var path_url = msfDirPath + '/' + mfsDirName;
 	     }
 	     console.log('createDirectory path_url ',path_url);
-
+	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/';
 	     var url = api_url + 'files/mkdir?arg=' + path_url;
 	     console.log('createDirectory : url ', url);
@@ -259,19 +317,21 @@
 		 .catch(logError)
 	 }
 
+	 
+	 
 	 function removeElement () {
 	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
 	     console.log("removeElement : mfspath '"+mfspath+"'");
 	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
 	     var conf = confirm(conf_mess);
 	     if (conf == true) {
-	     	 removeFileOfMfsPath (mfspath)
+		 removeFileOfMfsPath (mfspath)
 	     }		 
 	 }
-
+	 
 	 function removeFileOfMfsPath(mfspath) {
 	     console.log('removeFileOfPath input mfspath',mfspath);
-
+	     
 	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
 	     console.log('removeFileOfMfsPath parent',parent);
 	     const webui = 'http://127.0.0.1:5001';
@@ -280,9 +340,9 @@
 	     var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
 	     console.log('removeFileOfMfsPath url '+url);
 	     return fetch(url, { method: "POST", mode: 'cors'})
-	     	 .then (validate)
-	     	 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
-	 	 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
+		 .then (validate)
+		 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
+		 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
 		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
 		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('idMfsDirPath').value})
@@ -351,6 +411,19 @@
 		 console.log('createButtonOfMfsDirPath but',but);
 	     }
 	     but += '>';
+	     return but;
+	 }
+
+	 function createButtonOfPinBool (bool) {
+	     console.log('createButtonOfPinBool bool',bool);
+
+	     if (bool) {
+		 var but = '<button type="submit" class="pinButton" onclick="">';
+	     } else {
+		 var but = '<button type="submit" class="pinButton" onclick="">';
+	     }
+	     but += imageOfBool(bool);
+	     but += '</button>';
 	     return but;
 	 }
 
@@ -535,8 +608,9 @@
 		     break;	     
 
 		 case "Internal Server Error":
-		     var text = "Internal Server Error because ipfs file path was uncorrect";
-		     displayByIdOfTagOfValue("error", text); 
+		     //			 var text = "Internal Server Error because ipfs file path was uncorrect";
+		     //			 displayByIdOfTagOfValue("error", text); 
+		     return false;
 		     break;
 		     
 		 case "Cannot read property 'length' of null":
@@ -553,6 +627,10 @@
 		     var dir = document.getElementById('idMfsDirPath').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+		     break;
+
+		 case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
+		     displayByIdOfTagOfValue("error", '');
 		     break;
 		     
 		 default:
@@ -655,12 +733,20 @@
 	     console.log('fetchGetTextForm : input url '+url);
 	     return fetch(url, { method: "GET", mode: 'cors' })
 	 }
+
+	 
 	 
 	 function fetchGetJson (url) {
 	     console.log('fetchGetJson input url '+url)
 	     return fetch(url, { method: "GET"} )
-		 .then(validate)
 		 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+	 }
+
+	 function fetchGetPinned (url) {
+	     console.log('fetchGetPinned input url '+url)
+	     return fetch(url,{ method: "GET"} )
+	     /* 		 .then(validate) */
+		 .then( resp => {console.log('fetchGetPinned resp',resp.ok); return resp.ok} )
 	 }
 
 	 function fetchPostMkdirForm(mfspath, url) {
@@ -700,8 +786,10 @@
 	 function validate (resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
+	     } else {
+		 console.log('status:',resp.status)
+		 return Promise.reject(new Error(resp.statusText))
 	     }
-	     return Promise.reject(new Error(resp.statusText))
 	 }
 
 	</script>
