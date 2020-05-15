@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <body>
+	<div>
+	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="">
+	    <input type="button" onClick="showPinType(getValueOfName('hash'))" value="Pin">
+	</div>
+QmaHTHyL91mkX9yJp6pXDNeyURXPr35Ba7typ5HHDJEGGP
+	<p style="color:green" id="result"></p>
+        <p style="color:red" id="error"></p>
+
+	<!-- <script src="https://michel47.github.io/snippets/js/essential.js"></script> -->
+	<!-- <script src="https://willforge.github.io/jsring/js/ipfs.js"></script> -->
+
+	<script src="mcjs/mc_essential.js"></script>
+	<script src="mcjs/mc_ipfs.js"></script>
+
+	<script>
+
+	 function getValueOfName(name) {
+	     console.log('getValueOfName input name',name);
+	     let elements = document.getElementsByName(name)
+	     console.log('getValueOfName elements',elements);
+	     let result = elements[0].value;
+	     console.log('getValueOfName result',result);
+	     return result;
+	 }
+	 
+	 function getPinType(hash) {
+	     console.log('getPinType input hash',hash);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url;
+	     if (hash == '') {
+		 url = api_url + 'pin/ls?type=direct'
+	     } else {
+		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     }
+	     console.log('getPinType url',url)
+	     return fetchGetJson(url)
+		 .then( json => { console.log('getPinType json.Keys[hash]: ',json.Keys[hash]);return json.Keys[hash]; })
+		 .then( obj => { console.log('getPinType obj.Type: ',obj.Type);
+		     return obj.Type;})
+		 .catch(logError)
+	 }
+	 
+	 function showPinType(hash) {
+	     getPinType(hash)
+		 .then (type => { console.log('showPinType type', type);
+		     document.getElementById('result').innerHTML = type})
+		 .catch(err => logError(err)) 
+	 }
+	</script>
+    </body>
+</html>
+

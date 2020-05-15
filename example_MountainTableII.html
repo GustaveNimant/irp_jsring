@@ -35,12 +35,10 @@
      function generateTableHead(table, data) {
 	 let thead = table.createTHead();
 	 generateCaption("The Mountains");
-	 let row = thead.insertRow();
+	 let tr = createElementTable (thead,'tr', '');
 	 for (let key of data) {
-	     let th = document.createElement("th");
-	     let text = document.createTextNode(key);
-	     th.appendChild(text);
-	     row.appendChild(th);
+	     console.log('generateTableHead key',key);
+	     createElementHeadOfTable (tr, 'th', key)
 	 }
      }
      
@@ -52,22 +50,43 @@
      function generateTable(table, data) {
 	 for (let element of data) {
 	     console.log('generateTable element',element);
-	     let row = table.insertRow();
-	     console.log('generateTable row',row);
+	     let tr = createElementTable (table,'tr', '');
+	     console.log('generateTable tr',tr);
 	     for (key in element) {
 		 console.log('generateTable key',key);
-		 let cell = row.insertCell();
-		 console.log('generateTable cell',cell);
 		 let text = document.createTextNode(element[key]);
-		 console.log('generateTable text',text);
-		 cell.appendChild(text);
-		 cell.style.border="2px solid green";
+		 createElementTable (tr, 'td', text.data);
 	     }
 	 }
      }
      
      generateTable(table, mountains);
      generateTableHead(table, data);
+
+     function createElement (tag, id, value) {
+	 let doc_tag = document.createElement (tag);
+	 doc_tag.id = id;
+	 doc_tag.innerHTML = value;
+	 document.body.appendChild (doc_tag);
+     }
+
+     function createElementHeadOfTable (ele, tag, value) {
+	 let doc = document.createElement (tag);
+	 doc.style = "padding:7px";
+	 doc.style.border="2px solid blue";
+	 doc.innerHTML = value;
+	 ele.appendChild (doc);
+	 return doc;
+     }
+     
+     function createElementTable (ele, tag, value) {
+	 let doc = document.createElement (tag);
+	 doc.style = "padding:7px";
+	 doc.style.border="2px solid green";
+	 doc.innerHTML = value;
+	 ele.appendChild (doc);
+	 return doc;
+     }
      
     </script>
 </html>
