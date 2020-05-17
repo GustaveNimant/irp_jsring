@@ -233,15 +233,15 @@
 	     console.log('createTableOfEntriesOfMfspath.name',name);
 	     console.log('createTableOfEntriesOfMfspath.hash_link',hash_link);
 	     
-	     var imagePathOfDirAndFile = imageOfJsonOfKey (entries, i);
-	     console.log('createTableOfEntriesOfMfspath.imagePathOfDirAndFile',imagePathOfDirAndFile);
+	     var imageType = imageOfJsonOfKey (entries, i);
+	     console.log('createTableOfEntriesOfMfspath.imageType',imageType);
 	     let type = entries[i]['Type'];
 	     console.log('createTableOfEntriesOfMfspath.type',type);
 
 	     let tr = createElementTable (table,'tr', '');
 	     createElementTable (tr, 'td', imageOfHash (hash));
-	     createElementTable (tr, 'td', imagePathOfDirAndFile);
-	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
+	     createElementTable (tr, 'td', imageType);
+	     createElementTable (tr, 'td', createButtonNameOfMfsDirPath(mfsDirPath,name,type,hash));
 	     console.log('createTableOfEntriesOfMfspath.hash',hash);
 	     createElementTable (tr, 'td', hash_link);
 	 }
@@ -402,11 +402,11 @@
 	     return result;
 	 }
 
-	 function createButtonOfMfsDirPath (mfspath, name, type, hash) { // Improve
-	     console.log('createButtonOfMfsDirPath mfspath',mfspath);
-	     console.log('createButtonOfMfsDirPath name',name);
-	     console.log('createButtonOfMfsDirPath type',type);
-	     console.log('createButtonOfMfsDirPath hash',hash);
+	 function createButtonNameOfMfsDirPath (mfspath, name, type, hash) { // Improve
+	     console.log('createButtonNameOfMfsDirPath mfspath',mfspath);
+	     console.log('createButtonNameOfMfsDirPath name',name);
+	     console.log('createButtonNameOfMfsDirPath type',type);
+	     console.log('createButtonNameOfMfsDirPath hash',hash);
 
 	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
@@ -415,7 +415,7 @@
 	     } else {
 		 let rootName = 
 		     but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ' , ' + "'" + hash + "'" + ')"';
-		 console.log('createButtonOfMfsDirPath but',but);
+		 console.log('createButtonNameOfMfsDirPath but',but);
 	     }
 	     but += '>';
 	     return but;
