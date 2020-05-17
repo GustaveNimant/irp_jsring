@@ -161,9 +161,9 @@
 	 }
 	 
 	 function getForm (form) {
-	     console.log("getForm : form.elements ",form.elements);
+	     console.log("getForm.input.form",form);
 	     let mfspath = form.elements[0].value;
-	     console.log("getForm : mfspath '"+mfspath+"'");
+	     console.log("getForm.mfspath '"+mfspath+"'");
 
 	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
 	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
@@ -186,7 +186,7 @@
 	 }
 
 	 function deleteAllRowsOfTable (table) {
-	     console.log('deleteAllRowsOfTable input table', table);
+	     console.log('deleteAllRowsOfTable.input.table:', table);
 	     var i = 1;  // Be careful with deleteRow : length is modified.
 	     while (table.rows[i]) {
 		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
@@ -195,15 +195,15 @@
 	 }
 
 	 function displayJson (json) {
-	     console.log('displayJson input json', json);
+	     console.log('displayJson.input.json:', json);
 	     
 	     let mfsDirPath = json.mfspath
 	     let entries = json.Entries
-	     console.log('displayJson mfsDirPath', mfsDirPath);
-	     console.log('displayJson entries', entries);
+	     console.log('displayJson.mfsDirPath:', mfsDirPath);
+	     console.log('displayJson.entries:', entries);
 	     
 	     table = document.getElementById('ls-result')
-	     console.log('displayJson table',table);
+	     console.log('displayJson.table:',table);
 	     
 	     deleteActionsAndErrorTexts();
 	     deleteAllRowsOfTable (table);
@@ -238,9 +238,9 @@
 		 var name = entries[i]['Name'];
 		 var hashLink = linkIpfsHash (hash);
 		 
-		 console.log('displayJson hash',hash);
-		 console.log('displayJson name',name);
-		 console.log('displayJson hashLink',hashLink);
+		 console.log('displayJson.hash:',hash);
+		 console.log('displayJson.name:',name);
+		 console.log('displayJson.hashLink:',hashLink);
 		 
 		 var imageType = imageOfJsonOfKey (entries, i);
 		 console.log('displayJson imageType',imageType);
@@ -264,7 +264,7 @@
 
 	     let but = '<button type="submit" class="pinButton" onclick="togglePinStatus(this.value,this.name)" name="'+hash+'">';
 
-	     but += '<img src="images/inter.png" class="' + hash + '" style="height: 24px;" name="' + hash + '">';
+	     but += '<img src="images/inter.png" class="' + hash + '" style="height: 24px;">';
 	     but += '</button>';
 	     console.log('createButtonPinOfHash.but:', but);
 	     return but;
@@ -274,7 +274,7 @@
 	     console.log('togglePinStatus-input.status:',status);
 	     console.log('togglePinStatus-input.hash:',hash);
 	     
-	     if (status == 'unpinned') {
+	     if (status == 'unpinned' || status == 'indirect-through') {
 		 return ipfsPinAdd(hash)
 		     .then( _ => { updatePinStatus(hash) })
 		 console.log('togglePinStatus.status:',status);
@@ -285,20 +285,20 @@
 		 console.log('togglePinStatus.status:',status);
 	     }
 	 }
-
+	 
 	 function updatePinStatus(hash) {
 	     console.log('updatePinStatus.hash:',hash);
 	     return getPinStatus(hash)
 		 .then( status => {
-		     console.log('updatePinStatus-status:',status);
+		     console.log('updatePinStatus.status:',status);
 		     //status : 'pinned-indirect through Qma84TiiJye6mp4iJZ8ZtZBWqNEqJ3JyAfMXFXy94jgE2A'
 		     if (status.indexOf('through') >= 0) {
 			 let string = status.split(' ');
-			 console.log('updatePinStatus-string:',string);
+			 console.log('updatePinStatus.string:',string);
 			 var status = string[0]+'-'+string[1];
 		     }
 		     
-		     img=document.getElementsByClassName(hash)[0];
+		     img = document.getElementsByClassName(hash)[0];
 		     img.src = 'images/pinned-'+status+'-200.png';
 		     console.log('updatePinStatus.img:',img);
 		     button=document.getElementsByName(hash)[0];
@@ -343,7 +343,9 @@
 	     var url = api_url + 'pin/rm?arg=/ipfs/'+hash
 	     console.log('ipfsPinRm.url',url)
 	     return fetchGetJson(url)
-		 .then( json => { console.log('ipfsPinRm.json',json); return json.Pins })
+		 .then( json => { console.log('ipfsPinRm.json',json);
+		     return json.Pins  // Improve when not pinned or indirect
+		 })
 		 .catch(err => logErrorOfHash (err, hash))
 	 } 
 	 
@@ -351,9 +353,9 @@
 
 	 function createDirectory() {
 	     let msfDirPath =  document.getElementById('idMfsDirPath').value;
-	     console.log('createDirectory mfsDirPath ',msfDirPath);
+	     console.log('createDirectory.mfsDirPath:',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
-	     console.log('createDirectory mfsDirName',mfsDirName);
+	     console.log('createDirectory.mfsDirName:',mfsDirName);
 	     
 	     if (msfDirPath == '/'){
 		 var path_url = msfDirPath + mfsDirName;
@@ -364,7 +366,7 @@
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/';
 	     var url = api_url + 'files/mkdir?arg=' + path_url;
-	     console.log('createDirectory : url ', url);
+	     console.log('createDirectory.url:', url);
 	     
 	     return fetchPostMkdirForm(path_url, url)
 		 .then(_ => {document.getElementById('idValidateClick').click()})
@@ -373,7 +375,7 @@
 
 	 function removeElement () {
 	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
-	     console.log("removeElement : mfspath '"+mfspath+"'");
+	     console.log("removeElement.mfspath '"+mfspath+"'");
 	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
 	     var conf = confirm(conf_mess);
 	     if (conf == true) {
@@ -382,15 +384,15 @@
 	 }
 	 
 	 function removeFileOfMfsPath(mfspath) {
-	     console.log('removeFileOfPath input mfspath',mfspath);
+	     console.log('removeFileOfPath.input.mfspath:',mfspath);
 	     
 	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
-	     console.log('removeFileOfMfsPath parent',parent);
+	     console.log('removeFileOfMfsPath.parent:',parent);
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
 
 	     var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
-	     console.log('removeFileOfMfsPath url '+url);
+	     console.log('removeFileOfMfsPath.url:'+url);
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
 		 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
@@ -427,11 +429,11 @@
 	 }
 
 	 function typeOfJsonOfKey (json, key) {
-	     console.log ('typeOfJsonOfKey input json', json);
-	     console.log ('typeOfJsonOfKey input key', key);
+	     console.log ('typeOfJsonOfKey.input.json:', json);
+	     console.log ('typeOfJsonOfKey.input.key:', key);
 
 	     let result = json[key]['Type'];
-	     console.log ('typeOfJsonOfKey result', result);
+	     console.log ('typeOfJsonOfKey.result:', result);
 	     return result;
 	 }
 
@@ -443,7 +445,7 @@
 	 function imageOfJsonOfKey (json, key) {
 	     let type = typeOfJsonOfKey (json, key);
 	     result = imageOfType(type);
-	     console.log ('imageOfJsonOfKey result', result);
+	     console.log ('imageOfJsonOfKey.result:', result);
 	     return result;
 	 }
 
@@ -545,11 +547,12 @@
 
 	 function uploadFileToCurrentMfs(form) {
 	     console.log('uploadFileToCurrentMfs : form.elements ',form.elements);
+
 	     let fakepath = form.elements[0].value
 	     let mfsdir = document.getElementById('idMfsDirPath').value;
 	     console.log('uploadFileToCurrentMfs : fakepath ',fakepath)
 	     console.log('uploadFileToCurrentMfs : mfspath ',mfsdir)
-	     let path = mfsdir;
+	     let mfsdirOld = mfsdir;
 	     let file = form.elements[0].files[0]
 	     console.log('uploadFileToCurrentMfs : element[0].files ',form.elements[0].files)
 	     
@@ -578,7 +581,7 @@
 	     let formData = new FormData();
 	     formData.append("file", file);
 	     console.log('uploadFileToCurrentMfs : formData ',formData)
-	     let val = 'File '+name+' uploaded to '+path
+	     let val = 'File '+name+' uploaded to '+mfsdirOld
 	     updateElementOfIdOfValue('fileUploaded',val);
 	     console.log ('uploadFileToCurrentMfs txt', val);
 	     document.getElementById('idValidateClick').click();
@@ -598,8 +601,9 @@
 	 }
 	 
 	 function hashOfMfsFilePath(mfsFilePath) {
-	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     console.log('hashOfMfsFilePath : input mfsFilePath '+mfsFilePath);
+
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
 	     console.log('hashOfMfsFilePath : url '+url);
 	     
