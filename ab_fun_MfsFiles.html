@@ -17,8 +17,8 @@
 	 }
 
 	 #nameButton { 
-	     background-color:lightcyan;
-	     color:#0000FF;
+	     background-color:#0A6BB3;
+	     color:#ffffff;
 	     cursor: pointer;
 	 }
 	 
@@ -51,6 +51,10 @@
 	     font:"Fira Sans", serif;
 	 }
 
+	 .pinButton {
+	     background:#ffffff;
+	 }
+
 	 .title {
 	     border-radius: 10px;
 	     padding: 10px;
@@ -76,6 +80,8 @@
 	 }
 	 
 	</style>
+	<script src="https://michel47.github.io/snippets/js/essential.js"></script>
+	<script src="https://willforge.github.io/jsring/js/ipfs.js"></script>	
     </head>
     <body>
 	<div class="header">List of MFS Files and Directories</div>
@@ -92,7 +98,7 @@
 		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
 		<input type="button" onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
 		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
-	    </form>
+	    </form><br>
 
 	    <!-- Bloc mkdir -->
 
@@ -101,7 +107,7 @@
 		<input type="text" id="idNameOfDirectory"><br>
 		<input type="button" onclick="createDirectory()" id="createDirButton" value="Create"><br>
 		<div class="fileUploadedAndRemoved" id="directoryCreated"></div>
-	    </form>
+	    </form><br>
 	    
 	    <!-- Bloc remove -->
 	    
@@ -110,7 +116,18 @@
 		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
 		<input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
-	    </form>
+	    </form><br>
+
+	    <!-- Bloc pin -->
+	    
+	    <div class="upload">Meaning of pins</div>
+	    <img style="height: 24px;" src="images/pinned-unpinned-200.png">unpinned
+	    <img style="height: 24px;" src="images/pinned-recursive-200.png">recursive
+	    <img style="height: 24px;" src="images/pinned-direct-200.png">direct<br>
+	    <img style="height: 24px;" src="images/pinned-indirect-200.png">indirect
+	    <img style="height: 24px;" src="images/pinned-indirect-through-200.png">indirect through 
+	    
+	    
 	</div>
 
 	<!-- list of Mfs files in directory 'path' -->
@@ -118,7 +135,7 @@
 	<form>
 	    <center>
 		<span class="title">
-		    Mfs directories <input id="idMfsDirPath" name="idMfsDirPath" type="text" value="/">
+		    Mfs directories <input id="idMfsDirPath" name="idMfsDirPath" type="text" value="/" onkeyup="callFunctionWhenEnterEvent(event,getForm.this.value)">
 		    <input type="button" onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
 		    <input type="button" onClick="document.location.reload(true)" value="Reset page">
 		</span>
@@ -139,7 +156,7 @@
 
 	<script>
 	 window.onload = displayDirOnLoadWindow();
-
+	 
 	 function displayDirOnLoadWindow() {
 	     document.getElementById('idValidateClick').click();
 	 }
@@ -202,7 +219,7 @@
 	     if (entries.length != 0){
 		 createHeaderOfTable (table);
 	     }
-
+	     
 	     for (i=0; i<entries.length; i++) {
 		 createTableOfEntriesOfMfspath (entries, mfsDirPath);
 	     }
@@ -210,6 +227,7 @@
 	 
 	 function createHeaderOfTable (table) {
 	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'th', 'Pin');
 	     createElementTable (tr, 'th', 'Type');
 	     createElementTable (tr, 'th', 'Name');
 	     createElementTable (tr, 'th', 'Hash')   
@@ -225,31 +243,125 @@
 	     console.log('displayJson name',name);
 	     console.log('displayJson hash_link',hash_link);
 	     
-	     var imagePath = imageOfJsonOfKey (entries, i);
-	     console.log('displayJson imagePath',imagePath);
+	     var imagePathOfDirAndFile = imageOfJsonOfKey (entries, i);
+	     console.log('displayJson imagePathOfDirAndFile',imagePathOfDirAndFile);
 	     let type = entries[i]['Type'];
 	     console.log('displayJson type',type);
-	     
+
 	     let tr = createElementTable (table,'tr', '');
-	     createElementTable (tr, 'td', imagePath);
+	     createElementTable (tr, 'td', createButtonOfPinOfHash (hash));
+	     createElementTable (tr, 'td', imagePathOfDirAndFile);
 	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
 	     console.log('displayJson hash',hash);
 	     createElementTable (tr, 'td', hash_link);
+	     updatePinStatus(hash);
+	     
 	 }
+         /* ----- Pin functions ------ */
 	 
+	 function createButtonOfPinOfHash (hash) {
+	     console.log('createButtonOfPinOfHash hash',hash);
+
+	     let but = '<button type="submit" class="pinButton" onclick="togglePinStatus(this.value,this.name)" name="'+hash+'">';
+
+	     but += '<img src="images/inter.png" class="' + hash + '" style="height: 24px;" name="' + hash + '">';
+	     but += '</button>';
+	     console.log('createButtonOfPinOfHash.but:', but);
+	     return but;
+	 }
+
+	 function togglePinStatus(status,hash) {
+	     console.log('togglePinStatus-input.status:',status);
+	     console.log('togglePinStatus-input.hash:',hash);
+	     
+	     if (status == 'unpinned') {
+		 return ipfsPinAdd(hash)
+		     .then( _ => { updatePinStatus(hash) })
+		 console.log('togglePinStatus.status:',status);
+	     } else if (status == 'direct' || status == 'recursive' || status == 'indirect-through')  {
+		 return ipfsPinRm(hash)
+		     .then( _ => { updatePinStatus(hash) })
+	     } else {
+		 console.log('togglePinStatus.status:',status);
+	     }
+	 }
+
+	 function updatePinStatus(hash) {
+	     console.log('updatePinStatus.hash:',hash);
+	     return getPinStatus(hash)
+		 .then( status => {
+		     console.log('updatePinStatus-status:',status);
+		     	     //status : 'pinned-indirect through Qma84TiiJye6mp4iJZ8ZtZBWqNEqJ3JyAfMXFXy94jgE2A'
+		     if (status.indexOf('through') >= 0) {
+			 let string = status.split(' ');
+			 console.log('updatePinStatus-string:',string);
+			 var status = string[0]+'-'+string[1];
+		     }
+		     
+		     img=document.getElementsByClassName(hash)[0];
+		     img.src = 'images/pinned-'+status+'-200.png';
+		     console.log('updatePinStatus.img:',img);
+		     button=document.getElementsByName(hash)[0];
+		     button.value=status;
+		     console.log('updatePinStatus.button:',button);
+		 })
+		 .catch(logError)
+	 }
+
+	 function getPinStatus(hash) {
+	     console.log('getPinStatus input hash',hash);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     return fetchRespNoCatch(url)
+		 .then( obj => {
+		     let status;
+		     if (typeof(obj.Code) == 'undefined') {
+			 status = obj.Keys[hash].Type
+		     } else {
+			 status = 'unpinned'
+		     }
+		     console.log('getPinStatus: '+hash+" \u21A6",status);
+		     return status
+		 })
+		 .catch( obj => { logError('getPinStatus.catch',obj) })
+	 }
+
+	 function ipfsPinAdd(hash) {
+	     console.log('ipfsPinAdd.input.hash',hash);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'pin/add?arg=/ipfs/'+hash+'&progress=true'
+	     console.log('ipfsPinAdd.url',url)
+	     return fetchGetJson(url)
+		 .then( json => { console.log('ipfsPinAdd.json',json); })
+		 .catch(err => logErrorOfHash (err, hash))
+	 }
+
+	 function ipfsPinRm(hash) {
+	     console.log('ipfsPinRm.input.hash',hash);
+	     
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'pin/rm?arg=/ipfs/'+hash
+	     console.log('ipfsPinRm.url',url)
+	     return fetchGetJson(url)
+		 .then( json => { console.log('ipfsPinRm.json',json); return json.Pins })
+		 .catch(err => logErrorOfHash (err, hash))
+	 } 
+	 
+	 /* --------------- End Pin functions ---------------- */
+
 	 function createDirectory() {
 	     let msfDirPath =  document.getElementById('idMfsDirPath').value;
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory mfsDirName',mfsDirName);
-
+	     
 	     if (msfDirPath == '/'){
 		 var path_url = msfDirPath + mfsDirName;
 	     }else {
 		 var path_url = msfDirPath + '/' + mfsDirName;
 	     }
 	     console.log('createDirectory path_url ',path_url);
-
+	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/';
 	     var url = api_url + 'files/mkdir?arg=' + path_url;
 	     console.log('createDirectory : url ', url);
@@ -259,19 +371,21 @@
 		 .catch(logError)
 	 }
 
+	 
+	 
 	 function removeElement () {
 	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
 	     console.log("removeElement : mfspath '"+mfspath+"'");
 	     let conf_mess = 'Confirmer la suppression de ' + mfspath;
 	     var conf = confirm(conf_mess);
 	     if (conf == true) {
-	     	 removeFileOfMfsPath (mfspath)
+		 removeFileOfMfsPath (mfspath)
 	     }		 
 	 }
-
+	 
 	 function removeFileOfMfsPath(mfspath) {
 	     console.log('removeFileOfPath input mfspath',mfspath);
-
+	     
 	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
 	     console.log('removeFileOfMfsPath parent',parent);
 	     const webui = 'http://127.0.0.1:5001';
@@ -280,9 +394,9 @@
 	     var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
 	     console.log('removeFileOfMfsPath url '+url);
 	     return fetch(url, { method: "POST", mode: 'cors'})
-	     	 .then (validate)
-	     	 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
-	 	 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
+		 .then (validate)
+		 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
+		 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
 		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
 		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('idMfsDirPath').value})
@@ -353,6 +467,7 @@
 	     but += '>';
 	     return but;
 	 }
+
 
 	 function addNameOfFileOnDeleteBlock(rootName, hash) {
 	     console.log('addNameOfFileOnDeleteBlock rootName',rootName);
@@ -517,6 +632,23 @@
 		 .catch(logError)
 	 }
 
+	 function logErrorOfHash (err, hash) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     displayByIdOfTagOfValue("error", message);
+	     switch (message){
+		 case "Internal Server Error":
+		     var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
+		     displayByIdOfTagOfValue("error", text);
+		     
+		     break;
+		     
+		 default:
+		     console.log("logError : default err '"+err+"'");
+	     } // switch
+	 }
+	 
 	 function logError (err) {
 	     console.log("logError : input err ",err);
 	     const message = err.message;
@@ -535,8 +667,9 @@
 		     break;	     
 
 		 case "Internal Server Error":
-		     var text = "Internal Server Error because ipfs file path was uncorrect";
-		     displayByIdOfTagOfValue("error", text); 
+		     //			 var text = "Internal Server Error because ipfs file path was uncorrect";
+		     //			 displayByIdOfTagOfValue("error", text); 
+		     return false;
 		     break;
 		     
 		 case "Cannot read property 'length' of null":
@@ -553,6 +686,10 @@
 		     var dir = document.getElementById('idMfsDirPath').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+		     break;
+
+		 case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
+		     displayByIdOfTagOfValue("error", '');
 		     break;
 		     
 		 default:
@@ -655,12 +792,22 @@
 	     console.log('fetchGetTextForm : input url '+url);
 	     return fetch(url, { method: "GET", mode: 'cors' })
 	 }
+
+	 
 	 
 	 function fetchGetJson (url) {
 	     console.log('fetchGetJson input url '+url)
 	     return fetch(url, { method: "GET"} )
-		 .then(validate)
 		 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+	 }
+
+	 
+
+	 function fetchGetPinned (url) {
+	     console.log('fetchGetPinned input url '+url)
+	     return fetch(url,{ method: "GET"} )
+	     /* 		 .then(validate) */
+		 .then( resp => {console.log('fetchGetPinned resp',resp.ok); return resp.ok} )
 	 }
 
 	 function fetchPostMkdirForm(mfspath, url) {
@@ -700,8 +847,10 @@
 	 function validate (resp) {
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
+	     } else {
+		 console.log('status:',resp.status)
+		 return Promise.reject(new Error(resp.statusText))
 	     }
-	     return Promise.reject(new Error(resp.statusText))
 	 }
 
 	</script>

@@ -239,7 +239,7 @@
 	     console.log('createTableOfEntriesOfMfspath.type',type);
 
 	     let tr = createElementTable (table,'tr', '');
-	     createElementTable (tr, 'td', createButtonOfPinHash (hash));
+	     createElementTable (tr, 'td', imageOfHash (hash));
 	     createElementTable (tr, 'td', imagePathOfDirAndFile);
 	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
 	     console.log('createTableOfEntriesOfMfspath.hash',hash);
@@ -263,39 +263,37 @@
 		     return bool })
 	 }
 	 
-	 function showPinType(hash) { // Improve not clear
-	     console.log('showPinType.input.hash',hash);
-	     getPinBoolOfHash(hash)
-		 .then (type => {
-		     console.log('showPinType.type', type);
-		     if (type == undefined){
-			 var type = false;
-		     }else{
-			 var type = true;
-		     };
-		     return type;
-		 })
-	 }
-
 	 function imageOfBool (bool) {
 	     console.log('imageOfBool.input.bool', bool);
 	     var result;
-	     if (bool) {result = '<img src="images/pinTrue.png" width="10px" height="10" title="Click to unpin hash">'; }
-	     else { result = '<img src="images/pinFalse.png" width="10px" height="10" title="Click to pin hash">'; }
+	     if (bool) {result = '<img src="images/pinned-direct-200.png" width="10px" height="10" title="Click to unpin hash">'; }
+	     else { result = '<img src="images/pinned-unpinned-200.png" width="10px" height="10" title="Click to pin hash">'; }
 	     console.log('imageOfBool.result', result);
 	     return result;
 	 }
 	 
+	 function imageOfHash (hash) {
+	     console.log('imageOfHash.hash',hash);
+	     getPinBoolOfHash(hash)
+		 .then (bool => {
+		     result = imageOfBool(bool);
+		     console.log('imageOfHash.result',result);
+		     return result;
+		 })
+		 .catch(logError)
+	 }
+
 	 function createButtonOfPinHash (hash) {
 	     console.log('createButtonOfPinHash.hash',hash);
 	     getPinBoolOfHash(hash)
 		 .then (bool => {
+		     var result;
 		     console.log('createButtonOfPinHash.bool', bool);
 		     if(bool) {
-			 var result = '<button type="submit" class="pinButton" onclick="">';
+			 result = '<button type="submit" class="pinButton" onclick="">';
 		     }
 		     else {
-			 var result = '<button type="submit" class="pinButton" onclick="">';
+			 result = '<button type="submit" class="pinButton" onclick="">';
 		     }
 		     result += imageOfBool(bool);
 		     result += '</button>';
@@ -305,19 +303,6 @@
 		 .catch(logError)
 	 }
 
-	 function createButtonOfPinBool (bool) {
-	     console.log('createButtonOfPinBool.bool',bool);
-	     
-	     if (bool) {
-		 var but = '<button type="submit" class="pinButton" onclick="">';
-	     } else {
-		 var but = '<button type="submit" class="pinButton" onclick="">';
-	     }
-	     but += imageOfBool(bool);
-	     but += '</button>';
-	     return but;
-	 }
-	 
 	 function createDirectory() {
 	     let msfDirPath =  document.getElementById('idMfsDirPath').value;
 	     console.log('createDirectory mfsDirPath ',msfDirPath);
@@ -429,7 +414,7 @@
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 	     } else {
 		 let rootName = 
-		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ' , ' + "'" + hash + "'" + ')"';
+		     but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ' , ' + "'" + hash + "'" + ')"';
 		 console.log('createButtonOfMfsDirPath but',but);
 	     }
 	     but += '>';
