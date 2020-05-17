@@ -3,7 +3,7 @@
     <body>
 	<div>
 	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="">
-	    <input type="button" onClick="showPinType(getValueOfName('hash'))" value="Pin">
+	    <input type="button" onClick="showPinType(getValueOfName('hash'))" value="ShowPin">
 	</div>
 	<p style="color:green" id="result"></p>
         <p style="color:red" id="error"></p>
@@ -26,7 +26,7 @@
 	 }
 	 
 	 function getPinType(hash) {
-	     console.log('getPinType input hash',hash);
+	     console.log('getPinType.input.hash',hash);
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url;
 	     if (hash == '') {
@@ -43,9 +43,9 @@
 	 }
 	 
 	 function showPinType(hash) {
-	     console.log('showPinType input hash',hash);
+	     console.log('showPinType.input.hash',hash);
 	     getPinType(hash)
-		 .then (type => { console.log('showPinType type', type);
+		 .then (type => { console.log('showPinType.type', type);
 		     document.getElementById('result').innerHTML = type})
 		 .catch(err => logError(err)) 
 	 }

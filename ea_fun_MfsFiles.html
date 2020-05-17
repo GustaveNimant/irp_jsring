@@ -237,11 +237,9 @@
 	     console.log('createTableOfEntriesOfMfspath.imagePathOfDirAndFile',imagePathOfDirAndFile);
 	     let type = entries[i]['Type'];
 	     console.log('createTableOfEntriesOfMfspath.type',type);
-	     let bool = getPinType(hash);	     
-	     /* .then(resp  => {console.log('createTableOfEntriesOfMfspath resp',resp)})  */
-	     console.log('createTableOfEntriesOfMfspath bool',bool);
+
 	     let tr = createElementTable (table,'tr', '');
-	     createElementTable (tr, 'td', createButtonOfPinBool (bool));
+	     createElementTable (tr, 'td', createButtonOfPinHash (hash));
 	     createElementTable (tr, 'td', imagePathOfDirAndFile);
 	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
 	     console.log('createTableOfEntriesOfMfspath.hash',hash);
@@ -261,7 +259,7 @@
 	     }
 	     console.log('getPinType.url',url)
 	     return fetchGetPinned(url)
-		 .then( json => { console.log('getPinType bool: ',json);
+		 .then( json => { console.log('getPinType.json',json);
 		     return json })
 	 }
 	 
@@ -280,14 +278,41 @@
 	 }
 
 	 function imageOfBool (bool) {
-	     console.log('imageOfBool input bool', bool);
-	     if (bool) { return '<img src="images/pinTrue.png" width="10px" height="10" title="Click to unpin hash">'; }
-	     else { return '<img src="images/pinFalse.png" width="10px" height="10" title="Click to pin hash">'; }
+	     console.log('imageOfBool.input.bool', bool);
+	     var result;
+	     if (bool) {result = '<img src="images/pinTrue.png" width="10px" height="10" title="Click to unpin hash">'; }
+	     else { result = '<img src="images/pinFalse.png" width="10px" height="10" title="Click to pin hash">'; }
+	     console.log('imageOfBool.result', result);
+	     return result;
+	 }
+	 
+	 function createButtonOfPinHash (hash) {
+	     console.log('createButtonOfPinHash.hash',hash);
+	     getPinType(hash)
+		 .then (type => {
+		     console.log('createButtonOfPinHash.type', type);
+		     let result = imageOfBool(type);
+		     console.log('createButtonOfPinHash.result', result);
+		     return result;
+		     /*
+			if(type) {
+			var but = '<button type="submit" class="pinButton" onclick="">';
+			}
+			else {
+			var but = '<button type="submit" class="pinButton" onclick="">';
+			}
+			but += imageOfBool(type);
+			but += '</button>';
+			console.log('createButtonOfPinHash.but',but);
+			return but;
+		      */
+		 })
+		 .catch(logError)
 	 }
 
 	 function createButtonOfPinBool (bool) {
-	     console.log('createButtonOfPinBool bool',bool);
-
+	     console.log('createButtonOfPinBool.bool',bool);
+	     
 	     if (bool) {
 		 var but = '<button type="submit" class="pinButton" onclick="">';
 	     } else {
@@ -408,38 +433,26 @@
 	     if (type == 1){
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 	     } else {
-		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
+		 let rootName = 
+		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ' , ' + "'" + hash + "'" + ')"';
 		 console.log('createButtonOfMfsDirPath but',but);
 	     }
 	     but += '>';
 	     return but;
 	 }
 
-	 function createButtonOfPinBool (bool) {
-	     console.log('createButtonOfPinBool bool',bool);
-
-	     if (bool) {
-		 var but = '<button type="submit" class="pinButton" onclick="">';
-	     } else {
-		 var but = '<button type="submit" class="pinButton" onclick="">';
-	     }
-	     but += imageOfBool(bool);
-	     but += '</button>';
-	     return but;
-	 }
-
 	 function addNameOfFileOnDeleteBlock(rootName, hash) {
-	     console.log('addNameOfFileOnDeleteBlock rootName',rootName);
-	     console.log('addNameOfFileOnDeleteBlock hash',hash);
+	     console.log('addNameOfFileOnDeleteBlock.rootName',rootName);
+	     console.log('addNameOfFileOnDeleteBlock.hash',hash);
 	     
 	     var mfsdir = document.getElementById('idMfsDirPath').value;
-	     console.log('addNameOfFileOnDeleteBlock mfsdir',mfsdir);
+	     console.log('addNameOfFileOnDeleteBlock.mfsdir',mfsdir);
 	     if (mfsdir != '/') {
 		 var path = mfsdir + '/' + rootName;
 	     }else {
 		 var path = mfsdir + rootName;
 	     }
-	     console.log('addNameOfFileOnDeleteBlock path',path);
+	     console.log('addNameOfFileOnDeleteBlock.path',path);
 	     document.getElementById('idRemoveButton').disabled = false;
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
@@ -448,10 +461,10 @@
 
 	 function addNameOnInputMfsPath (mfspath) {
 	     console.log ('addNameOnInputMfsPath mfspath', mfspath);
-	     let oldMfsdir = document.getElementById('idMfsDirPath').value;
-	     console.log ('addNameOnInputMfsPath old path', oldMfsdir);
-	     let path = oldMfsdir;
-	     if (oldMfsdir == '/'){
+	     let oldMfsDir = document.getElementById('idMfsDirPath').value;
+	     console.log ('addNameOnInputMfsPath.oldMfsDir', oldMfsDir);
+	     let path = oldMfsDir;
+	     if (oldMfsDir == '/'){
 		 path += mfspath;
 	     } else {
 		 path += '/';
