@@ -130,7 +130,7 @@
 	</form>
 	
 	<div class="typeAndHash">
-	    <div>This Mfs <b><span id="type">type</span></b> has Hash <b><span id="hash">hash</span></b></div>
+	    <div>This Mfs <b><span id="idType">type</span></b> has Hash <b><span id="hash">hash</span></b></div>
             <span style="color:red" id="error"></span>
 	    <div>
 	    </center>	    
@@ -221,19 +221,22 @@
 	 }
 	 
 	 function createTableOfEntriesOfMfspath (entries, mfsDirPath){
+	     console.log('createTableOfEntriesOfMfspath.entries',entries);
+	     console.log('createTableOfEntriesOfMfspath.i',i);
+	     console.log('createTableOfEntriesOfMfspath.mfsDirPath',mfsDirPath);
 	     
 	     var hash = entries[i]['Hash'];
 	     var name = entries[i]['Name'];
 	     var hash_link = linkIpfsHash (hash);
 	     
-	     console.log('displayJson hash',hash);
-	     console.log('displayJson name',name);
-	     console.log('displayJson hash_link',hash_link);
+	     console.log('createTableOfEntriesOfMfspath.hash',hash);
+	     console.log('createTableOfEntriesOfMfspath.name',name);
+	     console.log('createTableOfEntriesOfMfspath.hash_link',hash_link);
 	     
 	     var imagePathOfDirAndFile = imageOfJsonOfKey (entries, i);
-	     console.log('displayJson imagePathOfDirAndFile',imagePathOfDirAndFile);
+	     console.log('createTableOfEntriesOfMfspath.imagePathOfDirAndFile',imagePathOfDirAndFile);
 	     let type = entries[i]['Type'];
-	     console.log('displayJson type',type);
+	     console.log('createTableOfEntriesOfMfspath.type',type);
 	     let bool = getPinType(hash);	     
 	     /* .then(resp  => {console.log('createTableOfEntriesOfMfspath resp',resp)})  */
 	     console.log('createTableOfEntriesOfMfspath bool',bool);
@@ -241,13 +244,14 @@
 	     createElementTable (tr, 'td', createButtonOfPinBool (bool));
 	     createElementTable (tr, 'td', imagePathOfDirAndFile);
 	     createElementTable (tr, 'td', createButtonOfMfsDirPath(mfsDirPath,name,type,hash));
-	     console.log('displayJson hash',hash);
+	     console.log('createTableOfEntriesOfMfspath.hash',hash);
 	     createElementTable (tr, 'td', hash_link);
 	 }
+	 
          /* ----- Pin functions ------ */
 	 
  	 function getPinType(hash) {
-	     console.log('getPinType input hash',hash);
+	     console.log('getPinType.input.hash',hash);
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url;
 	     if (hash == '') {
@@ -255,25 +259,24 @@
 	     } else {
 		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
 	     }
-	     console.log('getPinType url',url)
+	     console.log('getPinType.url',url)
 	     return fetchGetPinned(url)
-		 .then( json => { console.log('getPinType bool: ',json);return json })
-	     /* .then( obj => { console.log('getPinType obj: ',obj);
-		return obj}) */
-	     //.catch(logError)
+		 .then( json => { console.log('getPinType bool: ',json);
+		     return json })
 	 }
 	 
-	 function showPinType(hash) {
+	 function showPinType(hash) { // Improve not clear
+	     console.log('showPinType.input.hash',hash);
 	     getPinType(hash)
-		 .then (type => { console.log('showPinType type', type);
+		 .then (type => {
+		     console.log('showPinType.type', type);
 		     if (type == undefined){
 			 var type = false;
 		     }else{
 			 var type = true;
 		     };
-		     console.log('showPinType type return', type)  
-		     return type;})
-		 //.catch(err => logError(err)) 
+		     return type;
+		 })
 	 }
 
 	 function imageOfBool (bool) {
@@ -316,8 +319,6 @@
 		 .then(_ => {document.getElementById('idValidateClick').click()})
 		 .catch(logError)
 	 }
-
-	 
 	 
 	 function removeElement () {
 	     let mfspath = document.getElementById('idRemoveFileOrDirectory').value;
@@ -330,15 +331,15 @@
 	 }
 	 
 	 function removeFileOfMfsPath(mfspath) {
-	     console.log('removeFileOfPath input mfspath',mfspath);
+	     console.log('removeFileOfPath.input.mfspath',mfspath);
 	     
 	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
-	     console.log('removeFileOfMfsPath parent',parent);
+	     console.log('removeFileOfMfsPath.parent',parent);
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
 
 	     var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
-	     console.log('removeFileOfMfsPath url '+url);
+	     console.log('removeFileOfMfsPath.url',url);
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
 		 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
@@ -579,14 +580,16 @@
 	 }
 	 
 	 function getHashAndTypeOfMfsPath (mfspath) {
-	     console.log('getHashAndTypeOfMfsPath input mfspath '+mfspath)
+	     console.log('getHashAndTypeOfMfsPath.input.mfspath',mfspath)
+
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
 	     
 	     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
 	     return fetchGetJson(url)
-		 .then( obj => {console.log('getHashAndTypeOfMfsPath obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
-		 .then(callbackTuple ('hash', 'type'))
+		 .then( obj => {console.log('getHashAndTypeOfMfsPath.obj',obj);
+		     return Promise.resolve([obj.Hash, obj.Type]) })
+		 .then(callbackTuple ('hash', 'idType'))
 		 .catch(logError)
 	 }
 
@@ -679,7 +682,7 @@
 	 }
 
 	 function callback (tag) {
-	     console.log('callback tag: '+tag)
+	     console.log('callback.tag',tag)
 	     const result = obj => {
 		 displayByIdOfTagOfValue(tag, obj); 
 	     };
@@ -687,7 +690,7 @@
 	 }
 	 
 	 function callbackIpfsIo (tag) {
-	     console.log('callbackIpfsIo tag: '+tag)
+	     console.log('callbackIpfsIo.tag',tag)
 	     const substi = obj => {
 		 let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
 		 displayByIdOfTagOfValue(tag, text);
@@ -696,7 +699,7 @@
 	 }
 	 
 	 function callbackIpfsLocal (tag) {
-	     console.log('callbackIpfsLocal tag: '+tag)
+	     console.log('callbackIpfsLocal.tag',tag)
 	     const substi = obj => {
 		 let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
 		 displayByIdOfTagOfValue(tag, text);
@@ -705,6 +708,9 @@
 	 }
 	 
 	 function callbackTuple (tag1, tag2) {
+	     console.log('callbackTuple.tag1',tag1)
+	     console.log('callbackTuple.tag2',tag2)
+	     
 	     const substi = ([obj1, obj2]) => {
 		 let url = linkIpfsHash (obj1);
 		 updateElementOfIdOfValue(tag1, url);
@@ -730,28 +736,27 @@
 	 }
 
 	 function fetchGetTextForm(url) {
-	     console.log('fetchGetTextForm : input url '+url);
+	     console.log('fetchGetTextForm.input.url',url);
 	     return fetch(url, { method: "GET", mode: 'cors' })
 	 }
-
-	 
 	 
 	 function fetchGetJson (url) {
-	     console.log('fetchGetJson input url '+url)
+	     console.log('fetchGetJson.input.url',url)
 	     return fetch(url, { method: "GET"} )
-		 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+		 .then( resp => {console.log('fetchGetJson.resp',resp);
+		     return resp.json()} )
 	 }
 
 	 function fetchGetPinned (url) {
-	     console.log('fetchGetPinned input url '+url)
+	     console.log('fetchGetPinned.input.url',url)
 	     return fetch(url,{ method: "GET"} )
-	     /* 		 .then(validate) */
-		 .then( resp => {console.log('fetchGetPinned resp',resp.ok); return resp.ok} )
+		 .then( resp => {console.log('fetchGetPinned.resp.ok',resp.ok);
+		     return resp.ok} )
 	 }
 
 	 function fetchPostMkdirForm(mfspath, url) {
-	     console.log('fetchPostTextForm input msfpath ',mfspath);
-	     console.log('fetchPostTextForm input url ',url);
+	     console.log('fetchPostMkdirForm.input.msfpath',mfspath);
+	     console.log('fetchPostMkdirForm.input.url',url);
 	     
 	     let form = new FormData();
 	     form.append('file', mfspath)   
@@ -764,8 +769,8 @@
 	 }
 	 
 	 function fetchPostTextForm(url, content) {
-	     console.log('fetchPostTextForm input url '+url);
-	     console.log('fetchPostTextForm input content '+content);
+	     console.log('fetchPostTextForm.input.url',url);
+	     console.log('fetchPostTextForm.input.content',content);
 	     
 	     let form = new FormData();
 	     form.append('file', content)   
@@ -778,6 +783,7 @@
 	 }
 	 
 	 function fetchGetTextCors(url) {
+	     console.log('fetchGetTextCors.url',url);
 	     return fetch(url, { method: "GET", mode: "cors"} )
 		 .then(validate)
 		 .then( resp => resp.text() )
@@ -787,7 +793,7 @@
 	     if (resp.status >= 200 && resp.status < 300) {
 		 return Promise.resolve(resp)
 	     } else {
-		 console.log('status:',resp.status)
+		 console.log('validate.status',resp.status)
 		 return Promise.reject(new Error(resp.statusText))
 	     }
 	 }

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <body>
+	<div>
+	    Ipfs Hash <input name="hash"
+			     onkeyup="callFunctionWhenEnterEvent(event,getPinStatus,this.value)"
+			     type="text" value="" size="50px" placeholder="some hash">
+	    <button name="pin" onclick="togglePinStatus(this.previousSibling,this.value)" value="???")><img class="pinimg" style="height: 24px;">
+	    </button>
+	    <input type="button" onClick="updatePinStatus(getValueOfName('hash'))" value="check pin">
+	</div>
+
+	<p style="color:green" id="result"></p>
+	<p style="color:red" id="error"></p>
+	
+
+	<!-- michel's
+	     <script src="../snippets/js/essential.js"></script>
+	-->
+	<script src="https://michel47.github.io/snippets/js/essential.js"></script>
+	<script src="https://willforge.github.io/jsring/js/ipfs.js"></script>
+
+	<!-- note: api_url is defined in ipfs.js -->
+
+	<script>
+
+	 function togglePinStatus(parent,status) {
+	     console.log('togglePinStatus.input.parent:',parent);
+	     console.log('togglePinStatus.input.status:',status);
+	     
+	     // onclick="togglePinStatus(this.ParentNode,this.value)"
+	     //let hash = parent.getElementsByName('hash')[0].value;
+
+	     let hash = parent.previousElementSibling.value;
+	     console.log('togglePinStatus.hash:',hash);
+	     if (status == 'unpinned') {
+		 return ipfsPinAdd(hash)
+		     .then( _ => { updatePinStatus(hash) })
+		 
+	     } else if (status == 'direct' || status == 'indirect' || status == 'recursive')  {
+		 return ipfsPinRm(hash)
+		     .then( _ => { updatePinStatus(hash) })
+	     } else {
+		 console.log('togglePinStatus.status:',status);
+	     }
+	 }
+
+	 function updatePinStatus(hash) {
+	     console.log('updatePinStatus.input.hash:',hash);
+	     return getPinStatus(hash)
+		 .then( status => {
+		     console.log('updatePinStatus.status',status);
+		     img=document.getElementsByClassName('pinimg')[0];
+		     img.src = 'images/pinned-'+status+'-200.png';
+		     
+		     button=document.getElementsByName('pin')[0]
+		     button.value=status
+		     
+		 })
+		 .catch(logError)
+	 }
+	 
+	 function getPinStatus(hash) {
+	     console.log('getPinStatus.input.hash',hash);
+
+	     let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     return fetchRespNoCatch(url)
+		 .then( obj => {
+		     let status;
+		     if (typeof(obj.Code) == 'undefined') {
+			 let statusFull = obj.Keys[hash].Type; // indirect through hash
+			 status = statusFull.split(" ")[0]
+		     } else {
+			 status = 'unpinned'
+		     }
+		     console.log('getPinStatus: '+hash+" \u21A6",status);
+		     return status
+		 })
+		 .catch( obj => { logError('getPinStatus.catch',obj) })
+	 }
+
+	 function getDirectPinList() {
+	     url = api_url + 'pin/ls?type=direct'
+	     return fetchResp(url)
+	 }
+	 
+	 function getPinList(hash) {
+	     console.log('getPinList.input.hash: ',hash);
+             var url;
+	     if (hash == '') {
+		 url = api_url + 'pin/ls?type=direct'
+	     } else {
+		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	     }
+	     console.log('getPinList.url: ',url)
+	     return fetchRespNoCatch(url)
+		 .then( obj => {
+		     if (typeof(obj.Code) == 'undefined') {
+			 console.log('pin/ls.obj.Keys: ',obj.Keys);
+			 console.log('pin/ls.obj.Keys[hash].Type: ',obj.Keys[hash].Type);
+			 return obj.Keys
+		     } else {
+			 console.log('pin/ls.obj.Code: ',obj.Code,'notpinned');
+			 return 'notpinned'
+		     }
+		 })
+		 .catch( obj => { logError('getPinList.catch',obj) })
+	 }
+
+	 function ipfsPinAdd(hash) {
+	     console.log('ipfsPinAdd.input.hash',hash);
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'pin/add?arg=/ipfs/'+hash+'&progress=true'
+	     console.log('ipfsPinAdd.url',url)
+	     return fetchGetJson(url)
+		 .then( json => { console.log('ipfsPinAdd.json',json); })
+		 .catch(err => logErrorOfHash (err, hash))
+	 }
+
+	 function ipfsPinRm(hash) {
+	     console.log('ipfsPinRm.input.hash',hash);
+	     
+	     const api_url = 'http://127.0.0.1:5001/api/v0/'
+	     var url = api_url + 'pin/rm?arg=/ipfs/'+hash
+	     console.log('ipfsPinRm.url',url)
+	     return fetchGetJson(url)
+		 .then( json => { console.log('ipfsPinRm.json',json); return json.Pins })
+		 .catch(err => logErrorOfHash (err, hash))
+	 }
+
+	 function displayByIdOfTagOfValue (tag, value) {
+	     document.getElementById(tag).innerHTML = value
+	 }
+
+	 function logErrorOfHash (err, hash) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     displayByIdOfTagOfValue("error", message);
+	     switch (message){
+		 case "Internal Server Error":
+		     var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
+		     displayByIdOfTagOfValue("error", text);
+		     
+		     break;
+		     
+		 default:
+		     console.log("logError : default err '"+err+"'");
+	     } // switch
+	 }
+
+	 function logError (err) {
+	     console.log("logError : input err ",err);
+	     const message = err.message;
+	     console.log("logError : message '"+message+"'");
+	     displayByIdOfTagOfValue("error", message);
+	     switch (message){
+		 case "NetworkError when attempting to fetch resource.":
+		     var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
+		     displayByIdOfTagOfValue("error", text); 
+		     break;
+
+		 case "Failed to fetch":
+		     var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
+		     displayByIdOfTagOfValue("error", text); 
+		     break;	     
+
+		 case "Internal Server Error":
+		     var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add ";
+		     displayByIdOfTagOfValue("error", text);
+		     
+		     break;
+		     
+		 case "Cannot read property 'length' of null":
+		     console.log('logError', "Cannot read property 'length' of null");
+		     displayByIdOfTagOfValue("error", '');
+		     var dir = document.getElementById('idMfsDirPath').value;
+		     console.log('logError dir', dir);
+		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+		     break;
+
+		 case "entries is null":
+		     console.log('logError', 'entries is null');
+		     displayByIdOfTagOfValue("error", '');
+		     var dir = document.getElementById('idMfsDirPath').value;
+		     console.log('logError dir', dir);
+		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+		     break;
+		     
+		 default:
+		     console.log("logError : default err '"+err+"'");
+	     } // switch
+	 }
+
+	</script>
+    </body>
+</html>
+

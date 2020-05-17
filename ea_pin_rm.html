@@ -3,7 +3,7 @@
     <body>
 	<div>
 	    Ipfs Hash <input name="hash" type="text" value="" size="50px" placeholder="some hash">
-	    <input type="button" onClick="ipfsPinAdd(getValueOfName('hash'))" value="Pin">
+	    <input type="button" onClick="ipfsPinRm(getValueOfName('hash'))" value="PinRm">
 	</div>
 
 	<p style="color:green" id="result"></p>
@@ -28,13 +28,14 @@
 	     return result;
 	 }
 	 
-	 function ipfsPinAdd(hash) {
-	     console.log('ipfsPinAdd.input.hash',hash);
+	 function ipfsPinRm(hash) {
+	     console.log('ipfsPinRm.input.hash',hash);
+	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
-	     var url = api_url + 'pin/add?arg=/ipfs/'+hash+'&progress=true'
-	     console.log('ipfsPinAdd.url',url)
+	     var url = api_url + 'pin/rm?arg=/ipfs/'+hash
+	     console.log('ipfsPinRm.url',url)
 	     return fetchGetJson(url)
-		 .then( json => { console.log('ipfsPinAdd.json',json); })
+		 .then( json => { console.log('ipfsPinRm.json',json); return json.Pins })
 		 .catch(err => logErrorOfHash (err, hash))
 	 }
 
