@@ -248,8 +248,8 @@
 	 
          /* ----- Pin functions ------ */
 	 
- 	 function getPinType(hash) {
-	     console.log('getPinType.input.hash',hash);
+ 	 function getPinBoolOfHash(hash) {
+	     console.log('getPinBoolOfHash.input.hash',hash);
 	     const api_url = 'http://127.0.0.1:5001/api/v0/'
 	     var url;
 	     if (hash == '') {
@@ -257,15 +257,15 @@
 	     } else {
 		 url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
 	     }
-	     console.log('getPinType.url',url)
+	     console.log('getPinBoolOfHash.url',url)
 	     return fetchGetPinned(url)
-		 .then( json => { console.log('getPinType.json',json);
-		     return json })
+		 .then( bool => { console.log('getPinBoolOfHash.bool', bool);
+		     return bool })
 	 }
 	 
 	 function showPinType(hash) { // Improve not clear
 	     console.log('showPinType.input.hash',hash);
-	     getPinType(hash)
+	     getPinBoolOfHash(hash)
 		 .then (type => {
 		     console.log('showPinType.type', type);
 		     if (type == undefined){
@@ -288,24 +288,19 @@
 	 
 	 function createButtonOfPinHash (hash) {
 	     console.log('createButtonOfPinHash.hash',hash);
-	     getPinType(hash)
-		 .then (type => {
-		     console.log('createButtonOfPinHash.type', type);
-		     let result = imageOfBool(type);
-		     console.log('createButtonOfPinHash.result', result);
+	     getPinBoolOfHash(hash)
+		 .then (bool => {
+		     console.log('createButtonOfPinHash.bool', bool);
+		     if(bool) {
+			 var result = '<button type="submit" class="pinButton" onclick="">';
+		     }
+		     else {
+			 var result = '<button type="submit" class="pinButton" onclick="">';
+		     }
+		     result += imageOfBool(bool);
+		     result += '</button>';
+		     console.log('createButtonOfPinHash.result',result);
 		     return result;
-		     /*
-			if(type) {
-			var but = '<button type="submit" class="pinButton" onclick="">';
-			}
-			else {
-			var but = '<button type="submit" class="pinButton" onclick="">';
-			}
-			but += imageOfBool(type);
-			but += '</button>';
-			console.log('createButtonOfPinHash.but',but);
-			return but;
-		      */
 		 })
 		 .catch(logError)
 	 }
@@ -607,9 +602,9 @@
 	 }
 
 	 function logError (err) {
-	     console.log("logError : input err ",err);
+	     console.log("logError.input.err",err);
 	     const message = err.message;
-	     console.log("logError : message '"+message+"'");
+	     console.log("logError.message '"+message+"'");
 	     displayByIdOfTagOfValue("error", message);
 	     switch (message){
 		     
