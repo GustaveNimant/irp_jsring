@@ -244,10 +244,6 @@
 	     createElementTable (tr, 'th', 'Hash')   
 	 }
 
-	 function createTypeImageOf() {
-
-	 }
-	 
 	 function createTableOfEntriesOfMfsDirPath (entries, mfsDirPath){
 	     console.log('createTableOfEntriesOfMfsDirPath.input.entries:', entries);
 	     console.log('createTableOfEntriesOfMfsDirPath.input.mfsDirPath:', mfsDirPath);
@@ -267,7 +263,6 @@
 		 createElementTable (tr, 'td', typeImageOfJsonOfKey (entries, i)); 
 		 createElementTable (tr, 'td', createNameButtonOfMfsDirPath(mfsDirPath,name,type,hash));
 		 createElementTable (tr, 'td', linkIpfsHash (hash));
-		 updatePinButtonOfHash(hash);
 	     }
 	 }
 
@@ -281,6 +276,9 @@
 	     but += '<img src="images/questionmark.png" class="' + hash + '" style="height: 24px;">';
 	     but += '</button>';
 	     console.log('createPinButtonOfHash.but:', but);
+
+	     updatePinButtonOfHash(hash);
+
 	     return but;
 	 }
 
