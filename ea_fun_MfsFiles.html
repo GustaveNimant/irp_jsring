@@ -243,6 +243,10 @@
 	     createElementTable (tr, 'th', 'Name');
 	     createElementTable (tr, 'th', 'Hash')   
 	 }
+
+	 function createTypeImageOf() {
+
+	 }
 	 
 	 function createTableOfEntriesOfMfsDirPath (entries, mfsDirPath){
 	     console.log('createTableOfEntriesOfMfsDirPath.input.entries:', entries);
@@ -251,37 +255,32 @@
 	     for (let i=0; i < entries.length; i++) {
 		 
 		 var hash = entries[i]['Hash'];
-		 var name = entries[i]['Name'];
-		 var hashLink = linkIpfsHash (hash);
-		 
-		 console.log('displayJson.hash:',hash);
-		 console.log('displayJson.name:',name);
-		 console.log('displayJson.hashLink:',hashLink);
-		 
-		 var imageType = imageOfJsonOfKey (entries, i);
-		 console.log('displayJson imageType',imageType);
+		 var name = entries[i]['Name']; 
 		 let type = entries[i]['Type'];
-		 console.log('displayJson type',type);
+		 
+		 console.log('createTableOfEntriesOfMfsDirPath.hash:',hash);
+		 console.log('createTableOfEntriesOfMfsDirPath.name:',name);
+		 console.log('createTableOfEntriesOfMfsDirPath.type:',type);
 		 
 		 let tr = createElementTable (table,'tr', '');
-		 createElementTable (tr, 'td', createButtonPinOfHash (hash));
-		 createElementTable (tr, 'td', imageType);
-		 createElementTable (tr, 'td', createButtonNameOfMfsDirPath(mfsDirPath,name,type,hash));
-		 createElementTable (tr, 'td', hashLink);
-		 updatePinStatus(hash);
+		 createElementTable (tr, 'td', createPinButtonOfHash (hash));
+		 createElementTable (tr, 'td', typeImageOfJsonOfKey (entries, i)); 
+		 createElementTable (tr, 'td', createNameButtonOfMfsDirPath(mfsDirPath,name,type,hash));
+		 createElementTable (tr, 'td', linkIpfsHash (hash));
+		 updatePinButtonOfHash(hash);
 	     }
 	 }
 
-         /* ----- Pin functions ------ */
+	 /* ----- Pin functions ------ */
 	 
-	 function createButtonPinOfHash (hash) {
-	     console.log('createButtonPinOfHash.input.hash:',hash);
+	 function createPinButtonOfHash (hash) {
+	     console.log('createPinButtonOfHash.input.hash:',hash);
 
 	     let but = '<button type="submit" class="pinButton" onclick="togglePinStatus(this.value,this.name)" name="'+hash+'">';
 
-	     but += '<img src="images/inter.png" class="' + hash + '" style="height: 24px;">';
+	     but += '<img src="images/questionmark.png" class="' + hash + '" style="height: 24px;">';
 	     but += '</button>';
-	     console.log('createButtonPinOfHash.but:', but);
+	     console.log('createPinButtonOfHash.but:', but);
 	     return but;
 	 }
 
@@ -291,38 +290,40 @@
 	     
 	     if (status == 'unpinned' || status == 'indirect-through') {
 		 return ipfsPinAdd(hash)
-		     .then( _ => { updatePinStatus(hash) })
+		     .then( _ => { updatePinButtonOfHash(hash) })
 		 console.log('togglePinStatus.status:',status);
 	     } else if (status == 'direct' || status == 'recursive' || status == 'indirect-through')  {
 		 return ipfsPinRm(hash)
-		     .then( _ => { updatePinStatus(hash) })
+		     .then( _ => { updatePinButtonOfHash(hash) })
 	     } else {
 		 console.log('togglePinStatus.status:',status);
 	     }
 	 }
 	 
-	 function updatePinStatus(hash) {
-	     console.log('updatePinStatus.input.hash:',hash);
+	 function updatePinButtonOfHash(hash) {
+	     // Update buttonn defined in createPinButtonOfHash (hash)
+	     // with name=hash. Toggling by clicking.
+	     console.log('updatePinButtonOfHash.input.hash:',hash);
 	     return getPinStatus(hash)
 		 .then( status => {
-		     console.log('updatePinStatus.status:',status);
+		     console.log('updatePinButtonOfHash.status 1:',status);
 		     //status : 'pinned-indirect through Qma84TiiJye6mp4iJZ8ZtZBWqNEqJ3JyAfMXFXy94jgE2A'
 		     if (status.indexOf('through') >= 0) {
 			 let string = status.split(' ');
-			 console.log('updatePinStatus.string:',string);
+			 console.log('updatePinButtonOfHash.string:',string);
 			 var status = string[0]+'-'+string[1];
 		     }
-		     
+		     console.log('updatePinButtonOfHash.status 2:',status);
 		     img = document.getElementsByClassName(hash)[0];
 		     img.src = 'images/pinned-'+status+'-200.png';
 		     button = document.getElementsByName(hash)[0];
 		     button.value = status;
-		     console.log('updatePinStatus.img:',img);
-		     console.log('updatePinStatus.button:',button);
+		     console.log('updatePinButtonOfHash.img:',img);
+		     console.log('updatePinButtonOfHash.button:',button);
 		 })
 		 .catch(logError)
 	 }
-
+	 
 	 function getPinStatus(hash) {
 	     console.log('getPinStatus.input.hash:',hash);
 	     
@@ -461,21 +462,21 @@
 	     else { return '<img src="images/folder.png" width="25px" height="25">'; }
 	 }
 
-	 function imageOfJsonOfKey (json, key) {
-	     console.log('imageOfJsonOfKey.input.json',json);
-	     console.log('imageOfJsonOfKey.input.key',key);
+	 function typeImageOfJsonOfKey (json, key) {
+	     console.log('typeImageOfJsonOfKey.input.json',json);
+	     console.log('typeImageOfJsonOfKey.input.key',key);
 
 	     let type = typeOfJsonOfKey (json, key);
 	     result = imageOfType(type);
-	     console.log ('imageOfJsonOfKey.result:', result);
+	     console.log ('typeImageOfJsonOfKey.result:', result);
 	     return result;
 	 }
 
-	 function createButtonNameOfMfsDirPath (mfspath, name, type, hash) {
-	     console.log('createButtonNameOfMfsDirPath.input.mfspath:',mfspath);
-	     console.log('createButtonNameOfMfsDirPath.input.name:',name);
-	     console.log('createButtonNameOfMfsDirPath.input.type:',type);
-	     console.log('createButtonNameOfMfsDirPath.input.hash:',hash);
+	 function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
+	     console.log('createNameButtonOfMfsDirPath.input.mfspath:',mfspath);
+	     console.log('createNameButtonOfMfsDirPath.input.name:',name);
+	     console.log('createNameButtonOfMfsDirPath.input.type:',type);
+	     console.log('createNameButtonOfMfsDirPath.input.hash:',hash);
 
 	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
@@ -483,7 +484,7 @@
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 	     } else {
 		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
-		 console.log('createButtonNameOfMfsDirPath.but',but);
+		 console.log('createNameButtonOfMfsDirPath.but',but);
 	     }
 	     but += '>';
 	     return but;
@@ -559,10 +560,9 @@
 	     }
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/';
-	     
-	     console.log('getCat hash '+hash);
 	     var url = api_url + 'cat?&arg='+hash
-	     console.log('url '+url);
+	     console.log('getHash.url',url);
+
 	     return fetchGetTextCors(url)
 		 .then( obj => { return Promise.resolve(obj) })
 		 .then(callback('catOfHash'))

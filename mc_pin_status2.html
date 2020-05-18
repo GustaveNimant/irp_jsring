@@ -6,7 +6,7 @@
         onkeyup="callFunctionWhenEnterEvent(event,getPinStatus,this.value)"
         type="text" value="" size="50px" placeholder="some hash">
       <button name=pin onclick="togglePinStatus(this.ParentNode,this.value)" value="?")><img class=pinimg style="height: 24px;"></button>
-	    <input type="button" onClick="updatePinStatus(getValueOfName('hash'))" value="check pin">
+	    <input type="button" onClick="updatePinButtonOfHash(getValueOfName('hash'))" value="check pin">
 	</div>
 
 	<p style="color:green" id="result"></p>
@@ -27,19 +27,19 @@
     let hash = parent.getElementsByName('hash')[0].value;
     if (status == 'unpinned') {
       return ipfsPinAdd(hash)
-      .then( _ => { updatePinStatus(hash) })
+      .then( _ => { updatePinButtonOfHash(hash) })
 
     } else if (status == 'direct' || status == 'recursive')  {
       return ipfsPinRm(hash)
-      .then( _ => { updatePinStatus(hash) })
+      .then( _ => { updatePinButtonOfHash(hash) })
     } else {
      console.log('togglePinStatus.status:',status);
     }
   
 }
 
-  function updatePinStatus(hash) {
-     console.log('updatePinStatus.hash:',hash);
+  function updatePinButtonOfHash(hash) {
+     console.log('updatePinButtonOfHash.hash:',hash);
      return getPinStatus(hash)
         .then( status => { 
               img=document.getElementsByClassName('pinimg')[0];

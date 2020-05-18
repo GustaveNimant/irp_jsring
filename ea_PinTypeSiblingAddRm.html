@@ -7,7 +7,7 @@
 			     type="text" value="" size="50px" placeholder="some hash">
 	    <button name="pin" onclick="togglePinStatus(this.previousSibling,this.value)" value="???")><img class="pinimg" style="height: 24px;">
 	    </button>
-	    <input type="button" onClick="updatePinStatus(getValueOfName('hash'))" value="check pin">
+	    <input type="button" onClick="updatePinButtonOfHash(getValueOfName('hash'))" value="check pin">
 	</div>
 
 	<p style="color:green" id="result"></p>
@@ -35,21 +35,21 @@
 	     console.log('togglePinStatus.hash:',hash);
 	     if (status == 'unpinned') {
 		 return ipfsPinAdd(hash)
-		     .then( _ => { updatePinStatus(hash) })
+		     .then( _ => { updatePinButtonOfHash(hash) })
 		 
 	     } else if (status == 'direct' || status == 'indirect' || status == 'recursive')  {
 		 return ipfsPinRm(hash)
-		     .then( _ => { updatePinStatus(hash) })
+		     .then( _ => { updatePinButtonOfHash(hash) })
 	     } else {
 		 console.log('togglePinStatus.status:',status);
 	     }
 	 }
 
-	 function updatePinStatus(hash) {
-	     console.log('updatePinStatus.input.hash:',hash);
+	 function updatePinButtonOfHash(hash) {
+	     console.log('updatePinButtonOfHash.input.hash:',hash);
 	     return getPinStatus(hash)
 		 .then( status => {
-		     console.log('updatePinStatus.status',status);
+		     console.log('updatePinButtonOfHash.status',status);
 		     img=document.getElementsByClassName('pinimg')[0];
 		     img.src = 'images/pinned-'+status+'-200.png';
 		     
