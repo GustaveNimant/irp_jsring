@@ -216,13 +216,13 @@
 	     }
 
 	     if (entries.length != 0){
-		 createHeaderOfTable (table);
+		 createHeaderOfDirTable (table);
 	     }
 	     
 	     createTableOfEntriesOfMfspath (entries, mfsDirPath);
 	 }
 	 
-	 function createHeaderOfTable (table) {
+	 function createHeaderOfDirTable (table) {
 	     let tr = createElementTable (table,'tr', '');
 	     createElementTable (tr, 'th', 'Pin');
 	     createElementTable (tr, 'th', 'Type');

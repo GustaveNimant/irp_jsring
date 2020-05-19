@@ -27,7 +27,7 @@
 	     margin:20px;
 	 }
 
-	 .catOfHash {
+	 .idFileContent {
 	     background:#C7F8F6;
 	 }
 
@@ -151,13 +151,17 @@
 	    </table>
 	    </div>
 	</div>
-	<pre id="catOfHash" class="catOfHash"></pre>
-
+	<!-- <pre id="idFileContent" class="idFileContent"></pre> -->
+	<br>File content is <br> 
+	<textarea id="idFileContent" rows="40" cols="70">
+	</textarea>
+	
 	<script>
 	 // Improve : Error TypeError: NetworkError when attempting to fetch resource. (ipfs not running)
 	 // Improve : CR not working correctly
 	 // Improve : Pin ? when directory loading file 
 	 // Improve : suppress extra get url 
+	 // Improve : new directory has always the same Hash
 	 
 	 window.onload = displayDirOnLoadWindow();
 	 
@@ -186,20 +190,20 @@
 		 .then (validate)
 		 .then (resp => resp.json())
 		 .then (body => { body.mfspath = mfsDirPath; return body})
-		 .then (displayJson)
+		 .then (displayDirJson)
 		 .catch(err => {console.log(err); logError(err)})
 	 }
 
-	 function displayJson (json) {
-	     console.log('displayJson.input.json:', json);
+	 function displayDirJson (json) {
+	     console.log('displayDirJson.input.json:', json);
 	     
 	     let mfsDirPath = json.mfspath
 	     let entries = json.Entries
-	     console.log('displayJson.mfsDirPath:', mfsDirPath);
-	     console.log('displayJson.entries:', entries);
+	     console.log('displayDirJson.mfsDirPath:', mfsDirPath);
+	     console.log('displayDirJson.entries:', entries);
 	     
 	     table = document.getElementById('ls-result')
-	     console.log('displayJson.table:',table);
+	     console.log('displayDirJson.table:',table);
 	     
 	     deleteActionsAndErrorTexts();
 	     deleteAllRowsOfTable (table);
@@ -221,7 +225,7 @@
 	 function deleteActionsAndErrorTexts() {
 	     updateElementOfIdOfValue ('fileUploaded', '');
 	     updateElementOfIdOfValue ('error', '');
-	     updateElementOfIdOfValue ('catOfHash', '');
+	     updateElementOfIdOfValue ('idFileContent', '');
 	     updateElementOfIdOfValue ('fileRemoved', '');
 	 }
 	 
@@ -230,9 +234,55 @@
 
 	     var i = 1;  // Be careful with deleteRow : length is modified.
 	     while (table.rows[i]) {
-		 console.log('displayJson Row i',i,table.rows[i].innerHTML);
+		 console.log('deleteAllRowsOfTable.Row.i',i,table.rows[i].innerHTML);
 		 table.deleteRow(i);
 	     }
+	 }
+
+	 function keepOneRowOfRootNameOfTable (rootName, table) {
+	     console.log('keepOneRowOfTable.input.rootName:', rootName);
+	     console.log('keepOneRowOfTable.input.table:', table);
+	     console.log('keepOneRowOfTable.table.length:', table.rows.length);
+
+	     var rowKept = "";
+	     var rowI= 0;
+	     
+	     for (var i=0, row; row= table.rows[i];i++) {
+		 console.log('keepOneRowOfTable.Row.i',i,row);
+
+		 for (var j=0, col; col = row.cells[j];j++) {
+		     console.log('keepOneRowOfTable.Col.i.j',i,j,col);
+		     let name = col.firstChild.value;
+		     if( rootName == name) {
+			 rowKept = row;
+			 rowI = i;
+			 console.log('KEEP keepOneRowOfTable.name.i.j',i,j,name);
+		     }
+		     console.log('keepOneRowOfTable.name.i.j',i,j,name);
+		 }
+	     }
+	     console.log('keepOneRowOfTable.rowKept',rowKept);
+	     console.log('keepOneRowOfTable.rowI',rowI);
+
+	     let count = table.rows.length;
+	     for (let i=1; i< count ;i++) {
+		 if (i == rowI) {
+		     console.log('KEEPING i',i);
+		 }
+		 else {
+		     table.deleteRow(i)
+		 }
+	     }
+	 }
+
+	 function createHeaderOfFileTable (table) {
+	     console.log('createHeaderOfFileTable.input.table:', table);
+	     
+	     let tr = createElementTable (table,'tr', '');
+	     createElementTable (tr, 'th', 'Pin');
+	     createElementTable (tr, 'th', 'Type');
+	     createElementTable (tr, 'th', 'Name');
+	     createElementTable (tr, 'th', 'Hash');  
 	 }
 
 	 function createHeaderOfDirTable (table) {
@@ -383,7 +433,7 @@
 	     }else {
 		 var path_url = msfDirPath + '/' + mfsDirName;
 	     }
-	     console.log('createDirectory path_url ',path_url);
+	     console.log('createDirectory.path_url:',path_url);
 	     
 	     const api_url = 'http://127.0.0.1:5001/api/v0/';
 	     var url = api_url + 'files/mkdir?arg=' + path_url;
@@ -484,7 +534,7 @@
 	     let but = '<input type="button" id="nameButton" value="';
 	     but += name;
 	     if (type == 1){
-		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
+		 but += '" onclick="addNameOnInputMfsDirPath(this.value)"';
 	     } else {
 		 but += '" onclick="addNameOfFileOnDeleteBlock(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
 		 console.log('createNameButtonOfMfsDirPath.but',but);
@@ -509,14 +559,19 @@
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
 
-	     getHash(hash);
+	     getFileContentOfHash(hash);
+
+	     let table = document.getElementById('ls-result')
+	     console.log('addNameOfFileOnDeleteBlock.table:',table);
+	     
+	     keepOneRowOfRootNameOfTable (rootName, table); 
 	 }
 
-	 function addNameOnInputMfsPath (mfspath) {
-	     console.log ('addNameOnInputMfsPath.input.mfspath:', mfspath);
+	 function addNameOnInputMfsDirPath (mfspath) {
+	     console.log ('addNameOnInputMfsDirPath.input.mfspath:', mfspath);
 
 	     let oldMfsdir = document.getElementById('idMfsDirPath').value;
-	     console.log ('addNameOnInputMfsPath.oldMfsdir:', oldMfsdir);
+	     console.log ('addNameOnInputMfsDirPath.oldMfsdir:', oldMfsdir);
 	     let path = oldMfsdir;
 	     if (oldMfsdir == '/'){
 		 path += mfspath;
@@ -524,7 +579,7 @@
 		 path += '/';
 		 path += mfspath;
 	     }
-	     console.log ('addNameOnInputMfsPath.path:', path);
+	     console.log ('addNameOnInputMfsDirPath.path:', path);
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
 	     var mfsdir = document.getElementById('idMfsDirPath');
@@ -555,8 +610,8 @@
 	     return doc;
 	 }
 	 
-	 function getHash(hash) {
-	     console.log('getHash.input.hash:',hash)
+	 function getFileContentOfHash(hash) {
+	     console.log('getFileContentOfHash.input.hash:',hash)
 
 	     if (hash == "") {
 		 alert("Name must be filled out");
@@ -565,11 +620,11 @@
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/';
 	     var url = api_url + 'cat?&arg='+hash
-	     console.log('getHash.url',url);
+	     console.log('getFileContentOfHash.url',url);
 
 	     return fetchGetTextCors(url)
 		 .then( obj => { return Promise.resolve(obj) })
-		 .then(callback('catOfHash'))
+		 .then(callback('idFileContent'))
 		 .catch(logError)
 	 }
 
