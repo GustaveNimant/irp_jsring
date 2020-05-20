@@ -247,32 +247,28 @@
 	     var rowKept = "";
 	     var rowI= 0;
 	     
-	     for (var i=0, row; row= table.rows[i];i++) {
-		 console.log('keepOneRowOfTable.Row.i',i,row);
+	     for (var i=0, row; row = table.rows[i];i++) {
+		 console.log('keepOneRowOfTable.i.row:',i,row);
 
 		 for (var j=0, col; col = row.cells[j];j++) {
-		     console.log('keepOneRowOfTable.Col.i.j',i,j,col);
+		     console.log('keepOneRowOfTable.Col.i.j:',i,j,col);
 		     let name = col.firstChild.value;
 		     if( rootName == name) {
 			 rowKept = row;
 			 rowI = i;
 			 console.log('KEEP keepOneRowOfTable.name.i.j',i,j,name);
 		     }
-		     console.log('keepOneRowOfTable.name.i.j',i,j,name);
+		     console.log('keepOneRowOfTable.name.i.j:',i,j,name);
 		 }
 	     }
-	     console.log('keepOneRowOfTable.rowKept',rowKept);
-	     console.log('keepOneRowOfTable.rowI',rowI);
+	     console.log('keepOneRowOfTable.rowKept:',rowKept);
+	     console.log('keepOneRowOfTable.rowI:',rowI);
 
+	     deleteAllRowsOfTable (table);
+	     createHeaderOfDirTable (table);
 	     let count = table.rows.length;
-	     for (let i=1; i< count ;i++) {
-		 if (i == rowI) {
-		     console.log('KEEPING i',i);
-		 }
-		 else {
-		     table.deleteRow(i)
-		 }
-	     }
+	     console.log('keepOneRowOfTable.count:',count);
+	     createElementTable (table,'tr', rowKept.innerHTML);
 	 }
 
 	 function createHeaderOfFileTable (table) {
