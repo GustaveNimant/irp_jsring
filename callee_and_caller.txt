@@ -1,0 +1,5 @@
+	     let callee = arguments.callee.name;
+	     let caller = arguments.callee.caller;
+	     if(caller == null) {console.log('"None" -> "'+callee+'";:')}
+	     else {console.log('"'+caller.name+'" -> "'+callee+'";:')}
+	      
