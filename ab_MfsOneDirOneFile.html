@@ -410,32 +410,33 @@
 	 }
 
 	 function removeElement () {
+	     console.log("removeElement:");
 	     var hid = document.getElementsByClassName('hiddenForFile')[0];
 
 	     var mfspath = document.getElementById('idRemoveFileOrDirectory').value;
 	     
-	     console.log("removeElement.mfspath '"+mfspath+"'");
+	     console.log("removeElement.mfspath:",mfspath);
 	     let conf_mess = 'Confirm removing of ' + mfspath;
 	     var conf = confirm(conf_mess);
 	     if (conf == true) {
-		 removeFileOfMfsPath (mfspath)
+		 removeOfMfsPath (mfspath)
 	     }		 
 	 }
 	 
-	 function removeFileOfMfsPath(mfspath) {
+	 function removeOfMfsPath(mfspath) {
 	     console.log('removeFileOfPath.input.mfspath:',mfspath);
-	     console.log('removeFileOfMfsPath.chopMfspath.mfspath', chopMfspath (mfspath));
+	     console.log('removeOfMfsPath.chopMfspath.mfspath', chopMfspath (mfspath));
 	     
 	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
-	     console.log('removeFileOfMfsPath.parent:',parent);
+	     console.log('removeOfMfsPath.parent:',parent);
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
 
 	     var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
-	     console.log('removeFileOfMfsPath.url:'+url);
+	     console.log('removeOfMfsPath.url:'+url);
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
-		 .then (resp => {console.log('removeFileOfMfsPath resp',resp)})
+		 .then (resp => {console.log('removeOfMfsPath resp',resp)})
 		 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
 		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
@@ -557,20 +558,6 @@
 	     return butMod;
 	 }
 
-	 function unlockFileEdit () {
-	     let txtAre = document.getElementById('catOfHash');
-	     txtAre.disabled = false;
-	     let butSav = document.getElementById('saveModif');
-	     butSav.disabled = false;
-	 }
-	 
-	 function saveFileOnIpms () {
-	     let txtAre = document.getElementById('catOfHash');
-	     txtAre.disabled = true;
-	     let butSav = document.getElementById('saveModif');
-	     butSav.disabled = true;	     
-	 }
-	 
 	 function buttonDeleteFile (name) {
 	     console.log('buttonDeleteFile.input.name:',name);
 	     
@@ -581,11 +568,35 @@
 		 var mfspath = path + '/' + name
 	     }
 	     console.log('buttonDeleteFile.mfspath:', mfspath);
-	     let butDel = '<input type="button" value="Delete ' + name+ '" onclick="removeFileOfMfsPath(' + mfspath + ')">';
+	     let butDel = '<input type="button" value="Delete ';
+	     butDel += name;
+	     butDel += '" onclick="removeOfMfsPath(';
+	     butDel += mfspath;
+	     butDel += ')">';
 	     console.log('buttonDeleteFile.butDel:', butDel);
 	     return butDel;
 	 }
 
+	 function unlockFileEdit () {
+	     let txtAre = document.getElementById('catOfHash');
+	     txtAre.disabled = false;
+	     let butSav = document.getElementById('saveModif');
+	     butSav.disabled = false;
+	 }
+	 
+	 function saveFileOnIpms () {
+	     console.log('saveFileOnIpms:');
+	     
+	     let txtAre = document.getElementById('catOfHash');
+	     console.log('saveFileOnIpms:txtAre',txtAre);
+	     let content = txtAre.value;
+	     console.log('saveFileOnIpms:content',content);
+	     txtAre.disabled = true;
+	     let butSav = document.getElementById('saveModif');
+	     butSav.disabled = true;
+	     //	     writeOfMfsFilePathOfContent(mfsFilePath, content);
+	 }
+	 
 	 /* ---------- End file Functions ---------- */
 
 	 function addNameOfFileOnDeleteBlock(rootName, hash) {
