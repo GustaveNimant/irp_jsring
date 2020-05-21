@@ -170,16 +170,11 @@
 	 }
 	 
 	 function getForm (form) {
-	     let caller = arguments.callee.caller.name;
-	     let callee = arguments.callee.name;
-	     console.log('Entering in',callee,'called by',caller);
-	     console.log(callee+".input.form:",form);
-	     
 	     let mfspath = form.elements[0].value;
 	     console.log("getForm.mfspath '"+mfspath+"'");
 	     
-		 updateElementOfIdOfValue ("currentMfsPath", mfspath);
-		 updateElementOfIdOfValue ("currentMfsDir", mfspath);
+	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
+	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
 		 getHashAndTypeOfMfsPath (mfspath);
 		 getFileList (mfspath)
 	 }
@@ -198,7 +193,8 @@
 			 .catch(err => {console.log(err); logError(err)})
 		 }
 
-		 function displayDirJson (json) {
+	 function displayDirJson (json) {
+	     
 		     console.log('displayDirJson.input.json:', json);
 		     
 		     let mfsDirPath = json.mfspath

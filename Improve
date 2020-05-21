@@ -1,0 +1,6 @@
+// Improve : Error TypeError: NetworkError when attempting to fetch resource. (ip	fs not running)
+// Improve : CR not working correctly
+// Improve : Pin ? when directory loading file 
+// Improve : GET => POST
+// Bubble as popup 
+// Message when ipfs nor running	 
