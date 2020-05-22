@@ -151,14 +151,17 @@
 	    </table>
 	    </div>
 	</div>
-
 	<!-- <pre id="idFileContent" class="idFileContent"></pre> -->
-
 	<br>File content is <br> 
 	<textarea id="idFileContent" rows="40" cols="70">
 	</textarea>
 	
 	<script>
+	 // Improve : Error TypeError: NetworkError when attempting to fetch resource. (ipfs not running)
+	 // Improve : CR not working correctly
+	 // Improve : Pin ? when directory loading file 
+	 // Improve : suppress extra get url 
+	 // Improve : new directory has always the same Hash
 	 
 	 window.onload = displayDirOnLoadWindow();
 	 
