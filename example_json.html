@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+	<h2>Create Object from JSON String</h2>
+
+	<p id="demoj"></p>
+	<p id="demo"></p>
+
+	<script>
+	 var arrJSON = [
+	     '{"name":"John", "age":31, "city":"New York"}',
+	     '{"name":"Louis", "age":36, "city":"Paris"}'
+	 ];
+
+	 console.log('arrJSON',arrJSON);
+	 
+	 var arrObj = arrJSON.map (j => JSON.parse(j));
+	 arrObj.map (j => {j.name = "Truc "+j.name});
+	 console.log('arrObj',arrObj);
+	 
+	 var myJSON = '{"name":"John", "age":31, "city":"New York"}';
+	 var myObj = JSON.parse(myJSON);
+	 myObj.name = "Truc "+ myObj.name; 
+	 document.getElementById("demoj").innerHTML = myObj.name;
+	 
+	 var text = '{"employees":[' +
+		    '{"firstName":"John","lastName":"Doe" },' +
+		    '{"firstName":"Anna","lastName":"Smith" },' +
+		    '{"firstName":"Peter","lastName":"Jones" }]}';
+
+	 obj = JSON.parse(text);
+
+	 obj.employees[1].firstName ="Truc";
+	 
+	 console.log('obj',obj);
+	 document.getElementById("demo").innerHTML =
+	     obj.employees[1].firstName + " " + obj.employees[1].lastName;
+
+
+	</script>
+
+    </body>
+</html>

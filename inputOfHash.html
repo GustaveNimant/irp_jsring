@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+	<div>
+	    Enter Hash <input id="hash" type="text" name="hash" size="50px">
+            <button type="button" onclick="getOfHash(document.getElementById('hash').value)">Submit</button>
+	</div>
+	
+	<script>
+	 function getOfHash(hash) {
+	     console.log('getOfHash.input.hash',hash);
+
+             var a = document.createElement("div");
+             a.innerHTML = "Hash is "+hash;
+             document.getElementsByTagName("div")[0].appendChild(a);
+	 }
+	 
+	</script>
+    </body>
+</html>

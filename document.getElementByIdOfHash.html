@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+	<div>
+	    Enter Hash <input id="hash" type="text" name="hash" size="50px">
+            <button type="button" onclick="createLinkOfHash(document.getElementById('hash').value)">Submit</button>
+	</div>
+	
+	<button name="X" onclick="alert('Button clicked')">
+	    <img src="images/pinned-indirect-through-200.png" width="25px" height="25px" title="Click on image for action">
+	    <a class="aclassSpanBuble" target="_blank" onmouseover="disableButton()" onmouseout="enableButton()" title="Click to view through hash">link</a>
+	</button>
+	
+	<script>
+	 function createLinkOfHash(hash) {
+	     console.log('createLinkOfHash.input.hash',hash);
+	     let link = "http://127.0.0.1:8080/ipfs/"+hash;
+	     
+	     /* ajoute un lien dans la balise <a href=link> */
+	     var doc = document.getElementsByClassName('aclassSpanBuble')[0];
+	     console.log('docX', doc);
+	     doc.href = link;
+	     console.log('createLinkOfHash.link', link);
+	     console.log('createLinkOfHash.doc', doc);
+	 }
+
+	 /* bouton inactif quand le curseur est sur le lien */
+	 function disableButton () {
+	     /* butName : hash du fichier ou dossier */	 
+	     let butName = "X";
+	     
+	     document.getElementsByName(butName)[0].disabled = true;
+	     let but = document.getElementsByName(butName);
+	     console.log('disableButton.but', but);
+	 }
+	 
+	 /* bouton actif quand le curseur est hors du lien */
+	 function enableButton () {
+	     let butName = "X";
+	     
+	     document.getElementsByName(butName)[0].disabled = false;
+	     let but = document.getElementsByName(butName);
+	     console.log('enableButton.but', but);
+	 }
+	 
+	 function getHash() {
+	     var hash = document.getElementById("hash").value;
+	     console.log('getHash.input.hash',hash)
+	     if (hash == "") {
+		 alert("Name must be filled out");
+		 return false;
+	     }
+	     return createLinkOfHash(hash);
+	 } 
+
+	</script>
+    </body>
+</html>

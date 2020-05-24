@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	
+    </head>
+    
+    <body>
+	<script>
+
+	 function fatherListOfMfsPath (mfspath) {
+	     var father_a = [];
+	     var str = mfspath;
+	     
+	     father_a.push(str);
+	     var ind = str.lastIndexOf('/');
+	     console.log('fatherListOfMfsPath.ind:',ind);
+	     while (ind > 0) {
+                 str = str.substring(0, ind);
+		 father_a.push(str);
+		 console.log('fatherListOfMfsPath.str:',str);
+		 var ind = str.lastIndexOf('/');
+		 console.log('fatherListOfMfsPath.ind:',ind);
+		 console.log('fatherListOfMfsPath.father_a:',father_a);
+	     }
+	     father_a.push("/");
+	     return father_a;
+	 }
+
+	 let mfspath = '/.brings/system/bin/word.pl';
+	 let father_a = fatherListOfMfsPath (mfspath);
+	 console.log('fatherListOfMfsPath.father_a', father_a);
+	 
+	</script>
+    </body>
+</html>

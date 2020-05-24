@@ -237,34 +237,34 @@
 	 }
 
 	 function keepOneRowOfRootNameOfTable (rootName, table) {
-	     console.log('keepOneRowOfTable.input.rootName:', rootName);
-	     console.log('keepOneRowOfTable.input.table:', table);
-	     console.log('keepOneRowOfTable.table.length:', table.rows.length);
+	     console.log('keepOneRowOfRootNameOfTable.input.rootName:', rootName);
+	     console.log('keepOneRowOfRootNameOfTable.input.table:', table);
+	     console.log('keepOneRowOfRootNameOfTable.table.length:', table.rows.length);
 
 	     var rowKept = "";
 	     var rowI= 0;
 	     
 	     for (var i=0, row; row = table.rows[i];i++) {
-		 console.log('keepOneRowOfTable.i.row:',i,row);
+		 console.log('keepOneRowOfRootNameOfTable.i.row:',i,row);
 
 		 for (var j=0, col; col = row.cells[j];j++) {
-		     console.log('keepOneRowOfTable.Col.i.j:',i,j,col);
+		     console.log('keepOneRowOfRootNameOfTable.Col.i.j:',i,j,col);
 		     let name = col.firstChild.value;
 		     if( rootName == name) {
 			 rowKept = row;
 			 rowI = i;
-			 console.log('KEEP keepOneRowOfTable.name.i.j',i,j,name);
+			 console.log('KEEP keepOneRowOfRootNameOfTable.name.i.j',i,j,name);
 		     }
-		     console.log('keepOneRowOfTable.name.i.j:',i,j,name);
+		     console.log('keepOneRowOfRootNameOfTable.name.i.j:',i,j,name);
 		 }
 	     }
-	     console.log('keepOneRowOfTable.rowKept:',rowKept);
-	     console.log('keepOneRowOfTable.rowI:',rowI);
+	     console.log('keepOneRowOfRootNameOfTable.rowKept:',rowKept);
+	     console.log('keepOneRowOfRootNameOfTable.rowI:',rowI);
 
 	     deleteAllRowsOfTable (table);
 	     createHeaderOfDirTable (table);
 	     let count = table.rows.length;
-	     console.log('keepOneRowOfTable.count:',count);
+	     console.log('keepOneRowOfRootNameOfTable.count:',count);
 	     createElementTable (table,'tr', rowKept.innerHTML);
 	 }
 
@@ -343,7 +343,7 @@
 	 }
 	 
 	 function updatePinButtonOfHash(hash) {
-	     // Update buttonn defined in createPinButtonOfHash (hash)
+	     // Update button defined in createPinButtonOfHash (hash)
 	     // with name=hash. Toggling by clicking.
 	     console.log('updatePinButtonOfHash.input.hash:',hash);
 	     return getPinStatus(hash)

@@ -3,63 +3,104 @@
     <head>
     </head>
     <body>
-	<div>
-	    <p>Enter Hash <input id="hash" type="text" name="hash" size="50px"></p>
-            <button type="button" onclick="getHash()">Submit</button>
-	</div>
+QmNQ7mTXCxQQQThLWdH6wzNT8SvgRjGXYSu2YaSit4PrQK	
+<div name="divA"></div>
 	
-	<button name="X" onclick="alert('Button clicked')">
-	    <img src="images/pinned-indirect-through-200.png" width="25px" height="25px" title="Click on image for action">
-	    <a class="aclassSpanBuble" target="_blank" onmouseover="disableButton()" onmouseout="enableButton()" title="Click to view through hash">link</a>
-	</button>
-	
-	<script>
+<script>
+ window.onload = createDivHashElement ();
+ 
+ function createDivHashElement () {
+     createTagSpanOnDiv ();
+     createInputText ();
+     createGetHashButton ();     
+ }
+ 
+ function createTagSpanOnDiv () {
+     var p = document.createElement("span");
+     p.name = "B";
+     p.innerHTML = "Enter Hash";
+     document.getElementsByName('divA')[0].appendChild(p);
+ }
 
-	 var a = document.createElement("div");
-	 a.innerHTML = "truc";
-	 document.getElementsByName("X")[0].appendChild(a);
-	 
-	 function createLinkOfHash(hash) {
+ function createInputText () {
+     var inp = document.createElement("input");
+     inp.id = "hash";
+     inp.type = "text";
+     inp.name = "hash";
+     inp.size = 50;
+     document.getElementsByName("divA")[0].appendChild(inp);
+ }
 
-	     let link = "http://127.0.0.1:5001/ipfs/"+hash;
-	     
-	     /* ajoute un lien dans la balise <a href=link> */
-	     var doc = document.getElementsByClassName('aclassSpanBuble')[0];
-	     console.log('docX', doc);
-	     doc.href = link;
-	     console.log('createLinkOfHash.link', link);
-	     console.log('createLinkOfHash.doc', doc);
-	 }
+ function createGetHashButton () {
+     var but = document.createElement("input");
+     but.type = "submit";
+     but.name = "inputType";
+     but.onclick = function (){getHash()};
+     but.innerHTML = "Submit";
+     document.getElementsByName("divA")[0].appendChild(but);
+ }
 
-	 /* bouton inactif quand le curseur est sur le lien */
-	 function disableButton () {
-	     /* butName : hash du fichier ou dossier */	 
-	     let butName = "X";
-	     
-	     document.getElementsByName(butName)[0].disabled = true;
-	     let but = document.getElementsByName(butName);
-	     console.log('disableButton.but', but);
-	 }
-	 
-	 /* bouton actif quand le curseur est hors du lien */
-	 function enableButton () {
-	     let butName = "X";
-	     
-	     document.getElementsByName(butName)[0].disabled = false;
-	     let but = document.getElementsByName(butName);
-	     console.log('enableButton.but', but);
-	 }
-	 
-	 function getHash() {
-	     var hash = document.getElementById("hash").value;
-	     console.log('getHash.input.hash',hash)
-	     if (hash == "") {
-		 alert("Name must be filled out");
-		 return false;
-	     }
-	     return createLinkOfHash(hash);
-	 } 
+ function createButtonElement () {
+     var but = document.createElement("button");
+     but.name = "butX";
+     but.type = "button"
+     but.onclick = function () {alert('Button clicked')};
+     document.getElementsByName("divA")[0].appendChild(but);
+ }
 
-	</script>
+ function createImageElement () {
+     let pin = "indirect-through";
+     var img = document.createElement("img");
+     img.src = "images/pinned-" + pin + "-200.png";
+     img.width = 25;
+     img.height = 25;
+     img.title = "Click on image for action";
+     document.getElementsByName("butX")[0].appendChild(img);
+ }
+ 
+ function createLinkElementOfHash (hash) {
+     let link = "http://127.0.0.1:5001/ipfs/"+hash;
+     var lin = document.createElement("a");
+     lin.innerHTML = "link";
+     lin.href = link;
+     lin.target = "_blank";
+     lin.title ="Click to view through hash";
+     lin.onmouseover = function () {disableButton()};
+     lin.onmouseout = function (){enableButton()};
+     document.getElementsByName("butX")[0].appendChild(lin);
+ }
+
+ /* bouton inactif quand le curseur est sur le lien */
+ function disableButton () {
+     /* butName : hash du fichier ou dossier */	 
+     let butName = "butX";
+     
+     document.getElementsByName(butName)[0].disabled = true;
+     let but = document.getElementsByName(butName);
+     console.log('disableButton.but', but);
+ }
+ 
+ /* bouton actif quand le curseur est hors du lien */
+ function enableButton () {
+     let butName = "butX";
+     
+     document.getElementsByName(butName)[0].disabled = false;
+     let but = document.getElementsByName(butName);
+     console.log('enableButton.but', but);
+ }
+ 
+ function getHash() {
+     var hash = document.getElementById("hash").value;
+     console.log('getHash.input.hash',hash)
+     if (hash == "") {
+	 alert("Name must be filled out");
+	 return false;
+     }
+     createButtonElement ();
+     createImageElement ();
+     createLinkElementOfHash (hash);
+ } 
+
+</script>
     </body>
 </html>
