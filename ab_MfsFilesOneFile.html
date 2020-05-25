@@ -199,10 +199,22 @@
 	 function displayJson (json) {
 	     console.log('displayJson.input.json:', json);
 	     
-	     let mfsDirPath = json.mfspath
+	     var mfsDirPath = json.mfspath
 	     let entries = json.Entries
 	     console.log('displayJson.mfsDirPath:', mfsDirPath);
 	     console.log('displayJson.entries:', entries);
+
+	     /*
+		if( mfsDirPath == '/') mfsDirPath = json.mfspath
+		else {mfsDirPath = json.mfspath + '/'}
+		mfsDirPath.replace("\/\/", "/");
+		console.log('displayJson.mfsDirPath 2:', mfsDirPath);
+		
+		let entriesExtended = entries;
+		entriesExtended.map (o => {o.Name = mfsDirPath + o.Name}); 
+		
+		console.log('displayJson.entriesExtended:',entriesExtended);
+	      */
 	     
 	     table = document.getElementById('ls-result')
 	     console.log('displayJson.table:',table);
@@ -213,13 +225,13 @@
 	     deleteAllRowsOfTable (table);
 	     updateElementOfIdOfValue ('h3-title', mfsDirPath);
 
-	     let [parent, rootName, basename, ext] = chopMfspath (mfsDirPath);
+	     let [parent, baseName, rootName, ext] = chopMfspath (mfsDirPath);
 	     console.log('displayJson.chop.mfsDirPath.parent:', parent);
+	     console.log('displayJson.chop.mfsDirPath.baseName:', baseName);
 	     console.log('displayJson.chop.mfsDirPath.rootName:', rootName);
-	     console.log('displayJson.chop.mfsDirPath.baseName:', basename);
 	     console.log('displayJson.chop.mfsDirPath.ext:', ext);
-	     let nof = baseName(mfsDirPath);
-	     console.log('displayJson.basename.mfsDirPath.nof:', nof);
+	     let nof = baseNameOfPath(mfsDirPath);
+	     console.log('displayJson.baseName.mfsDirPath.nof:', nof);
 	     
 	     try {
 		 if (entries == null) throw "entries is null"		 
@@ -434,7 +446,7 @@
 	     console.log('removeFileOfPath.input.mfspath:',mfspath);
 	     console.log('removeFileOfMfsPath.chopMfspath.mfspath', chopMfspath (mfspath));
 	     
-	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
+	     let [parent, rootName, baseName, ext] = chopMfspath (mfspath);
 	     console.log('removeFileOfMfsPath.parent:',parent);
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
@@ -853,7 +865,7 @@
 	 
 	 // library
 	 
-	 function baseName(mfspath){
+	 function baseNameOfPath(mfspath){
 	     console.log('baseName.input.mfspath:',mfspath);
 	     var base = new String(mfspath).substring(mfspath.lastIndexOf('/') + 1); 
 	     if(base.lastIndexOf(".") != -1)       
@@ -865,29 +877,30 @@
 	     console.log('chopMfspath input mfspath',mfspath);
 	     // MfsPath is decomposed into [ParentDirectory, BaseName, RootName, Extension]
 	     // Ex.: "/my/ceci/Z_block.txt" => ["/my/ceci", "Z_block.txt", "Z_block", ".txt" ]
+	     var parent, baseName, rootName, ext;
 	     if (mfspath.match('/./')) {
-		 [parent,basename] = mfspath.split('/./')
+		 [parent,baseName] = mfspath.split('/./')
 	     } else {
 		 let p = mfspath.lastIndexOf('/')
 		 // console.log('p: '+p)
 		 if (p != 0) {
 		     parent = mfspath.substr(0,p)
-		     basename = mfspath.substr(p+1)
+		     baseName = mfspath.substr(p+1)
 		 } else {
 		     parent = '/';
-		     basename = mfspath.substr(1)
+		     baseName = mfspath.substr(1)
 		 }
 	     }
-	     let d = basename.lastIndexOf('.')
+	     let d = baseName.lastIndexOf('.')
 	     if (d != -1) {
-		 rootName = basename.substr(0,d)
-		 ext = basename.substr(d)
+		 rootName = baseName.substr(0,d)
+		 ext = baseName.substr(d)
 	     } else {
-		 rootName = basename
+		 rootName = baseName
 		 ext = ''
 	     }
 	     let result = [parent, baseName, rootName, ext]; 
-	     console.log('chopMfspath result',result);
+	     console.log('chopMfspath.result',result);
 	     return result;
 	 }
 
