@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+	<ul>
+	    <li>Enter Hash <input id="idHash" type="text" name="hash" size="50px"></li>
+            <li><input type="button" onclick="Action()" value="Submit"</input></li>
+	</ul>
+	
+	<script>
+	 function Action() {
+	     let element = document.getElementById('idHash');
+	     console.log('Action.element',element);
+	     let hash = element.value;
+	     console.log('Action.hash',hash);
+	     displayOfHash(hash); 
+	 }
+
+	 function displayOfTagOfMessageOfValue(tag, message, value) {
+	     console.log('displayOfHash.input.tag',tag);
+
+	     var a = document.createElement(tag);
+	     a.innerHTML = message+ " " +value;
+	     document.getElementsByTagName(tag)[0].appendChild(a);
+	 }
+	 
+	 function displayOfHash(hash) {
+	     console.log('displayOfHash.input.hash',hash);
+	     displayOfTagOfMessageOfValue("li", "Here is hash", hash);
+	     }
+	     
+	</script>
+    </body>
+</html>
