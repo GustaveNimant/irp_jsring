@@ -71,7 +71,7 @@
 	     margin:10px;
 	 }
 
-	 .upload {
+	 .whiteOnDarkBlue {
 	     border-radius:5px;
 	     background:#0A6BB3;
 	     color:white;
@@ -90,40 +90,42 @@
 	<div id="blockUploadAndRemove">
 	    <div class="hiddenForFile">
 		
-	    <!-- Block upload -->
+	    <!-- UploadBlock -->
 		
-	    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
-	    <form method="POST">
-		<input type="file"><br>
-		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
-		<input type="radio" name="nameoffile" id="idUploadNewName">
-		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
-		<input type="button" onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
-		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
-	    </form><br>
+		<div class="whiteOnDarkBlue">Upload file to <span id="UploadId">Mfs Directory</span></div><br>
+		
+		<form method="POST" name="UploadForm">
+		    <input type="file"><br>
+		    <input type="radio" name="nameoffile" id="UploadIdOld" checked>Upload with name kept<br>
+		    <input type="radio" name="nameoffile" id="UploadIdNew">
+		    <input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
+		    <input type="button" onclick="uploadFileToCurrentMfs()" value="Upload"><br>
+		    <div class="fileUploadedAndRemoved" id="fileUploaded"></div>
+		</form><br>
+		
+	    <!-- CreateDirectoryBlock -->
 
-	    <!-- Block mkdir -->
-
-	    <div class="upload">Create directory to <span id="currentMfsDir"></span></div><br>
-	    <form method="POST">
-		<input type="text" id="idNameOfDirectory"><br>
-		<input type="button" onclick="createDirectory()" id="createDirButton" value="Create"><br>
+	    <div class="whiteOnDarkBlue">Create directory to <span id="CreateDirectoryId"></span></div><br>
+	    <form method="POST" name="CreateDirectoryForm">
+		<input type="text" id="CreateDirectoryId"><br>
+		<input type="button" onclick="createDirectory()" id="createDirectoryButton" value="Create"><br>
 		<div class="fileUploadedAndRemoved" id="directoryCreated"></div>
 	    </form><br>
 	    
-	    <!-- Block remove -->
+	    <!-- RemoveBlock -->
 	    
-	    <div class="upload">Remove file or directory</div><br>
-	    <form method="POST">
+	    <div class="whiteOnDarkBlue">Remove file or directory</div><br>
+
+	    <form method="POST" name="RemoveForm">
 		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
 		<input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
 	    </form><br>
 	    </div>
 	    
-	    <!-- Block pin -->
+	    <!-- PinBlock -->
 	    
-	    <div class="upload">Meaning of the Pins</div>
+	    <div class="whiteOnDarkBlue">Meaning of the Pins</div>
 	    <img style="height: 24px;" src="images/pinned-unpinned-200.png">unpinned
 	    <img style="height: 24px;" src="images/pinned-recursive-200.png">recursive
 	    <img style="height: 24px;" src="images/pinned-direct-200.png">direct<br>
@@ -132,13 +134,13 @@
 	    
 	</div>
 
-	<!-- list of Mfs files in Current directory 'path' -->
+	<!-- CurrentMfsDirectoryBlock -->
 
-	<form>
+	<form method="POST" name="CurrentMfsDirectoryForm">
 	    <center>
 		<span class="title">
-		    Current Mfs directory <input id="idMfsDirPath" name="nameMfsDirPath" type="text" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm(this.closest('form'))">
-		    <input type="button" onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
+		    Current Mfs directory <input id="CurrentMfsDirectoryId" name="CurrentMfsDirectoryName" type="text" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
+		    <input type="button" onClick="getCurrentMfsDirectory()" id="idValidateClick" value="Display">
 		    <input type="button" onClick="document.location.reload(true)" value="Reset page">
 		</span>
 		<pre id="ls"></pre>
@@ -150,10 +152,11 @@
 	    <div>
 	    </center>	    
 	    <table id=ls-result>
-		<tr><th colspan=4><h3 id="h3-title" class="upload"></h3></th>
+		<tr><th colspan=4><h3 id="h3-title" class="whiteOnDarkBlue"></h3></th>
 	    </table>
 	    </div>
 	</div>
+
 	<div class="hiddenForDir" hidden="true">
 	    <center>
 		<span><b>Content of file</b></span><br>
@@ -167,16 +170,46 @@
 	 function displayDirOnLoadWindow() {
 	     document.getElementById('idValidateClick').click();
 	 }
+
+	 function mfsPathOfForm(form) {
+	     console.log('mfsPathOfForm.entering');
+
+	     let name = form.name;
+	     console.log('mfsPathOfForm.name',name);
+
+	     let result = form.elements[0].value;
+	     console.log('mfsPathOfForm.result',result);
+	     return result;
+	 }	     
+
+	 function updateElementOfIdOfValue (id, value) {
+	     let doc = document.getElementById(id);
+	     doc.innerHTML = value;
+	 }
+
+	 function getFormOfName(nameForm) {
+	     console.log('getFormOfName.nameForm',nameForm);
+
+	     let forms = document.getElementsByName(nameForm);
+	     console.log('getFormOfName.forms',forms);
+
+	     let result = forms[0];
+	     let name = result.name;
+	     console.log('getFormOfName.name',name);
+	     console.log('getFormOfName.result',result);
+	     return result;
+	 }
 	 
-	 function getForm (form) {
-	     console.log("getForm.input.form:",form);
+	 function getCurrentMfsDirectory(){
 	     var hid = document.getElementsByClassName('hiddenForFile')[0];
 	     hid.hidden = false;
-	     let mfspath = form.elements[0].value;
-	     console.log("getForm.mfspath '"+mfspath+"'");
 
-	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
-	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
+	     let form = getFormOfName("CurrentMfsDirectoryForm");
+	     let mfspath = mfsPathOfForm(form);
+	     console.log('getCurrentMfsDirectory.mfspath',mfspath);
+
+	     updateElementOfIdOfValue ("UploadId", mfspath);
+	     updateElementOfIdOfValue ("CreateDirectoryId", mfspath);
 	     getHashAndTypeOfMfsPath (mfspath);
 	     getFileList (mfspath)
 	 }
@@ -385,9 +418,9 @@
 
 	 function createDirectory() {
 
-	     let msfDirPath = document.getElementById('idMfsDirPath').value;
+	     let msfDirPath = document.getElementById('CurrentMfsDirectoryId').value;
 	     console.log('createDirectory.mfsDirPath:',msfDirPath);
-	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
+	     let mfsDirName = document.getElementById('CreateDirectoryId').value;
 	     console.log('createDirectory.mfsDirName:',mfsDirName);
 	     
 	     if (msfDirPath == '/'){
@@ -434,18 +467,18 @@
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (validate)
 		 .then (resp => {console.log('removeOfMfsPath resp',resp)})
-		 .then (_ => {document.getElementById('idMfsDirPath').value = parent})    
+		 .then (_ => {document.getElementById('CurrentMfsDirectoryId').value = parent})    
 		 .then (_ => {document.getElementById('idValidateClick').click()})
 		 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
-		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('idMfsDirPath').value})
+		 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('CurrentMfsDirectoryId').value})
 		 .catch(err => logError(err))
 	 }	 
 
 	 function checkedRadio () {
-	     let rad = document.getElementById('idUploadNewName');
+	     let rad = document.getElementById('UploadIdNew');
 	     console.log ('checkedRadio.rad:',rad);
 	     rad.checked = true;
-	     updateElementOfIdOfValue ("idUploadNewName", rad);
+	     updateElementOfIdOfValue ("UploadIdNew", rad);
 	 }
 	 
 	 function linkIpfsHash (hash) {
@@ -558,7 +591,7 @@
 	 function buttonDeleteFile (name) {
 	     console.log('buttonDeleteFile.input.name:',name);
 	     
-	     let path = document.getElementById ('idMfsDirPath').value;
+	     let path = document.getElementById ('CurrentMfsDirectoryId').value;
 	     if (path == '/') {
 		 var mfspath = path + name
 	     } else {
@@ -600,7 +633,7 @@
 	     console.log('addNameOfFileOnDeleteBlock.input.rootName:',rootName);
 	     console.log('addNameOfFileOnDeleteBlock.input.hash:',hash);
 
-	     var mfsdir = document.getElementById('idMfsDirPath').value;
+	     var mfsdir = document.getElementById('CurrentMfsDirectoryId').value;
 	     console.log('addNameOfFileOnDeleteBlock.mfsdir',mfsdir);
 	     if (mfsdir != '/') {
 		 var path = mfsdir + '/' + rootName;
@@ -617,7 +650,7 @@
 	 function addNameOnInputMfsPath (mfspath) {
 	     console.log ('addNameOnInputMfsPath.input.mfspath:', mfspath);
 
-	     let oldMfsdir = document.getElementById('idMfsDirPath').value;
+	     let oldMfsdir = document.getElementById('CurrentMfsDirectoryId').value;
 	     console.log ('addNameOnInputMfsPath.oldMfsdir:', oldMfsdir);
 	     let path = oldMfsdir;
 	     if (oldMfsdir == '/'){
@@ -629,7 +662,7 @@
 	     console.log ('addNameOnInputMfsPath.path:', path);
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
-	     var mfsdir = document.getElementById('idMfsDirPath');
+	     var mfsdir = document.getElementById('CurrentMfsDirectoryId');
 	     mfsdir.value = path;
 	     document.getElementById('idRemoveButton').disabled = false;
 	     document.getElementById('idValidateClick').click();
@@ -675,12 +708,15 @@
 		 .catch(logError)
 	 }
 
-	 function uploadFileToCurrentMfs(form) {
-	     console.log('uploadFileToCurrentMfs.input.form:',form);
+	 function uploadFileToCurrentMfs() {
+	     console.log('uploadFileToCurrentMfs.entering');
+
+	     let form = getFormOfName("UploadForm");
+	     console.log('uploadFileToCurrentMfs.form:',form);
 	     console.log('uploadFileToCurrentMfs.form.elements:',form.elements);
 
 	     let fakepath = form.elements[0].value;
-	     let mfsdir = document.getElementById('idMfsDirPath').value;
+	     let mfsdir = document.getElementById('CurrentMfsDirectoryId').value;
 	     console.log('uploadFileToCurrentMfs.fakepath:',fakepath);
 	     console.log('uploadFileToCurrentMfs.mfsdir:',mfsdir);
 
@@ -689,7 +725,7 @@
 	     console.log('uploadFileToCurrentMfs.form.element[0].files:',form.elements[0].files);
 	     console.log('uploadFileToCurrentMfs.file:',file)
 	     
-	     if (document.getElementById('idUploadNewName').checked) {
+	     if (document.getElementById('UploadIdNew').checked) {
 		 var name = document.getElementById('idUploadKeptName').value;
 		 console.log('uploadFileToCurrentMfs.checked.name:',name);
 	     } else {
@@ -813,7 +849,7 @@
 		 case "Cannot read property 'length' of null":
 		     console.log('logError', "Cannot read property 'length' of null");
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('idMfsDirPath').value;
+		     var dir = document.getElementById('CurrentMfsDirectoryId').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;
@@ -821,7 +857,7 @@
 		 case "entries is null":
 		     console.log('logError', 'entries is null');
 		     displayByIdOfTagOfValue("error", '');
-		     var dir = document.getElementById('idMfsDirPath').value;
+		     var dir = document.getElementById('CurrentMfsDirectoryId').value;
 		     console.log('logError dir', dir);
 		     updateElementOfIdOfValue('h3-title', dir + ' is empty');
 		     break;

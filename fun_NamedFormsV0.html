@@ -71,7 +71,7 @@
 	     margin:10px;
 	 }
 
-	 .upload {
+	 .whiteOnDarkBlue {
 	     border-radius:5px;
 	     background:#0A6BB3;
 	     color:white;
@@ -90,31 +90,33 @@
 	<div id="blockUploadAndRemove">
 	    <div class="hiddenForFile">
 		
-	    <!-- Block upload -->
+	    <!-- UploadBlock -->
 		
-	    <div class="upload">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
-	    <form method="POST">
-		<input type="file"><br>
-		<input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
-		<input type="radio" name="nameoffile" id="idUploadNewName">
-		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
-		<input type="button" onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
-		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
-	    </form><br>
+		<div class="whiteOnDarkBlue">Upload file to <span id="currentMfsPath">Mfs Directory</span></div><br>
+		
+		<form method="POST" name="UploadBlock">
+		    <input type="file"><br>
+		    <input type="radio" name="nameoffile" id="idUploadName" checked>Upload with name kept<br>
+		    <input type="radio" name="nameoffile" id="idUploadNewName">
+		    <input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
+		    <input type="button" onclick="uploadFileToCurrentMfs()" value="Upload"><br>
+		    <div class="fileUploadedAndRemoved" id="fileUploaded"></div>
+		</form><br>
+		
+	    <!-- CreateDirectoryBlock -->
 
-	    <!-- Block mkdir -->
-
-	    <div class="upload">Create directory to <span id="currentMfsDir"></span></div><br>
-	    <form method="POST">
+	    <div class="whiteOnDarkBlue">Create directory to <span id="currentMfsDir"></span></div><br>
+	    <form method="POST" name="CreateDirectoryBlock">
 		<input type="text" id="idNameOfDirectory"><br>
 		<input type="button" onclick="createDirectory()" id="createDirButton" value="Create"><br>
 		<div class="fileUploadedAndRemoved" id="directoryCreated"></div>
 	    </form><br>
 	    
-	    <!-- Block remove -->
+	    <!-- RemoveBlock -->
 	    
-	    <div class="upload">Remove file or directory</div><br>
-	    <form method="POST">
+	    <div class="whiteOnDarkBlue">Remove file or directory</div><br>
+
+	    <form method="POST" name="RemoveBlock">
 		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
 		<input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
 		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
@@ -123,7 +125,7 @@
 	    
 	    <!-- Block pin -->
 	    
-	    <div class="upload">Meaning of the Pins</div>
+	    <div class="whiteOnDarkBlue">Meaning of the Pins</div>
 	    <img style="height: 24px;" src="images/pinned-unpinned-200.png">unpinned
 	    <img style="height: 24px;" src="images/pinned-recursive-200.png">recursive
 	    <img style="height: 24px;" src="images/pinned-direct-200.png">direct<br>
@@ -132,13 +134,13 @@
 	    
 	</div>
 
-	<!-- list of Mfs files in Current directory 'path' -->
+	<!-- CurrentMfsDirectory -->
 
-	<form>
+	<form method="POST" name="CurrentMfsDirectory">
 	    <center>
 		<span class="title">
-		    Current Mfs directory <input id="idMfsDirPath" name="nameMfsDirPath" type="text" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm(this.closest('form'))">
-		    <input type="button" onClick="getForm(this.closest('form'))" id="idValidateClick" value="Display">
+		    Current Mfs directory <input id="idMfsDirPath" name="nameMfsDirPath" type="text" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
+		    <input type="button" onClick="getCurrentMfsDirectory()" id="idValidateClick" value="Display">
 		    <input type="button" onClick="document.location.reload(true)" value="Reset page">
 		</span>
 		<pre id="ls"></pre>
@@ -150,10 +152,11 @@
 	    <div>
 	    </center>	    
 	    <table id=ls-result>
-		<tr><th colspan=4><h3 id="h3-title" class="upload"></h3></th>
+		<tr><th colspan=4><h3 id="h3-title" class="whiteOnDarkBlue"></h3></th>
 	    </table>
 	    </div>
 	</div>
+
 	<div class="hiddenForDir" hidden="true">
 	    <center>
 		<span><b>Content of file</b></span><br>
@@ -167,13 +170,43 @@
 	 function displayDirOnLoadWindow() {
 	     document.getElementById('idValidateClick').click();
 	 }
+
+	 function mfsPathOfForm(form) {
+	     console.log('mfsPathOfForm.entering');
+
+	     let name = form.name;
+	     console.log('mfsPathOfForm.name',name);
+
+	     let result = form.elements[0].value;
+	     console.log('mfsPathOfForm.result',result);
+	     return result;
+	 }	     
+
+	 function updateElementOfIdOfValue (id, value) {
+	     let doc = document.getElementById(id);
+	     doc.innerHTML = value;
+	 }
+
+	 function getFormOfName(nameForm) {
+	     console.log('getFormOfName.nameForm',nameForm);
+
+	     let forms = document.getElementsByName(nameForm);
+	     console.log('getFormOfName.forms',forms);
+
+	     let result = forms[0];
+	     let name = result.name;
+	     console.log('getFormOfName.name',name);
+	     console.log('getFormOfName.result',result);
+	     return result;
+	 }
 	 
-	 function getForm (form) {
-	     console.log("getForm.input.form:",form);
+	 function getCurrentMfsDirectory(){
 	     var hid = document.getElementsByClassName('hiddenForFile')[0];
 	     hid.hidden = false;
-	     let mfspath = form.elements[0].value;
-	     console.log("getForm.mfspath '"+mfspath+"'");
+
+	     let form = getFormOfName("CurrentMfsDirectory");
+	     let mfspath = mfsPathOfForm(form);
+	     console.log('getCurrentMfsDirectory.mfspath',mfspath);
 
 	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
 	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
@@ -675,8 +708,11 @@
 		 .catch(logError)
 	 }
 
-	 function uploadFileToCurrentMfs(form) {
-	     console.log('uploadFileToCurrentMfs.input.form:',form);
+	 function uploadFileToCurrentMfs() {
+	     console.log('uploadFileToCurrentMfs.entering');
+
+	     let form = getFormOfName("UploadBlock");
+	     console.log('uploadFileToCurrentMfs.form:',form);
 	     console.log('uploadFileToCurrentMfs.form.elements:',form.elements);
 
 	     let fakepath = form.elements[0].value;
