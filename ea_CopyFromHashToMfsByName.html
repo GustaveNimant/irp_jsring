@@ -5,7 +5,7 @@
     <li>Example : QmTFaSZPNhbELpRM3idJcQAAciYLVRAEC6vmSuUpgJnFkY</li>
     <li>Source <input name="hashSource" type="text" placeholder="Qm..." size="50px"></li>
     <li>Target <input name="pathTarget" type="text" value="/my/test.json"></li>
-    <li><input type="button" onclick="copyMfsToMfs()" value="Copy"></li>
+    <li><input type="button" onclick="copyHashToMfs()" value="Copy"></li>
     <li>Result : <span id="result"></span></li>
 </ul>
 
@@ -14,17 +14,17 @@
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
- function copyMfsToMfs() {
+ function copyHashToMfs() {
      let source = document.getElementsByName("hashSource")[0];
-     console.log('copyMfsToMfs.source',source);
+     console.log('copyHashToMfs.source',source);
      
      let target = document.getElementsByName("pathTarget")[0];
-     console.log('copyMfsToMfs.target',target);
+     console.log('copyHashToMfs.target',target);
      
      let from = '/ipfs/'+source.value;
-     console.log('copyMfsToMfs.from',from);
+     console.log('copyHashToMfs.from',from);
      let to = target.value;
-     console.log('copyMfsToMfs.to',to);
+     console.log('copyHashToMfs.to',to);
      
      var url = api_url + 'files/cp?arg='+from+'&arg='+to
      return fetchPostText(url)

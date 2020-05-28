@@ -2,8 +2,8 @@
 <meta charset="utf8"/>
 
 <div>
-    Source <input name="pathSource" type="text" value="/etc/test.json">
-    Target <input name="pathTarget" type="text" value="/my/test.json">
+    Source <input id="idPathSource" name="copy" type="text" value="/etc/test.json">
+    Target <input id="idPathTarget" name="copy" type="text" value="/my/test.json">
     <input type="button" onclick="copyMfsToMfs()" value="Copy">
     <br>Result : <span id="result"></span>
 </div>
@@ -14,9 +14,9 @@
  const api_url = webui + '/api/v0/'
 
  function copyMfsToMfs() {
-     let source = document.getElementsByName("pathSource")[0];
+     let source = document.getElementById("idPathSource");
      console.log('copyMfsToMfs.source',source);
-     let target = document.getElementsByName("pathTarget")[0];
+     let target = document.getElementById("idPathTarget");
      console.log('copyMfsToMfs.target',target);
      let from = source.value;
      console.log('copyMfsToMfs.from',from);
