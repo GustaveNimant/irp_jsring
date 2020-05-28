@@ -14,20 +14,20 @@
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
- function provideByName (name) {
-     console.log('provideByName.input.name', name);
+ function provideDataByName (name) {
+     console.log('provideDataByName.input.name', name);
      let element = document.getElementsByName(name)[0];
-     console.log('provideByName.element', element);
+     console.log('provideDataByName.element', element);
      let data = element.value;
-     console.log('provideByName.data', data);
+     console.log('provideDataByName.data', data);
      return data;
  }
  
  function copyMfsToMfs() {
      console.log('copyMfsToMfs');
      
-     let from = provideByName("pathSource");
-     let to   = provideByName("pathTarget");
+     let from = provideDataByName("pathSource");
+     let to   = provideDataByName("pathTarget");
      
      var url = api_url + 'files/cp?arg='+from+'&arg='+to
      return fetchPostText(url)
@@ -51,59 +51,60 @@
  function removeTarget() {
      console.log('removeTarget');
      
-     let to = provideByName("pathTarget");
+     let to = provideDataByName("pathTarget");
      removeOfMfsPath(to);
+ }
+ 
+ function fetchPostText(url) {
+     return fetch(url, { method: "POST", mode: "cors"} )
+	 .then( resp => {console.log('fetchPostText.resp',resp); return resp })
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp.statusText)
+     } else {
+	 return Promise.reject(new Error(resp.statusText))
      }
-     
-     function fetchPostText(url) {
-	 return fetch(url, { method: "POST", mode: "cors"} )
-	     .then( resp => {console.log('fetchPostText.resp',resp); return resp })
+ }
+ 
+ function callbackOfAction(tag, action) {
+     console.log("callbackOfAction.input.tag",tag);
+     console.log("callbackOfAction.input.action",action);
+     const substi = obj => {
+	 console.log('callbackOfAction.obj',obj);
+	 let e = document.getElementById(tag);
+	 e.innerHTML = action + " is " + obj;
      }
-     
-     function validate(resp) {
-	 if (resp.status >= 200 && resp.status < 300) {
-	     return Promise.resolve(resp.statusText)
-	 } else {
-	     return Promise.reject(new Error(resp.statusText))
-	 }
-     }
-     
-     function callbackOfAction(tag, action) {
-	 console.log("callbackOfAction.input.tag",tag);
-	 console.log("callbackOfAction.input.action",action);
-	 const substi = obj => {
-	     console.log('callbackOfAction.obj',obj);
-	     let e = document.getElementById(tag);
-	     e.innerHTML = action + " is " + obj;
-	 }
-	 console.log('callbackOfAction.substi',substi);
-	 return substi;
-     }
+     console.log('callbackOfAction.substi',substi);
+     return substi;
+ }
 
-     function callback(tag) {
-	 const substi = obj => {
-	     console.log('callback.obj',obj);
-	     let e = document.getElementById(tag);
-	     e.innerHTML = obj;
-	 };
-	 return substi;
-     }
-     
-     function logError(err) {
-	 console.log("logError.input err",err);
-	 const message = err.message;
-	 console.log("logError.message '"+message+"'");
-	 document.getElementById("result").innerHTML = message;
-	 switch (message){
-	     case "NetworkError when attempting to fetch resource.":
-		 alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
-		 break;
-	     case "Internal Server Error":
-		 removeTarget();
-		 break;
-	     default:
-		 console.log("logError : output err '"+err+"'");
-	 } // switch
-     }
-     
+ function callback(tag) {
+     const substi = obj => {
+	 console.log('callback.obj',obj);
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return substi;
+ }
+ 
+ function logError(err) {
+     console.log("logError.input err",err);
+     const message = err.message;
+     console.log("logError.message '"+message+"'");
+     document.getElementById("result").innerHTML = message;
+
+     switch (message){
+	 case "NetworkError when attempting to fetch resource.":
+	     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+	     break;
+	 case "Internal Server Error":
+	     removeTarget();
+	     break;
+	 default:
+	     console.log("logError : output err '"+err+"'");
+     } // switch
+ }
+ 
 </script>

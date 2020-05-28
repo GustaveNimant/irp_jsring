@@ -33,7 +33,7 @@
 
 	 .dbug { border: 1px dotted #0A6BB3 }
 
-	 .fileUploadedAndRemoved {
+	 .greenBackground {
 	     background:#58F571;
 	     text-align: center;
 	     font-size:80%;
@@ -97,7 +97,7 @@
 		<input type="radio" name="nameoffile" id="idUploadNewName">
 		<input type="text" onchange="checkedRadio()" name="nameoffile" id="idUploadKeptName" placeholder="Upload with name changed"><br>
 		<input type="button" onclick="uploadFileToCurrentMfs(this.closest('form'))" value="Upload"><br>
-		<div class="fileUploadedAndRemoved" id="fileUploaded"></div>
+		<div class="greenBackground" id="fileUploaded"></div>
 	    </form><br>
 
 	    <!-- Block mkdir -->
@@ -106,17 +106,27 @@
 	    <form method="POST">
 		<input type="text" id="idNameOfDirectory"><br>
 		<input type="button" onclick="createDirectory()" id="createDirButton" value="Create"><br>
-		<div class="fileUploadedAndRemoved" id="directoryCreated"></div>
+		<div class="greenBackground" id="directoryCreated"></div>
 	    </form><br>
-	    </div>
+	    
+	    
+	    <!-- Block copy -->
+	    <div class="upload">Copy to Mfs path</div><br>
+	    <form method="POST">
 
+		Source<input name="pathSource" type="text"><br>
+		Target<input name="pathTarget" type="text"><br>
+		<input type="button" onclick="copyHashOrMfsToMfs()" value="Copy Source">
+		<div class="greenBackground" id="fileCopied"></div>
+	    </form><br>
+	     </div>
 	    <!-- Block remove -->
 	    
 	    <div class="upload">Remove <span class="hiddenForDir">file</span><span class="hiddenForFile">directory</span></div><br>
 	    <form method="POST">
 		<input type="text" id="idRemoveFileOrDirectory" disabled><br>
 		<input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
-		<div class="fileUploadedAndRemoved" id="fileRemoved"></div>
+		<div class="greenBackground" id="fileRemoved"></div>
 	    </form><br>
 	    
 	    <!-- Block pin -->
@@ -160,13 +170,11 @@
 	    </center></div>
 
 	<script>
-	 // Improve : Error TypeError: NetworkError when attempting to fetch resource. (ipfs not running)
-	 // Improve : CR not working correctly
-	 // Improve : Pin ? when directory loading file 
 	 
 	 window.onload = displayDirOnLoadWindow();
-	 
+
 	 function displayDirOnLoadWindow() {
+	     register = new Map ();	     
 	     document.getElementById('idValidateClick').click();
 	 }
 	 
@@ -176,7 +184,6 @@
 	     hid.hidden = false;
 	     let mfspath = form.elements[0].value;
 	     console.log("getForm.mfspath '"+mfspath+"'");
-
 	     updateElementOfIdOfValue ("currentMfsPath", mfspath);
 	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
 	     getHashAndTypeOfMfsPath (mfspath);
@@ -200,22 +207,18 @@
 	 function displayJson (json) {
 	     console.log('displayJson.input.json:', json);
 	     
-	     var mfsDirPath = json.mfspath
+	     let mfsDirPath = json.mfspath
 	     let entries = json.Entries
+
+	     /* let mfsFilesPath = entries.map(e.Name => e.Name);
+		console.log('displayJson.mfsFilesPath:',mfsFilesPath); */
+
+	     //register.set(mfsDirPath, entries);
+	     
+	     
+	     console.log('register',register);
 	     console.log('displayJson.mfsDirPath:', mfsDirPath);
 	     console.log('displayJson.entries:', entries);
-
-	     /*
-		if( mfsDirPath == '/') mfsDirPath = json.mfspath
-		else {mfsDirPath = json.mfspath + '/'}
-		mfsDirPath.replace("\/\/", "/");
-		console.log('displayJson.mfsDirPath 2:', mfsDirPath);
-		
-		let entriesExtended = entries;
-		entriesExtended.map (o => {o.Name = mfsDirPath + o.Name}); 
-		
-		console.log('displayJson.entriesExtended:',entriesExtended);
-	      */
 	     
 	     table = document.getElementById('ls-result')
 	     console.log('displayJson.table:',table);
@@ -226,13 +229,13 @@
 	     deleteAllRowsOfTable (table);
 	     updateElementOfIdOfValue ('h3-title', mfsDirPath);
 
-	     let [parent, baseName, rootName, ext] = chopMfspath (mfsDirPath);
+	     let [parent, rootName, basename, ext] = chopMfspath (mfsDirPath);
 	     console.log('displayJson.chop.mfsDirPath.parent:', parent);
-	     console.log('displayJson.chop.mfsDirPath.baseName:', baseName);
 	     console.log('displayJson.chop.mfsDirPath.rootName:', rootName);
+	     console.log('displayJson.chop.mfsDirPath.baseName:', basename);
 	     console.log('displayJson.chop.mfsDirPath.ext:', ext);
-	     let nof = baseNameOfPath(mfsDirPath);
-	     console.log('displayJson.baseName.mfsDirPath.nof:', nof);
+	     let nof = baseName(mfsDirPath);
+	     console.log('displayJson.basename.mfsDirPath.nof:', nof);
 	     
 	     try {
 		 if (entries == null) throw "entries is null"		 
@@ -285,7 +288,7 @@
 	     for (let i=0; i < entries.length; i++) {
 		 
 		 var hash = entries[i]['Hash'];
-		 var name = entries[i]['Name']; 
+		 var name = entries[i]['Name'];
 		 let type = entries[i]['Type'];
 		 
 		 console.log('createTableOfEntriesOfMfsDirPath.hash:',hash);
@@ -296,9 +299,41 @@
 		 createElementTable (tr, 'td', createPinButtonOfHash (hash));
 		 createElementTable (tr, 'td', typeImageOfJsonOfKey (entries, i)); 
 		 createElementTable (tr, 'td', createNameButtonOfMfsDirPath(mfsDirPath,name,type,hash));
+		 
 		 createElementTable (tr, 'td', linkIpfsHash (hash));
 	     }
 	 }
+
+	 /* Copy functions */
+
+	 function provideByName (name) {
+	     console.log('provideByName.input.name', name);
+	     let element = document.getElementsByName(name)[0];
+	     console.log('provideByName.element', element);
+	     let data = element.value;
+	     console.log('provideByName.data', data);
+	     return data;
+	 }
+
+	 function copyHashOrMfsToMfs() {
+	     console.log('copyHashOrMfsToMfs');
+	     
+	     var from = provideByName("pathSource");
+	     let to   = provideByName("pathTarget");
+	     
+	     if ( from.charAt(0) != '/') {
+		 from = '/ipfs/' + from;
+	     }
+	     
+	     var url = api_url + 'files/cp?arg='+from+'&arg='+to
+	     return fetchPostText(url)
+     		 .then(validate)
+		 .then(resp => resp.statusText)
+		 .then(callback('fileCopied'))
+		 .catch(logError)
+	 }
+	 
+	 /* End Copy Functions */
 
 	 /* ----- Pin Functions ------ */
 	 
@@ -351,8 +386,14 @@
 		     img = document.getElementsByClassName(hash)[0];
 		     if ( thrHash ) {
 			 img.title = 'indirect through ' + thrHash;
+			 
 		     } else {
 			 img.title = status;
+		     }
+		     if ( status == 'indirect-through' ) {
+			 register.set(hash,status+' ' + thrHash );
+		     } else {
+			 register.set(hash,status);
 		     }
 		     img.src = 'images/pinned-'+status+'-200.png';
 		     button = document.getElementsByName(hash)[0];
@@ -410,7 +451,7 @@
 
 	 function createDirectory() {
 
-	     let msfDirPath = document.getElementById('idMfsDirPath').value;
+	     let msfDirPath =  document.getElementById('idMfsDirPath').value;
 	     console.log('createDirectory.mfsDirPath:',msfDirPath);
 	     let mfsDirName = document.getElementById('idNameOfDirectory').value;
 	     console.log('createDirectory.mfsDirName:',mfsDirName);
@@ -447,7 +488,7 @@
 	     console.log('removeFileOfPath.input.mfspath:',mfspath);
 	     console.log('removeFileOfMfsPath.chopMfspath.mfspath', chopMfspath (mfspath));
 	     
-	     let [parent, rootName, baseName, ext] = chopMfspath (mfspath);
+	     let [parent, rootName, basename, ext] = chopMfspath (mfspath);
 	     console.log('removeFileOfMfsPath.parent:',parent);
 	     const webui = 'http://127.0.0.1:5001';
 	     const api_url = webui + '/api/v0/'
@@ -469,6 +510,7 @@
 	     console.log ('checkedRadio.rad:',rad);
 	     rad.checked = true;
 	     updateElementOfIdOfValue ("idUploadNewName", rad);
+	     register.set('checkedRadio', rad);
 	 }
 	 
 	 function linkIpfsHash (hash) {
@@ -510,11 +552,17 @@
 
 	     let type = typeOfJsonOfKey (json, key);
 	     result = imageOfType(type);
-	     console.log ('typeImageOfJsonOfKey.result:', result);
-	     return result;
+	     console.log ('typeImageOfJsonOfKey.result:', result);	     return result;
 	 }
 
 	 function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
+
+	     if (mfspath == '/' ) {
+		 register.set(mfspath+name,hash);
+	     } else {
+		 register.set(mfspath+'/'+name,hash);
+	     }
+	     
 	     console.log('createNameButtonOfMfsDirPath.input.mfspath:',mfspath);
 	     console.log('createNameButtonOfMfsDirPath.input.name:',name);
 	     console.log('createNameButtonOfMfsDirPath.input.type:',type);
@@ -650,6 +698,7 @@
 		 path += mfspath;
 	     }
 	     console.log ('addNameOnInputMfsPath.path:', path);
+	     register.set('currentInputMfsDirPath', path);
 	     var del = document.getElementById('idRemoveFileOrDirectory');
 	     del.value = path;
 	     var mfsdir = document.getElementById('idMfsDirPath');
@@ -866,7 +915,7 @@
 	 
 	 // library
 	 
-	 function baseNameOfPath(mfspath){
+	 function baseName(mfspath){
 	     console.log('baseName.input.mfspath:',mfspath);
 	     var base = new String(mfspath).substring(mfspath.lastIndexOf('/') + 1); 
 	     if(base.lastIndexOf(".") != -1)       
@@ -878,30 +927,29 @@
 	     console.log('chopMfspath input mfspath',mfspath);
 	     // MfsPath is decomposed into [ParentDirectory, BaseName, RootName, Extension]
 	     // Ex.: "/my/ceci/Z_block.txt" => ["/my/ceci", "Z_block.txt", "Z_block", ".txt" ]
-	     var parent, baseName, rootName, ext;
 	     if (mfspath.match('/./')) {
-		 [parent,baseName] = mfspath.split('/./')
+		 [parent,basename] = mfspath.split('/./')
 	     } else {
 		 let p = mfspath.lastIndexOf('/')
 		 // console.log('p: '+p)
 		 if (p != 0) {
 		     parent = mfspath.substr(0,p)
-		     baseName = mfspath.substr(p+1)
+		     basename = mfspath.substr(p+1)
 		 } else {
 		     parent = '/';
-		     baseName = mfspath.substr(1)
+		     basename = mfspath.substr(1)
 		 }
 	     }
-	     let d = baseName.lastIndexOf('.')
+	     let d = basename.lastIndexOf('.')
 	     if (d != -1) {
-		 rootName = baseName.substr(0,d)
-		 ext = baseName.substr(d)
+		 rootName = basename.substr(0,d)
+		 ext = basename.substr(d)
 	     } else {
-		 rootName = baseName
+		 rootName = basename
 		 ext = ''
 	     }
 	     let result = [parent, baseName, rootName, ext]; 
-	     console.log('chopMfspath.result',result);
+	     console.log('chopMfspath result',result);
 	     return result;
 	 }
 
@@ -940,6 +988,7 @@
 		 updateElementOfIdOfValue(tag1, url);
 		 updateElementOfIdOfValue(tag2, obj2);
 	     };
+
 	     return substi
 	 }
 

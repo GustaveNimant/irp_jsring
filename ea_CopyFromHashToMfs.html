@@ -2,8 +2,8 @@
 <meta charset="utf8"/>
 
 <ul>
-    <li> Example : QmTFaSZPNhbELpRM3idJcQAAciYLVRAEC6vmSuUpgJnFkY</li>
-    <li>Source <input name="hashSource" type="text" value="Qm..." size="50px"></li>
+    <li>Example : QmTFaSZPNhbELpRM3idJcQAAciYLVRAEC6vmSuUpgJnFkY</li>
+    <li>Source <input name="hashSource" type="text" placeholder="Qm..." size="50px"></li>
     <li>Target <input name="pathTarget" type="text" value="/my/test.json"></li>
     <li><input type="button" onclick="copyMfsToMfs()" value="Copy"></li>
     <li>Result : <span id="result"></span></li>
@@ -17,12 +17,15 @@
  function copyMfsToMfs() {
      let source = document.getElementsByName("hashSource")[0];
      console.log('copyMfsToMfs.source',source);
+     
      let target = document.getElementsByName("pathTarget")[0];
      console.log('copyMfsToMfs.target',target);
+     
      let from = '/ipfs/'+source.value;
      console.log('copyMfsToMfs.from',from);
      let to = target.value;
      console.log('copyMfsToMfs.to',to);
+     
      var url = api_url + 'files/cp?arg='+from+'&arg='+to
      return fetchPostText(url)
      	 .then(validate)
@@ -31,7 +34,7 @@
  }
 
  function fetchPostText(url) {
-     return fetch(url, { method: "POST",mode: "cors"} )
+     return fetch(url, { method: "POST", mode: "cors"} )
 	 .then( resp => {console.log('fetchPostText.resp',resp);return resp })
  }
  
