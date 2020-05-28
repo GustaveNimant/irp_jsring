@@ -13,20 +13,28 @@
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
- function provideByName (name) {
-     console.log('provideByName.input.name', name);
-     let element = document.getElementsByName(name)[0];
-     console.log('provideByName.element', element);
-     let data = element.value;
-     console.log('provideByName.data', data);
-     return data;
+ function valueInputOfNameOfId(curNam, curId) {
+     console.log('valueInputOfNameOfId.input.curNam',curNam);
+     console.log('valueInputOfNameOfId.input.curId',curId);
+     
+     let names = document.getElementsByName(curNam);
+     console.log('valueInputOfNameOfId.names',names);
+
+     var result = "";
+     for (let n=0; n <names.length; n++) {
+	 if (names[n].id == curId) {
+	     result = names[n].value;
+	 }
+     }
+     console.log('valueInputOfNameOfId.result',result);
+     return result
  }
- 
+
  function copyMfsToMfs() {
      console.log('copyMfsToMfs');
-     
-     let from = provideByName("pathSource");
-     let to   = provideByName("pathTarget");
+
+     let from = valueInputOfNameOfId("pathSource", "");
+     let to   = valueInputOfNameOfId("pathTarget", "");
      
      var url = api_url + 'files/cp?arg='+from+'&arg='+to
      return fetchPostText(url)

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<meta charset="utf8"/>
+<h3>Check if a File exist for an Mfs path</h3>
+<ul>
+    <li>Mfs path <input type="text" name="stat" id="mfspath" value="/etc/test.json"></li>
+    <li>Action <input type="button" onclick="mfsPathExists()" value="Get Hash"></li>
+    <li>Result : <span id="result"></span></li>
+</ul>
+
+<p id="error"></p>
+
+<script>
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ function valueInputOfNameOfId(curNam, curId) {
+     console.log('valueInputOfNameOfId.input.curNam',curNam);
+     console.log('valueInputOfNameOfId.input.curId',curId);
+     
+     let names = document.getElementsByName(curNam);
+     console.log('valueInputOfNameOfId.names',names);
+
+     var result = "";
+     for (let n=0; n <names.length; n++) {
+	 if (names[n].id == curId) {
+	     result = names[n].value;
+	 }
+     }
+     console.log('valueInputOfNameOfId.result',result);
+     return result
+ }
+
+ function mfsPathExists() {
+     console.log('mfsPathExists.entering')
+
+     let mfspath = valueInputOfNameOfId("stat", "mfspath");
+     console.log('mfsPathExists.mfspath',mfspath)
+     
+     var url = api_url + 'files/stat?&arg='+mfspath
+     return fetchPostJson(url)
+	 .then( obj => {console.log('mfsPathExists.obj',obj);
+	     let result = obj.Blocks > 0;
+	     return Promise.resolve(result) })
+	 .then(callback('result'))
+	 .catch(logError)
+ }
+
+ function fetchPostJson(url) {
+     console.log('fetchGetJson.input.url',url)
+     return fetch(url, { method: "POST"} )
+	 .then(validate)
+	 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     } else {
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+
+ function callback(tag) {
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return substi
+ }
+
+ function logError(err) {
+     console.log("logError : input err ",err);
+     const message = err.message;
+     console.log("logError : message '"+message+"'");
+     document.getElementById("error").innerHTML = message;
+     switch (message){
+	 case "NetworkError when attempting to fetch resource.":
+	     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
+	     break;
+	 case "Internal Server Error":
+	     document.getElementById('result').innerHTML = "File does not exist";
+	     break;
+	 default:
+	     console.log("logError : output err '"+err+"'");
+     } // switch
+ }
+
+ 
+</script>
