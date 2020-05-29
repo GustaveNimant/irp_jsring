@@ -11,7 +11,7 @@
 	  *   mfsDirPath /etc/my/directory 
 	  *   mfsDirName my
 	  *   baseName Z_block.txt
-	  *   rootName Z_block
+	  *   rootName Z_block or etc 
 	  *   name is baseName || mfsDirName (name of last path element) 
 	  *   extension .txt
 	  *   imagePath images/file.png

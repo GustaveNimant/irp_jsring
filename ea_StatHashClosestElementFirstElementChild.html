@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<meta charset="utf8"/>
+
+<div>
+    Set a Path Submit <input name="path" type="text" value="/etc">
+    <br>
+    <input type="button" onclick="getHash(this)" value="Submit">
+    <br>Hash is : <span id=hash></span>
+</div>
+
+<script>
+
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ function getHash(input) {
+     console.log('getHash.input.input',input);
+     let div = input.closest("div");
+     console.log('getHash.div',div);
+     let inp = div.firstElementChild;
+     let path = inp.value;
+     var url = api_url + 'files/stat?&arg='+path+'&hash=true'
+     return fetchPostJson(url)
+	 .then( obj => { return Promise.resolve(obj.Hash) })
+	 .then(callback('hash'))
+	 .catch(logError)
+ }
+
+ function fetchPostJson(url) {
+     return fetch(url, { method: "POST"} )
+	 .then(validate)
+	 .then( resp => resp.json() )
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     } else {
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+
+ function callback(tag) {
+     const substi = obj => {
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return substi
+ }
+
+ function logError(err) { console.log(err); }
+</script>

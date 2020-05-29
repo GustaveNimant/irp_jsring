@@ -2,10 +2,9 @@
 <meta charset="utf8"/>
 
 <ul>
-    <li>Source <input name="pathSource" id="some" type="text" value="/etc/test.json"></li>
-    <li>Target <input name="pathTarget" id="some" type="text" value="/my/test.json"></li>
-    <li>Action <input type="button" onclick="copyMfsToMfs()" value="Copy Source"></li>
-    <li>Action <input type="button" onclick="removeTarget()" value="Remove Target"></li>
+    <li>Source <input name="pathSource" type="text" value="/etc/test.json"></li>
+    <li>Target <input name="pathTarget" type="text" value="/my/test.json"></li>
+    <li>Action <input type="button" onclick="copyMfsToMfs()" value="Copy"></li>
     <li>Result : <span id="result"></span></li>
 </ul>
 
@@ -33,9 +32,9 @@
 
  function copyMfsToMfs() {
      console.log('copyMfsToMfs');
-     
-     let from = valueInputOfNameOfId("pathSource", "some");
-     let to   = valueInputOfNameOfId("pathTarget", "some");
+
+     let from = valueInputOfNameOfId("pathSource", "");
+     let to   = valueInputOfNameOfId("pathTarget", "");
      
      var url = api_url + 'files/cp?arg='+from+'&arg='+to
      return fetchPostText(url)
@@ -54,13 +53,6 @@
          .then(validate)
 	 .then(callbackOfAction('result','remove target'))
 	 .catch(logError)
- }
- 
- function removeTarget() {
-     console.log('removeTarget');
-
-     let to   = valueInputOfNameOfId("pathTarget", "some");
-     removeOfMfsPath(to);
  }
  
  function fetchPostText(url) {
@@ -84,7 +76,6 @@
 	 let e = document.getElementById(tag);
 	 e.innerHTML = action + " is " + obj;
      }
-     console.log('callbackOfAction.substi',substi);
      return substi;
  }
 
@@ -102,13 +93,14 @@
      const message = err.message;
      console.log("logError.message '"+message+"'");
      document.getElementById("result").innerHTML = message;
-
      switch (message){
 	 case "NetworkError when attempting to fetch resource.":
 	     alert("NetworkError because ipfs has not been launched\nrun : jsm; . config.sh; ipmsd.sh");
 	     break;
 	 case "Internal Server Error":
-	     removeTarget();
+	     let to = provideByName("pathTarget");
+	     console.log('logError.to',to);
+	     removeOfMfsPath(to);
 	     break;
 	 default:
 	     console.log("logError : output err '"+err+"'");

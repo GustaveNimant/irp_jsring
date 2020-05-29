@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<meta charset="utf8"/>
+
+<ul>
+    <li>Example : QmTFaSZPNhbELpRM3idJcQAAciYLVRAEC6vmSuUpgJnFkY</li>
+    <li>Source <input name="hashSource" type="text" placeholder="Qm..." size="50px"></li>
+    <li>Target <input name="pathTarget" type="text" value="/my/test.json"></li>
+    <li><input type="button" onclick="copyHashToMfs()" value="Copy"></li>
+    <li>Result : <span id="result"></span></li>
+</ul>
+
+<script>
+
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ function copyHashToMfs() {
+     let source = document.getElementsByName("hashSource")[0];
+     console.log('copyHashToMfs.source',source);
+     
+     let target = document.getElementsByName("pathTarget")[0];
+     console.log('copyHashToMfs.target',target);
+     
+     let from = '/ipfs/'+source.value;
+     console.log('copyHashToMfs.from',from);
+     let to = target.value;
+     console.log('copyHashToMfs.to',to);
+     
+     var url = api_url + 'files/cp?arg='+from+'&arg='+to
+     return fetchPostText(url)
+     	 .then(validate)
+	 .then(callback('result'))
+	 .catch(logError)
+ }
+
+ function fetchPostText(url) {
+     return fetch(url, { method: "POST", mode: "cors"} )
+	 .then( resp => {console.log('fetchPostText.resp',resp);return resp })
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp.statusText)
+     } else {
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+
+ function callback(tag) {
+     const substi = obj => {
+	 console.log('callback.obj',obj);
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return substi
+ }
+
+ function logError(err) { console.log(err); }
+</script>

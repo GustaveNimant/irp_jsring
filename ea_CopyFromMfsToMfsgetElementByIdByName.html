@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <meta charset="utf8"/>
-<h3>Get the Hash of an Mfs path</h3>
-<ul>
-    <li>Mfs path <input type="text" name="stat" id="mfspath" value="/etc/test.json"></li>
-    <li>Action <input type="button" onclick="getHash()" value="Get Hash"></li>
-    <li>Result : <span id="result"></span></li>
-</ul>
 
-<p id="error"></p>
+<div>
+    Source <input id="idPathSource" name="copy" type="text" value="/etc/test.json">
+    Target <input id="idPathTarget" name="copy" type="text" value="/my/test.json">
+    <input type="button" onclick="copyMfsToMfs()" value="Copy">
+    <br>Result : <span id="result"></span>
+</div>
 
 <script>
+
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
@@ -29,31 +29,34 @@
      console.log('valueInputOfNameOfId.result',result);
      return result
  }
+ 
+ function copyMfsToMfs() {
+      console.log('copyMfsToMfs.entering');
 
- function getHash() {
-     console.log('getHash.entering')
+     let arr = Array.from(names);
+     console.log('copyMfsToMfs.arr',arr);
 
-     let mfspath = valueInputOfNameOfId("stat", "mfspath");
-     console.log('getHash.mfspath',mfspath)
+     let from = valueInputOfNameOfId("copy", "idPathSource");
+     console.log('copyMfsToMfs.from',from);
      
-     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true'
-     return fetchPostJson(url)
-	 .then( obj => {console.log('getHash.obj',obj);
-	     return Promise.resolve(obj.Hash) })
+     let to = valueInputOfNameOfId("copy", "idPathTarget");
+     console.log('copyMfsToMfs.to',to);
+
+     var url = api_url + 'files/cp?arg='+from+'&arg='+to
+     return fetchPostText(url)
+     	 .then(validate)
 	 .then(callback('result'))
 	 .catch(logError)
  }
 
- function fetchPostJson(url) {
-     console.log('fetchGetJson.input.url',url)
-     return fetch(url, { method: "POST"} )
-	 .then(validate)
-	 .then( resp => {console.log('fetchGetJson resp',resp); return resp.json()} )
+ function fetchPostText(url) {
+     return fetch(url, { method: "POST",mode: "cors"} )
+	 .then( resp => {console.log('fetchPostText.resp',resp);return resp })
  }
  
  function validate(resp) {
      if (resp.status >= 200 && resp.status < 300) {
-	 return Promise.resolve(resp)
+	 return Promise.resolve(resp.statusText)
      } else {
 	 return Promise.reject(new Error(resp.statusText))
      }
@@ -61,6 +64,7 @@
 
  function callback(tag) {
      const substi = obj => {
+	 console.log('callback.obj',obj);
 	 let e = document.getElementById(tag);
 	 e.innerHTML = obj;
      };
@@ -68,5 +72,4 @@
  }
 
  function logError(err) { console.log(err); }
- 
 </script>

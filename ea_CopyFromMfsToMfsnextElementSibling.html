@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset="utf8"/>
+
+<div>
+    Source <input name="pathSource" type="text" value="/etc/test.json">
+    Target <input name="pathTarget" type="text" value="/my/test.json">
+    <input type="button" onclick="copyMfsToMfs(this)" value="Copy">
+    <br>Result : <span id="result"></span>
+</div>
+
+<script>
+
+ const webui = 'http://127.0.0.1:5001';
+ const api_url = webui + '/api/v0/'
+
+ function copyMfsToMfs(input) {
+     console.log('copyMfsToMfs.input.input',input);
+     let div = input.closest("div");
+     console.log('copyMfsToMfs.div',div);
+     let source = div.firstElementChild;
+     console.log('copyMfsToMfs.source',source);
+     let target = source.nextElementSibling;
+     console.log('copyMfsToMfs.target',target);
+     let from = source.value;
+     console.log('copyMfsToMfs.from',from);
+     let to = target.value;
+     console.log('copyMfsToMfs.to',to);
+     var url = api_url + 'files/cp?arg='+from+'&arg='+to
+     return fetchPostText(url)
+     	 .then(validate)
+	 .then(callback('result'))
+	 .catch(logError)
+ }
+
+ function fetchPostText(url) {
+     return fetch(url, { method: "POST",mode: "cors"} )
+	 .then( resp => {console.log('fetchPostText.resp',resp);return resp })
+ }
+ 
+ function validate(resp) {
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp.statusText)
+     } else {
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+
+ function callback(tag) {
+     const substi = obj => {
+	 console.log('callback.obj',obj);
+	 let e = document.getElementById(tag);
+	 e.innerHTML = obj;
+     };
+     return substi
+ }
+
+ function logError(err) { console.log(err); }
+</script>

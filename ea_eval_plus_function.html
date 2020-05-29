@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	
+    </head>
+    
+    <body>
+	<p id="result"></p>
+	<p id="evaluation"></p>	
+	<script>		
+
+	 function plus (x, y) {
+	     return x + y;
+	 }		    
+
+	 let result = plus (1,2);	
+	 console.log('main.result', result);
+	 document.getElementById("result").innerHTML = result;		 
+
+	 let evaluation = eval("plus(1,2)");
+	 console.log('main.evaluation', evaluation);
+	 document.getElementById("evaluation").innerHTML = result;		 
+	</script>
+    </body>
+</html>
