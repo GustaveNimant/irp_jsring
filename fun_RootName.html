@@ -13,14 +13,14 @@
  const webui = 'http://127.0.0.1:5001';
  const api_url = webui + '/api/v0/'
 
- function baseName(mfspath){
-     console.log('baseName.input.mfspath:',mfspath);
+ function rootNameOfMfsPath(mfspath){
+     console.log('rootNameOfMfsPath.input.mfspath:',mfspath);
      
      var base = new String(mfspath).substring(mfspath.lastIndexOf('/') + 1); 
      if(base.lastIndexOf(".") != -1) {       
 	 base = base.substring(0, base.lastIndexOf("."));
      }
-     console.log('baseName.result:',result);
+     console.log('rootNameOfMfsPath.result:',result);
      return base;
  }
 
@@ -29,7 +29,7 @@
 
      let mfspath = valueInputOfNameOfId("stat", "mfspath");
      console.log('mfsPathBaseName.mfspath',mfspath)
-     let result = baseName(mfspath);
+     let result = rootNameOfMfsPath(mfspath);
      
      document.getElementById('result').innerHTML = result;
      console.log('mfsPathBaseName.result:',result)
