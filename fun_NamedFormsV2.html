@@ -105,7 +105,7 @@
 		
 		<!-- CreateDirectoryBlock -->
 
-		<div class="whiteOnDarkBlue">Create directory to <span id="CreateDirectoryId"></span></div><br>
+		<div class="whiteOnDarkBlue">Create directory to <span id="currentMfsDir"></span></div><br>
 		<form method="POST" name="CreateDirectoryForm">
 		    <input type="text" id="CreateDirectoryId"><br>
 		    <input type="button" onclick="createDirectory()" id="createDirectoryButton" value="Create"><br>
@@ -216,7 +216,7 @@
 	     console.log('getCurrentMfsDirectory.mfspath',mfspath);
 
 	     updateElementOfIdOfValue ("UploadId", mfspath);
-	     updateElementOfIdOfValue ("CreateDirectoryId", mfspath);
+	     updateElementOfIdOfValue ("currentMfsDir", mfspath);
 	     getHashAndTypeOfMfsPath (mfspath);
 	     getFileList (mfspath)
 	 }
