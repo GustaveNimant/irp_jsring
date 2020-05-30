@@ -107,8 +107,8 @@
 
 		<div class="whiteOnDarkBlue">Create directory to <span id="currentMfsDir"></span></div><br>
 		<form method="POST" name="CreateDirectoryForm">
-		    <input type="text" id="CreateDirectoryId"><br>
-		    <input type="button" onclick="createDirectory()" id="createDirectoryButton" value="Create"><br>
+		    <input type="text" name="CreateDirectoryName" id="CreateDirectoryId"><br>
+		    <input type="button" name="CreateDirectoryName" onclick="createDirectory()" value="Create Directory"><br>
 		    <div class="fileUploadedAndRemoved" id="directoryCreated"></div>
 		</form><br>
 		
@@ -401,7 +401,7 @@
 	 function createDirectory() {
 
 	     //	     let msfDirPath = document.getElementById('CurrentMfsDirectoryId').value;
-	     let msfDirPath = valueInputOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+	     let msfDirPath = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
 	     console.log('createDirectory.mfsDirPath:',msfDirPath);
 
 	     let mfsDirName = document.getElementById('CreateDirectoryId').value;
@@ -572,11 +572,14 @@
 	 }
 	 
 	 function buttonCopyFile (name) {
+	     console.log('buttonCopyFile.input.name:',name);
 	     let butCop = '<input type="button" value="Copy ' + name + '" onclick="">';
 	     return butCop;
 	 }
 	 
 	 function buttonModifyFile (name) {
+	     console.log('buttonModifyFile.input.name:',name);
+	     
 	     let butMod = '<input type="button" value="Modify ' + name + '" onclick="unlockFileEdit ()">';
 	     return butMod;
 	 }
@@ -711,8 +714,9 @@
 	     console.log('uploadFileToCurrentMfs.form.elements:',form.elements);
 
 	     let fakepath = form.elements[0].value;
-	     let mfsdir = document.getElementById('CurrentMfsDirectoryId').value;
 	     console.log('uploadFileToCurrentMfs.fakepath:',fakepath);
+
+	     let mfsdir = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
 	     console.log('uploadFileToCurrentMfs.mfsdir:',mfsdir);
 
 	     let mfsdirOld = mfsdir;
@@ -1010,25 +1014,30 @@
 	     return form;
 	 }
 
-	 function valueInputOfFormOfNameOfId(forNam, curNam, curId) {
-	     console.log('valueInputOfNameOfId.input.forNam',forNam);
-	     console.log('valueInputOfNameOfId.input.curNam',curNam);
-	     console.log('valueInputOfNameOfId.input.curId',curId);
+	 function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
+	     console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
+	     console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
+	     console.log('valueInputTextOfFormOfNameOfId.input.curId',curId);
 
 	     let form = getFormOfName(forNam);
 	     
   	     let elements = form.elements;
-	     console.log('valueInputOfFormOfNameOfId.elements:',elements);
+	     console.log('valueInputTextOfFormOfNameOfId.elements:',elements);
 	     
 	     var result = "";
 	     for (let e=0; e <elements.length; e++) {
 		 let ele = elements[e];
-		 
-		 if (ele.tagName == "INPUT" && ele.id == curId && ele.name == curNam) {
-		     result = ele.value
+		 if(ele.tagName == "INPUT" && ele.type == "text"){
+		     if (ele.id == curId && ele.name == curNam) {
+			 result = ele.value
+		     }
 		 }
 	     }
-	     console.log('valueInputOfFormOfNameOfId.result:',result);
+	     console.log('valueInputTextOfFormOfNameOfId.result:',result);
+
+	     if(result == "") {
+		 throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+	     }
 	     return result;
 	 }
 	 

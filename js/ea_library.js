@@ -42,6 +42,33 @@
 	     return form;
 	 }
 
+	 function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
+	     console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
+	     console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
+	     console.log('valueInputTextOfFormOfNameOfId.input.curId',curId);
+
+	     let form = getFormOfName(forNam);
+	     
+  	     let elements = form.elements;
+	     console.log('valueInputTextOfFormOfNameOfId.elements:',elements);
+	     
+	     var result = "";
+	     for (let e=0; e <elements.length; e++) {
+		 let ele = elements[e];
+		 if(ele.tagName == "INPUT" && ele.type == "text"){
+		     if (ele.id == curId && ele.name == curNam) {
+			 result = ele.value
+		     }
+		 }
+	     }
+	     console.log('valueInputTextOfFormOfNameOfId.result:',result);
+
+	     if(result == "") {
+		throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+	     }
+	     return result;
+	 }
+	 
 	 function valueInputOfFormOfNameOfId(forNam, curNam, curId) {
 	     console.log('valueInputOfNameOfId.input.forNam',forNam);
 	     console.log('valueInputOfNameOfId.input.curNam',curNam);
