@@ -1000,6 +1000,7 @@
 	     for (let e=0; e <elements.length; e++) {
  		 let ele = elements[e];
 		 console.log('getFormOfName.ele:',ele);
+		 console.log('getFormOfName.ele.tag:',ele.tagName);
 		 console.log('getFormOfName.ele.id:',ele.id);
 		 console.log('getFormOfName.ele.type:',ele.type);
 		 console.log('getFormOfName.ele.name:',ele.name);
@@ -1022,7 +1023,8 @@
 	     var result = "";
 	     for (let e=0; e <elements.length; e++) {
 		 let ele = elements[e];
-		 if (ele.id == curId && ele.name == curNam) {
+		 
+		 if (ele.tagName == "INPUT" && ele.id == curId && ele.name == curNam) {
 		     result = ele.value
 		 }
 	     }
