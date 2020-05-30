@@ -139,7 +139,7 @@
 	<form method="POST" name="CurrentMfsDirectoryForm">
 	    <center>
 		<span class="title">
-		    Current Mfs directory <input id="CurrentMfsDirectoryId" name="CurrentMfsDirectoryName" type="text" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
+		    Current Mfs directory <input type="text" name="CurrentMfsDirectoryName" id="CurrentMfsDirectoryId" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
 		    <input type="button" onClick="getCurrentMfsDirectory()" id="CurrentMfsDirectoryClickId" value="Display">
 		    <input type="button" onClick="document.location.reload(true)" value="Reset page">
 		</span>
@@ -198,20 +198,69 @@
 	     let forms = document.getElementsByName(nameForm);
 	     console.log('getFormOfName.forms:',forms);
 
-	     let result = forms[0];
-	     let name = result.name;
+	     let form = forms[0];
+	     let name = form.name;
 	     console.log('getFormOfName.name:',name);
-	     console.log('getFormOfName.result:',result);
+	     console.log('getFormOfName.form:',form);
+
+	     let elements = form.elements;
+	     console.log('getFormOfName.elements:',elements);
+	     for (let e=0; e <elements.length; e++) {
+ 		 let ele = elements[e];
+		 console.log('getFormOfName.ele:',ele);
+		 console.log('getFormOfName.ele.id:',ele.id);
+		 console.log('getFormOfName.ele.type:',ele.type);
+		 console.log('getFormOfName.ele.name:',ele.name);
+		 console.log('getFormOfName.ele.value:',ele.value);
+	     }
+
+	     return form;
+	 }
+
+	 function valueInputOfFormOfNameOfId(forNam, curNam, curId) {
+	     console.log('valueInputOfNameOfId.input.forNam',forNam);
+	     console.log('valueInputOfNameOfId.input.curNam',curNam);
+	     console.log('valueInputOfNameOfId.input.curId',curId);
+
+	     let form = getFormOfName(forNam);
+	     
+  	     let elements = form.elements;
+	     console.log('valueInputOfFormOfNameOfId.elements:',elements);
+	     
+	     var result = "";
+	     for (let e=0; e <elements.length; e++) {
+		 let ele = elements[e];
+		 if (ele.id == curId && ele.name == curNam) {
+		     result = ele.value
+		 }
+	     }
+	     console.log('valueInputOfFormOfNameOfId.result:',result);
 	     return result;
 	 }
 	 
+	 function valueInputOfNameOfId(curNam, curId) {
+	     console.log('valueInputOfNameOfId.input.curNam',curNam);
+	     console.log('valueInputOfNameOfId.input.curId',curId);
+	     
+	     let names = document.getElementsByName(curNam);
+	     console.log('valueInputOfNameOfId.names',names);
+
+	     var result = "";
+	     for (let n=0; n <names.length; n++) {
+		 if (names[n].id == curId) {
+		     result = names[n].value;
+		 }
+	     }
+	     console.log('valueInputOfNameOfId.result',result);
+	     return result
+	 }
+
 	 function getCurrentMfsDirectory(){
 	     console.log('getCurrentMfsDirectory.entering');
 
 	     var hid = document.getElementsByClassName('hiddenForFile')[0];
 	     hid.hidden = false;
-	     console.log('getCurrentMfsDirectory.hid',hid);
-	     
+
 	     let form = getFormOfName("CurrentMfsDirectoryForm");
 	     let mfspath = mfsPathOfForm(form);
 	     console.log('getCurrentMfsDirectory.mfspath',mfspath);
@@ -288,8 +337,6 @@
 	     console.log('createHeaderOfTable.input.table:', table);
 	     
 	     var hid = document.getElementsByClassName('hiddenForFile')[0];
-	     console.log('createHeaderOfTable.hid:',hid);
-
 	     let tr = createElementTable (table,'tr', '');
 
 	     createElementTable (tr, 'th', 'Pin');
@@ -435,7 +482,8 @@
 
 	 function createDirectory() {
 
-	     let msfDirPath = document.getElementById('CurrentMfsDirectoryId').value;
+//	     let msfDirPath = document.getElementById('CurrentMfsDirectoryId').value;
+	     let msfDirPath = valueInputOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
 	     console.log('createDirectory.mfsDirPath:',msfDirPath);
 
 	     let mfsDirName = document.getElementById('CreateDirectoryId').value;
@@ -548,25 +596,24 @@
 	     return result;
 	 }
 
-	 function createNameButtonOfMfsDirPath (mfspath, rooNam, type, hash) {
+	 function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
 	     console.log('createNameButtonOfMfsDirPath.input.mfspath:',mfspath);
-	     console.log('createNameButtonOfMfsDirPath.input.rooNam:',rooNam);
+	     console.log('createNameButtonOfMfsDirPath.input.name:',name);
 	     console.log('createNameButtonOfMfsDirPath.input.type:',type);
 	     console.log('createNameButtonOfMfsDirPath.input.hash:',hash);
 
 	     let but = '<input type="button" id="nameButton" value="';
-	     but += rooNam;
+	     but += name;
 	     if (type == 1){
 		 but += '" onclick="addNameOnInputMfsPath(this.value)"';
 
 		 var hid = document.getElementsByClassName('hiddenForFile')[0];
 		 hid.hidden = false
-
 		 var hid = document.getElementsByClassName('hiddenForDir')[0];
 		 hid.hidden = true
 		 
 	     } else {
-		 but += '" onclick="displayFileOptions(' + "'" + rooNam + "'" + ',' + "'" + hash + "'" + ')"';
+		 but += '" onclick="displayFileOptions(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
 		 console.log('createNameButtonOfMfsDirPath.but',but);
 	     }
 	     but += '>';
@@ -575,23 +622,17 @@
 
 	 /* ---------- File Functions ---------- */
 
-	 function displayFileOptions(basNam, hash) {
-	     console.log('displayFileOptions.input.basNam:',basNam);
-	     console.log('displayFileOptions.input.hash:',hash);
-	     
+	 function displayFileOptions(name, hash) {
 	     var hid = document.getElementsByClassName('hiddenForFile')[0];
 	     hid.hidden = true;
 	     var hid = document.getElementsByClassName('hiddenForDir')[0];
 	     hid.hidden = false;
 
-	     createTableForFileOfBaseNameOfHash (basNam, hash);
+	     createTableForFileOfNameOfHash (name, hash);
 	 }
 
-	 function createTableForFileOfBaseNameOfHash (basNam, hash) {
-	     console.log('createTableForFileOfBaseNameOfHash.input.basNam:',basNam);
-	     console.log('createTableForFileOfBaseNameOfHash.input.hash:',hash);
-
-	     updateElementOfIdOfValue ('h3-title',basNam);
+	 function createTableForFileOfNameOfHash (name, hash) {
+	     updateElementOfIdOfValue ('h3-title',name);
 
 	     table = document.getElementById('ls-result');
 	     deleteAllRowsOfTable (table);
@@ -602,26 +643,22 @@
 	     createElementTable (tr, 'td', linkIpfsHash (hash));
 
 	     var tr = createElementTable (table,'tr', '');
-	     createElementTable (tr, 'td', buttonCopyFile (basNam));
-	     createElementTable (tr, 'td', buttonModifyFile (basNam));
+	     createElementTable (tr, 'td', buttonCopyFile (name));
+	     createElementTable (tr, 'td', buttonModifyFile (name));
 
 	     var tr = createElementTable (table,'tr', '');
-	     createElementTable (tr, 'td', buttonDeleteFile (basNam));
+	     createElementTable (tr, 'td', buttonDeleteFile (name));
 	     
 	     console.log ('displayFileOptions.table:', table);
 	     getHash(hash);
 	 }
 	 
 	 function buttonCopyFile (name) {
-	     console.log('buttonCopyFile.input.name:',name);
-	     
 	     let butCop = '<input type="button" value="Copy ' + name + '" onclick="">';
 	     return butCop;
 	 }
 	 
 	 function buttonModifyFile (name) {
-	     console.log('buttonModifyFile.input.name:',name);
-	     
 	     let butMod = '<input type="button" value="Modify ' + name + '" onclick="unlockFileEdit ()">';
 	     return butMod;
 	 }
@@ -655,7 +692,7 @@
 	 }
 	 
 	 function saveFileOnIpms () {
-	     console.log('saveFileOnIpms.entering');
+	     console.log('saveFileOnIpms:');
 	     
 	     let txtAre = document.getElementById('catOfHash');
 	     console.log('saveFileOnIpms:txtAre',txtAre);
@@ -913,14 +950,14 @@
 	 
 	 // Library functions
 	 
-	 function rootNameOfMfsPath(mfspath){
-	     console.log('rootNameOfMfsPath.input.mfspath:',mfspath);
+	 function baseName(mfspath){
+	     console.log('baseName.input.mfspath:',mfspath);
 	     
 	     var base = new String(mfspath).substring(mfspath.lastIndexOf('/') + 1); 
 	     if(base.lastIndexOf(".") != -1) {       
 		 base = base.substring(0, base.lastIndexOf("."));
 	     }
-	     console.log('rootNameOfMfsPath.result:',result);
+	     console.log('baseName.result:',result);
 	     return base;
 	 }
 
