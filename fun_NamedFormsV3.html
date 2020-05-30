@@ -295,7 +295,7 @@
 	 function createPinButtonOfHash (hash) {
 	     console.log('createPinButtonOfHash.input.hash:',hash);
 
-	     let but = '<button type="submit" class="pinButton" onclick="togglePinStatus(this.value,this.name)" name="'+hash+'">';
+	     let but = '<button type="submit" class="pinButton" onclick="togglePinStatus(this.value, this.name)" name="'+hash+'">';
 
 	     but += '<img src="images/questionmark.png" class="' + hash + '" style="height: 24px;">';
 	     but += '</button>';
@@ -593,9 +593,9 @@
 	     console.log('buttonDeleteFile.mfspath:', mfspath);
 	     let butDel = '<input type="button" value="Delete ';
 	     butDel += name;
-	     butDel += '" onclick="removeOfMfsPath(';
+	     butDel += '" onclick="removeOfMfsPath(\'';
 	     butDel += mfspath;
-	     butDel += ')">';
+	     butDel += '\')">';
 	     console.log('buttonDeleteFile.butDel:', butDel);
 	     return butDel;
 	 }
