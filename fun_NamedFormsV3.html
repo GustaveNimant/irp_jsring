@@ -399,8 +399,8 @@
 	 /* --------------- End Pin Functions ---------------- */
 
 	 function createDirectory() {
-
-	     //	     let msfDirPath = document.getElementById('CurrentMfsDirectoryId').value;
+	     console.log('createDirectory.entering');
+	     
 	     let msfDirPath = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
 	     console.log('createDirectory.mfsDirPath:',msfDirPath);
 
@@ -726,7 +726,7 @@
 	     
 	     if (document.getElementById('UploadIdNew').checked) {
 		 var name = document.getElementById('idUploadKeptName').value;
-		 console.log('uploadFileToCurrentMfs.checked.name:',name);
+		 console.log('uploadFileToCurrentMfs.name:',name);
 	     } else {
 		 var name = form.elements[0]['files'][0].name;
 		 console.log('uploadFileToCurrentMfs.old.name:',name);
