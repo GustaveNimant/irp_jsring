@@ -1,0 +1,77 @@
+<div class="whiteOnDarkBlue">Upload file to <span id="UploadId">Mfs Directory</span></div><br>
+
+<form method="POST" name="UploadForm">
+    <input type="file"><br>
+    <input type="radio" name="nameoffile" id="UploadIdOld" checked>Upload with name kept<br>
+    <input type="radio" name="nameoffile" id="UploadIdNew">
+    <input type="text"  name="nameoffile" id="idUploadKeptName" onchange="checkedRadio()" placeholder="Upload with name changed"><br>
+    <input type="button" onclick="uploadFileToCurrentMfs()" value="Upload"><br>
+    <div class="fileUploadedAndRemoved" id="fileUploaded"></div>
+</form><br>
+
+<script>
+ 
+ function uploadFileToCurrentMfs() {
+     console.log('uploadFileToCurrentMfs.entering');
+     
+     let form = getFormOfName("UploadForm");
+     console.log('uploadFileToCurrentMfs.form:',form);
+     console.log('uploadFileToCurrentMfs.form.elements:',form.elements);
+     
+     let fakepath = form.elements[0].value;
+     console.log('uploadFileToCurrentMfs.fakepath:',fakepath);
+
+     let mfsdir = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     console.log('uploadFileToCurrentMfs.mfsdir:',mfsdir);
+
+     let mfsdirOld = mfsdir;
+     let file = form.elements[0].files[0];
+     console.log('uploadFileToCurrentMfs.form.element[0].files:',form.elements[0].files);
+     console.log('uploadFileToCurrentMfs.file:',file)
+
+     if (document.getElementById('UploadIdNew').checked) {
+	 var name = document.getElementById('idUploadKeptName').value;
+	 console.log('uploadFileToCurrentMfs.name:',name);
+     } else {
+	 var name = form.elements[0]['files'][0].name;
+	 console.log('uploadFileToCurrentMfs.old.name:',name);
+     }
+     console.log('uploadFileToCurrentMfs.name:',name);
+     mfsdir += '/';
+     console.log('uploadFileToCurrentMfs.mfsdir 1:',mfsdir);
+     mfsdir += name;
+     console.log('uploadFileToCurrentMfs.mfsdir 2:',mfsdir);
+
+     let reader = new FileReader();
+     reader.onload = event => {
+	 const content_on_load = event.target.result;
+	 console.log('uploadFileToCurrentMfs.content_on_load:',content_on_load)
+	 writeOfMfsFilePathOfContent(mfsdir, content_on_load)
+		.then(callback('hash'))
+     }
+
+     reader.readAsText(file,'UTF-8') 
+
+     let formData = new FormData();
+     formData.append("file", file);
+     console.log('uploadFileToCurrentMfs.formData:',formData)
+     let val = "File '"+name+"' uploaded to "+mfsdirOld
+     updateElementOfIdOfValue('fileUploaded', val);
+     console.log ('uploadFileToCurrentMfs.val:', val);
+     document.getElementById('CurrentMfsDirectoryClickId').click();
+ }
+
+ function writeOfMfsFilePathOfContent(mfsFilePath, content) {
+     console.log('writeOfMfsFilePathOfContent.input.mfsFilePath:',mfsFilePath);
+     console.log('writeOfMfsFilePathOfContent.input.content:',content)
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/write?arg=' + mfsFilePath + '&create=1';
+     console.log('writeOfMfsFilePathOfContent.url:',url);
+     return fetchPostTextForm(url, content)
+	 .then( _ => hashOfMfsFilePath(mfsFilePath) )
+	 .then( _ => {document.getElementById('CurrentMfsDirectoryClickId').click()})
+	 .catch(logError)
+ }
+
+</script>

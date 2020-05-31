@@ -1,0 +1,57 @@
+<div class="whiteOnDarkBlue">Remove file or directory</div><br>
+
+<form method="POST" name="RemoveForm">
+    <input type="text" id="idRemoveFileOrDirectory" disabled><br>
+    <input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
+    <div class="fileUploadedAndRemoved" id="fileRemoved"></div>
+</form><br>
+</div>
+
+<script>
+ function removeElement () {
+     console.log('removeElement.entering');
+     
+     var hid = document.getElementsByClassName('hiddenForFile')[0];
+     console.log('removeElement.hid:',hid);
+     
+     var mfspath = document.getElementById('idRemoveFileOrDirectory').value;
+     console.log('removeElement.mfspath:',mfspath);
+     
+     let conf_mess = 'Confirm removing of ' + mfspath;
+     var conf = confirm(conf_mess);
+     if (conf == true) {
+	 removeOfMfsPath (mfspath)
+     }		 
+ }
+ 
+ function removeOfMfsPath (mfspath) {
+     console.log('removeOfMfsPath.input.mfspath:',mfspath);
+     
+     console.log('removeOfMfsPath.chopOfMfsPath.mfspath', chopOfMfsPath (mfspath));
+     
+     let [parent, rootName, basename, ext] = chopOfMfsPath (mfspath);
+     console.log('removeOfMfsPath.parent:',parent);
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/'
+
+     var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
+     console.log('removeOfMfsPath.url:'+url);
+     return fetch(url, { method: "POST", mode: 'cors'})
+	 .then (validate)
+	 .then (resp => {console.log('removeOfMfsPath resp',resp)})
+	 .then (_ => {document.getElementById('CurrentMfsDirectoryId').value = parent})    
+	 .then (_ => {document.getElementById('CurrentMfsDirectoryClickId').click()})
+	 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
+	 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('CurrentMfsDirectoryId').value})
+	 .catch(err => logError(err))
+ }	 
+
+ function updateElementOfIdOfValue (id, value) {
+     console.log('updateElementOfIdOfValue.input.id:',id);
+     console.log('updateElementOfIdOfValue.input.value:',value);
+
+     let doc = document.getElementById(id);
+     doc.innerHTML = value;
+ }
+
+</script>

@@ -1,0 +1,49 @@
+<script>
+ function deleteAllRowsOfTable (table) {
+     console.log('deleteAllRowsOfTable.input.table:', table);
+
+     var i = 1;  // Be careful with deleteRow : length is modified.
+     while (table.rows[i]) {
+	 console.log('displayJson Row i',i,table.rows[i].innerHTML);
+	 table.deleteRow(i);
+     }
+ }
+
+ function createHeaderOfTable (table) {
+     console.log('createHeaderOfTable.input.table:', table);
+
+     var hid = document.getElementsByClassName('hiddenForFile')[0];
+     let tr = createElementTable (table,'tr', '');
+
+     createElementTable (tr, 'th', 'Pin');
+     if (hid.hidden != true) {
+	 createElementTable (tr, 'th', 'Type');
+	 createElementTable (tr, 'th', 'Name');
+     }
+
+     createElementTable (tr, 'th', 'Hash')   
+ }
+
+ function createTableOfEntriesOfMfsDirPath (entries, mfsDirPath){
+     console.log('createTableOfEntriesOfMfsDirPath.input.entries:', entries);
+     console.log('createTableOfEntriesOfMfsDirPath.input.mfsDirPath:', mfsDirPath);
+
+     for (let i=0; i < entries.length; i++) {
+
+	 var hash = entries[i]['Hash'];
+	 var name = entries[i]['Name']; 
+	 let type = entries[i]['Type'];
+
+	 console.log('createTableOfEntriesOfMfsDirPath.hash:',hash);
+	 console.log('createTableOfEntriesOfMfsDirPath.name:',name);
+	 console.log('createTableOfEntriesOfMfsDirPath.type:',type);
+
+	 let tr = createElementTable (table,'tr', '');
+	 createElementTable (tr, 'td', createPinButtonOfHash (hash));
+	 createElementTable (tr, 'td', typeImageOfJsonOfKey (entries, i)); 
+	 createElementTable (tr, 'td', createNameButtonOfMfsDirPath(mfsDirPath,name,type,hash));
+	 createElementTable (tr, 'td', linkIpfsHash (hash));
+     }
+ }
+
+</script>

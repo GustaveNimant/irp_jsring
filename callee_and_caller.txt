@@ -1,5 +1,0 @@
-	     let callee = arguments.callee.name;
-	     let caller = arguments.callee.caller;
-	     if(caller == null) {console.log('Entering in',callee,'called by None')}
-	     else {console.log('Entering in',callee,'called by',caller.name)}
-	      
