@@ -2,7 +2,7 @@
 <div class="whiteOnDarkBlue">Upload file to <span id="UploadId">Mfs Directory</span></div><br>
 
 <form method="POST" name="UploadForm">
-    <input type="file"><br>
+    <input type="file"  name="nameoffile" id="FakePathId">
     <input type="radio" name="nameoffile" id="UploadIdOld" checked>Upload with name kept<br>
     <input type="radio" name="nameoffile" id="UploadIdNew">
     <input type="text"  name="nameoffile" id="idUploadKeptName" onchange="checkedRadio()" placeholder="Upload with name changed"><br>
@@ -19,7 +19,7 @@
      console.log('uploadFileToCurrentMfs.form:',form);
      console.log('uploadFileToCurrentMfs.form.elements:',form.elements);
      
-     let fakepath = form.elements[0].value;
+     let fakepath = valueInputFileOfFormOfNameOfId("UploadForm", "nameoffile", "FakePathId"); 
      console.log('uploadFileToCurrentMfs.fakepath:',fakepath);
 
      let mfsdir = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
