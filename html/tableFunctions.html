@@ -70,5 +70,35 @@
      return but;
  }
 
+ function addNameOnInputMfsPath (mfspath) {
+     console.log ('addNameOnInputMfsPath.input.mfspath:', mfspath);
+
+     let oldMfsdir = document.getElementById('CurrentMfsDirectoryId').value;
+     console.log ('addNameOnInputMfsPath.oldMfsdir:', oldMfsdir);
+     let path = oldMfsdir;
+     if (oldMfsdir == '/'){
+	 path += mfspath;
+     } else {
+	 path += '/';
+	 path += mfspath;
+     }
+     console.log ('addNameOnInputMfsPath.path:', path);
+     var del = document.getElementById('idRemoveFileOrDirectory');
+     del.value = path;
+     var mfsdir = document.getElementById('CurrentMfsDirectoryId');
+     mfsdir.value = path;
+     document.getElementById('idRemoveButton').disabled = false;
+     document.getElementById('CurrentMfsDirectoryClickId').click();
+ }
+
+ function createElementTable (ele, tag, value) {
+     let doc = document.createElement (tag);
+     doc.style = "padding:7px";
+     doc.innerHTML = value;
+     ele.appendChild (doc);
+     return doc;
+ }
+ 
+
 
 </script>

@@ -151,33 +151,12 @@
      getHash(hash);
  }
 
- function addNameOnInputMfsPath (mfspath) {
-     console.log ('addNameOnInputMfsPath.input.mfspath:', mfspath);
-
-     let oldMfsdir = document.getElementById('CurrentMfsDirectoryId').value;
-     console.log ('addNameOnInputMfsPath.oldMfsdir:', oldMfsdir);
-     let path = oldMfsdir;
-     if (oldMfsdir == '/'){
-	 path += mfspath;
-     } else {
-	 path += '/';
-	 path += mfspath;
-     }
-     console.log ('addNameOnInputMfsPath.path:', path);
-     var del = document.getElementById('idRemoveFileOrDirectory');
-     del.value = path;
-     var mfsdir = document.getElementById('CurrentMfsDirectoryId');
-     mfsdir.value = path;
-     document.getElementById('idRemoveButton').disabled = false;
-     document.getElementById('CurrentMfsDirectoryClickId').click();
- }
-
  function updateElementOfIdOfValue (id, value) {
      let doc = document.getElementById(id);
      doc.innerHTML = value;
  }
 
- function createElement (tag, id, value, input_type) {
+ function createElement__ (tag, id, value, input_type) {
      let doc_tag = document.createElement (tag);
      doc_tag.id = id;
      doc_tag.value = value;
@@ -186,14 +165,6 @@
      document.body.appendChild (doc_tag);
  }
 
- function createElementTable (ele, tag, value) {
-     let doc = document.createElement (tag);
-     doc.style = "padding:7px";
-     doc.innerHTML = value;
-     ele.appendChild (doc);
-     return doc;
- }
- 
  function getHash(hash) {
      console.log('getHash.input.hash:',hash)
 
@@ -212,26 +183,6 @@
 	 .catch(logError)
  }
 
- function hashOfMfsFilePath(mfsFilePath) {
-     console.log('hashOfMfsFilePath.input.mfsFilePath:',mfsFilePath);
-
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
-     console.log('hashOfMfsFilePath : url '+url);
-     
-     return fetchGetTextForm(url)
-	 .then( obj => obj.json())
-	 .then( json => {
-	     console.log('hashOfMfsFilePath : json ',json);
-	     console.log("hashOfMfsFilePath : json.Type '"+json.Type+"'");
-	     if (json.Type == "error") {
-		 const message = 'Error from hashOfMfsFilePath : '+json.Message;
-		 console.log("hashOfMfsFilePath : message '"+message+"'")
-		 updateElementOfIdOfValue("error", message);
-	     }
-	     return json.Hash} )
- }
- 
  function logErrorOfHash (err, hash) {
      console.log("logErrorOfHash.input.err:",err);
      console.log("logErrorOfHash.input.hash:",hash);
@@ -381,56 +332,6 @@
      document.getElementById(tag).innerHTML = value
  }
 
- function IpfsException (message) {
-     console.log('IpfsException.input.message:',message)
-     
-     this.message = message;
-     this.name = "IpfsException";
- }
- function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
-     console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
-     console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
-     console.log('valueInputTextOfFormOfNameOfId.input.curId',curId);
-
-     let form = getFormOfName(forNam);
-     
-     let elements = form.elements;
-     console.log('valueInputTextOfFormOfNameOfId.elements:',elements);
-     
-     var result = "";
-     for (let e=0; e <elements.length; e++) {
-	 let ele = elements[e];
-	 if(ele.tagName == "INPUT" && ele.type == "text"){
-	     if (ele.id == curId && ele.name == curNam) {
-		 result = ele.value
-	     }
-	 }
-     }
-     console.log('valueInputTextOfFormOfNameOfId.result:',result);
-
-     if(result == "") {
-	 throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
-     }
-     return result;
- }
- 
- function valueInputOfNameOfId(curNam, curId) {
-     console.log('valueInputOfNameOfId.input.curNam',curNam);
-     console.log('valueInputOfNameOfId.input.curId',curId);
-     
-     let names = document.getElementsByName(curNam);
-     console.log('valueInputOfNameOfId.names',names);
-
-     var result = "";
-     for (let n=0; n <names.length; n++) {
-	 if (names[n].id == curId) {
-	     result = names[n].value;
-	 }
-     }
-     console.log('valueInputOfNameOfId.result',result);
-     return result
- }
-
  function fetchGetTextForm(url) {
      console.log('fetchGetTextForm.input.url:',url);
 
@@ -488,6 +389,57 @@
 	 .then( resp => resp.text() )
  }	 
  
+ function IpfsException (message) {
+     console.log('IpfsException.input.message:',message)
+     
+     this.message = message;
+     this.name = "IpfsException";
+ }
+
+ function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
+     console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
+     console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
+     console.log('valueInputTextOfFormOfNameOfId.input.curId',curId);
+
+     let form = getFormOfName(forNam);
+     
+     let elements = form.elements;
+     console.log('valueInputTextOfFormOfNameOfId.elements:',elements);
+     
+     var result = "";
+     for (let e=0; e <elements.length; e++) {
+	 let ele = elements[e];
+	 if(ele.tagName == "INPUT" && ele.type == "text"){
+	     if (ele.id == curId && ele.name == curNam) {
+		 result = ele.value
+	     }
+	 }
+     }
+     console.log('valueInputTextOfFormOfNameOfId.result:',result);
+
+     if(result == "") {
+	 throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+     }
+     return result;
+ }
+ 
+ function valueInputOfNameOfId(curNam, curId) {
+     console.log('valueInputOfNameOfId.input.curNam',curNam);
+     console.log('valueInputOfNameOfId.input.curId',curId);
+     
+     let names = document.getElementsByName(curNam);
+     console.log('valueInputOfNameOfId.names',names);
+
+     var result = "";
+     for (let n=0; n <names.length; n++) {
+	 if (names[n].id == curId) {
+	     result = names[n].value;
+	 }
+     }
+     console.log('valueInputOfNameOfId.result',result);
+     return result
+ }
+
 </script>
 
     </body>

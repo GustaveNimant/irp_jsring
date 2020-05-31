@@ -74,4 +74,25 @@
 	 .catch(logError)
  }
 
+ function hashOfMfsFilePath(mfsFilePath) {
+     console.log('hashOfMfsFilePath.input.mfsFilePath:',mfsFilePath);
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
+     console.log('hashOfMfsFilePath : url '+url);
+     
+     return fetchGetTextForm(url)
+	 .then( obj => obj.json())
+	 .then( json => {
+	     console.log('hashOfMfsFilePath : json ',json);
+	     console.log("hashOfMfsFilePath : json.Type '"+json.Type+"'");
+	     if (json.Type == "error") {
+		 const message = 'Error from hashOfMfsFilePath : '+json.Message;
+		 console.log("hashOfMfsFilePath : message '"+message+"'")
+		 updateElementOfIdOfValue("error", message);
+	     }
+	     return json.Hash} )
+ }
+ 
+
 </script>
