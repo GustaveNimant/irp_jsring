@@ -183,74 +183,6 @@
 	 .catch(logError)
  }
 
- function logErrorOfHash (err, hash) {
-     console.log("logErrorOfHash.input.err:",err);
-     console.log("logErrorOfHash.input.hash:",hash);
-
-     const message = err.message;
-     console.log("logError.message:'"+message+"'");
-     displayByIdOfTagOfValue("error", message);
-     switch (message){
-	 case "Internal Server Error":
-	     var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
-	     displayByIdOfTagOfValue("error", text);
-	     
-	     break;
-	     
-	 default:
-	     console.log("logError.default.err:'"+err+"'");
-     } // switch
- }
- 
- function logError (err) {
-     console.log("logError.input.err:",err);
-     
-     const message = err.message;
-     console.log("logError : message '"+message+"'");
-     displayByIdOfTagOfValue("error", message);
-     switch (message){
-	     
-	 case "NetworkError when attempting to fetch resource.":
-	     var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
-	     displayByIdOfTagOfValue("error", text); 
-	     break;
-
-	 case "Failed to fetch":
-	     var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
-	     displayByIdOfTagOfValue("error", text); 
-	     break;	     
-
-	 case "Internal Server Error":
-	     //			 var text = "Internal Server Error because ipfs file path was uncorrect";
-	     //			 displayByIdOfTagOfValue("error", text); 
-	     return false;
-	     break;
-	     
-	 case "Cannot read property 'length' of null":
-	     console.log('logError', "Cannot read property 'length' of null");
-	     displayByIdOfTagOfValue("error", '');
-	     var dir = document.getElementById('CurrentMfsDirectoryId').value;
-	     console.log('logError dir', dir);
-	     updateElementOfIdOfValue('h3-title', dir + ' is empty');
-	     break;
-
-	 case "entries is null":
-	     console.log('logError', 'entries is null');
-	     displayByIdOfTagOfValue("error", '');
-	     var dir = document.getElementById('CurrentMfsDirectoryId').value;
-	     console.log('logError dir', dir);
-	     updateElementOfIdOfValue('h3-title', dir + ' is empty');
-	     break;
-
-	 case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
-	     displayByIdOfTagOfValue("error", '');
-	     break;
-	     
-	 default:
-	     console.log("logError : default err '"+err+"'");
-     } // switch
- }
- 
  // Library functions
  
  function baseName(mfspath){
@@ -396,6 +328,74 @@
      this.name = "IpfsException";
  }
 
+ function logErrorOfHash (err, hash) {
+     console.log("logErrorOfHash.input.err:",err);
+     console.log("logErrorOfHash.input.hash:",hash);
+
+     const message = err.message;
+     console.log("logError.message:'"+message+"'");
+     displayByIdOfTagOfValue("error", message);
+     switch (message){
+	 case "Internal Server Error":
+	     var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
+	     displayByIdOfTagOfValue("error", text);
+	     
+	     break;
+	     
+	 default:
+	     console.log("logError.default.err:'"+err+"'");
+     } // switch
+ }
+ 
+ function logError (err) {
+     console.log("logError.input.err:",err);
+     
+     const message = err.message;
+     console.log("logError : message '"+message+"'");
+     displayByIdOfTagOfValue("error", message);
+     switch (message){
+	     
+	 case "NetworkError when attempting to fetch resource.":
+	     var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
+	     displayByIdOfTagOfValue("error", text); 
+	     break;
+
+	 case "Failed to fetch":
+	     var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
+	     displayByIdOfTagOfValue("error", text); 
+	     break;	     
+
+	 case "Internal Server Error":
+	     //			 var text = "Internal Server Error because ipfs file path was uncorrect";
+	     //			 displayByIdOfTagOfValue("error", text); 
+	     return false;
+	     break;
+	     
+	 case "Cannot read property 'length' of null":
+	     console.log('logError', "Cannot read property 'length' of null");
+	     displayByIdOfTagOfValue("error", '');
+	     var dir = document.getElementById('CurrentMfsDirectoryId').value;
+	     console.log('logError dir', dir);
+	     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	     break;
+
+	 case "entries is null":
+	     console.log('logError', 'entries is null');
+	     displayByIdOfTagOfValue("error", '');
+	     var dir = document.getElementById('CurrentMfsDirectoryId').value;
+	     console.log('logError dir', dir);
+	     updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	     break;
+
+	 case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
+	     displayByIdOfTagOfValue("error", '');
+	     break;
+	     
+	 default:
+	     console.log("logError : default err '"+err+"'");
+     } // switch
+ }
+ 
  function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
      console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
      console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
