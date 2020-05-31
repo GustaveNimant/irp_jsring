@@ -46,4 +46,29 @@
      }
  }
 
+ function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
+     console.log('createNameButtonOfMfsDirPath.input.mfspath:',mfspath);
+     console.log('createNameButtonOfMfsDirPath.input.name:',name);
+     console.log('createNameButtonOfMfsDirPath.input.type:',type);
+     console.log('createNameButtonOfMfsDirPath.input.hash:',hash);
+
+     let but = '<input type="button" id="nameButton" value="';
+     but += name;
+     if (type == 1){
+	 but += '" onclick="addNameOnInputMfsPath(this.value)"';
+
+	 var hid = document.getElementsByClassName('hiddenForFile')[0];
+	 hid.hidden = false
+	 var hid = document.getElementsByClassName('hiddenForDir')[0];
+	 hid.hidden = true
+	 
+     } else {
+	 but += '" onclick="displayFileOptions(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
+	 console.log('createNameButtonOfMfsDirPath.but',but);
+     }
+     but += '>';
+     return but;
+ }
+
+
 </script>

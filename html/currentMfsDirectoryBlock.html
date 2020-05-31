@@ -160,4 +160,19 @@
      }
  }
 
+ function linkIpfsHash (hash) {
+     console.log ('linkIpfsHash.input.hash:',hash);
+     
+     let api_url = 'http://127.0.0.1:5001/ipfs/';
+     let link = '<a href="';
+     link += api_url;
+     link += hash;
+     link += '" target="_blank">';
+     link += hash;
+     link += '</a>';
+     console.log ('linkIpfsHash link',link);
+     return link;
+ }
+
+
 </script>

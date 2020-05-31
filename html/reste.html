@@ -13,116 +13,10 @@
 <!-- WindowOnLoad -->
 
 <!-- Table Functions -->
- 
+
 <!-- Pin Functions -->
 
 <script>
-    
- function createPinButtonOfHash (hash) {
-     console.log('createPinButtonOfHash.input.hash:',hash);
-
-     let but = '<button type="submit" class="pinButton" onclick="togglePinStatus(this.value, this.name)" name="'+hash+'">';
-
-     but += '<img src="images/questionmark.png" class="' + hash + '" style="height: 24px;">';
-     but += '</button>';
-     console.log('createPinButtonOfHash.but:', but);
-
-     updatePinButtonOfHash(hash);
-     return but;
- }
-
- function togglePinStatus(status, hash) {
-     console.log('togglePinStatus.input.status:',status);
-     console.log('togglePinStatus.input.hash:',hash);
-     
-     if (status == 'unpinned' || status == 'indirect-through') {
-	 return ipfsPinAdd(hash)
-	     .then( _ => { updatePinButtonOfHash(hash) })
-	 console.log('togglePinStatus.status:',status); // Improve
-     } else if (status == 'direct' || status == 'recursive' || status == 'indirect-through')  {
-	 return ipfsPinRm(hash)
-	     .then( _ => { updatePinButtonOfHash(hash) })
-     } else {
-	 console.log('togglePinStatus.status:',status); // Improve
-     }
- }
- 
- function updatePinButtonOfHash(hash) {
-     // Update button defined in createPinButtonOfHash (hash)
-     // with name=hash. Toggling by clicking.
-     console.log('updatePinButtonOfHash.input.hash:',hash);
-
-     return getPinStatus(hash)
-	 .then( status => {
-	     console.log('updatePinButtonOfHash.status 1:',status);
-	     //status : 'pinned-indirect through Qma84TiiJye6mp4iJZ8ZtZBWqNEqJ3JyAfMXFXy94jgE2A'
-	     if (status.indexOf('through') >= 0) {
-		 let string = status.split(' ');
-		 console.log('updatePinButtonOfHash.string:',string);
-		 var thrHash = string[2];
-		 console.log('updatePinButtonOfHash.through.hash:', thrHash);
-		 var status = string[0]+'-'+string[1];
-	     }
-	     console.log('updatePinButtonOfHash.status 2:',status);
-	     img = document.getElementsByClassName(hash)[0];
-	     if ( thrHash ) {
-		 img.title = 'indirect through ' + thrHash;
-	     } else {
-		 img.title = status;
-	     }
-	     img.src = 'images/pinned-'+status+'-200.png';
-	     button = document.getElementsByName(hash)[0];
-	     button.value = status;
-	     console.log('updatePinButtonOfHash.img:',img);
-	     console.log('updatePinButtonOfHash.button:',button);
-	 })
-	 .catch(logError)
- }
- 
- function getPinStatus(hash) {
-     console.log('getPinStatus.input.hash:',hash);
-     
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
-     return fetchRespNoCatch(url)
-	 .then( obj => {
-	     let status;
-	     if (typeof(obj.Code) == 'undefined') {
-		 status = obj.Keys[hash].Type
-	     } else {
-		 status = 'unpinned'
-	     }
-	     console.log('getPinStatus: '+hash+" \u21A6",status);
-	     return status
-	 })
-	 .catch( obj => { logError('getPinStatus.catch',obj) })
- }
-
- function ipfsPinAdd(hash) {
-     console.log('ipfsPinAdd.input.hash:',hash);
-
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'pin/add?arg=/ipfs/'+hash+'&progress=true'
-     console.log('ipfsPinAdd.url',url)
-     return fetchGetText(url)
-	 .then(text => { console.log('ipfsPinAdd.text',text); })
-	 .catch(err => logErrorOfHash (err, hash))
- }
-
- function ipfsPinRm(hash) {
-     console.log('ipfsPinRm.input.hash:',hash);
-     
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'pin/rm?arg=/ipfs/'+hash
-     console.log('ipfsPinRm.url',url)
-     return fetchGetJson(url)
-	 .then( json => { console.log('ipfsPinRm.json',json);
-	     return json.Pins  // Improve when not pinned or indirect
-	 })
-	 .catch(err => logErrorOfHash (err, hash))
- } 
- 
- /* --------------- End Pin Functions ---------------- */
 
  function checkedRadio () {
      console.log ('checkedRadio.entering');
@@ -133,20 +27,6 @@
      updateElementOfIdOfValue ('UploadIdNew', rad);
  }
  
- function linkIpfsHash (hash) {
-     console.log ('linkIpfsHash.input.hash:',hash);
-     
-     let api_url = 'http://127.0.0.1:5001/ipfs/';
-     let link = '<a href="';
-     link += api_url;
-     link += hash;
-     link += '" target="_blank">';
-     link += hash;
-     link += '</a>';
-     console.log ('linkIpfsHash link',link);
-     return link;
- }
-
  function sizeOfJsonOfKey (json, key) {
      let siz = json[key]['Size']
      if (siz > 0) { return ' ('+siz+' octets) '; }
@@ -175,30 +55,6 @@
      result = imageOfType(type);
      console.log ('typeImageOfJsonOfKey.result:', result);
      return result;
- }
-
- function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
-     console.log('createNameButtonOfMfsDirPath.input.mfspath:',mfspath);
-     console.log('createNameButtonOfMfsDirPath.input.name:',name);
-     console.log('createNameButtonOfMfsDirPath.input.type:',type);
-     console.log('createNameButtonOfMfsDirPath.input.hash:',hash);
-
-     let but = '<input type="button" id="nameButton" value="';
-     but += name;
-     if (type == 1){
-	 but += '" onclick="addNameOnInputMfsPath(this.value)"';
-
-	 var hid = document.getElementsByClassName('hiddenForFile')[0];
-	 hid.hidden = false
-	 var hid = document.getElementsByClassName('hiddenForDir')[0];
-	 hid.hidden = true
-	 
-     } else {
-	 but += '" onclick="displayFileOptions(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
-	 console.log('createNameButtonOfMfsDirPath.but',but);
-     }
-     but += '>';
-     return but;
  }
 
  /* ---------- File Functions ---------- */
