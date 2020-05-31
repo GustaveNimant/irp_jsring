@@ -32,7 +32,19 @@ function errorMessage (expected, found, cure, caller) {
     throw "exit";
 }
 
-function functionNameJS (mod) {
+function functionNameJS () {
+    var stack = new Error().stack;
+    console.log('stack',stack);
+    var stackArray = stack.split('\n');
+    console.log('stackArray',stackArray);
+    var callee = "";
+    callee = stackArray[1].split('@')[0]);
+caller = stackArray[2].split('@')[0]);
+console.log('functionNameJS.callee',callee);
+return [callee, caller];
+}
+
+function functionNameJS__ (mod) {
     var stack = new Error().stack;
 
     if (mod === "main") {

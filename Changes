@@ -1,0 +1,9 @@
+ createNameButtonOfMfsDirPath
+
+ displayFileOptions
+
+ createTableForFileOfNameOfHash
+
+ getHash => catOfHash => displayFileContentOfHash
+
+  catOfHash => fileContentOfHash
