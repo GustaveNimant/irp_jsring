@@ -425,6 +425,33 @@
      return result;
  }
 
+ function valueInputRadioOfFormOfNameOfId(forNam, curNam, curId) {
+     console.log('valueInputRadioOfFormOfNameOfId.input.forNam',forNam);
+     console.log('valueInputRadioOfFormOfNameOfId.input.curNam',curNam);
+     console.log('valueInputRadioOfFormOfNameOfId.input.curId',curId);
+     
+     let form = getFormOfName(forNam);
+     
+     let elements = form.elements;
+     console.log('valueInputRadioOfFormOfNameOfId.elements:',elements);
+     
+     var result = "";
+     for (let e=0; e <elements.length; e++) {
+	 let ele = elements[e];
+	 if(ele.tagName == "INPUT" && ele.type == "radio"){
+	     if (ele.id == curId && ele.name == curNam) {
+		 result = ele.value
+	     }
+	 }
+     }
+     console.log('valueInputRadioOfFormOfNameOfId.result:',result);
+     
+     if(result == "") {
+	 throw "No such Input Radio element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+     }
+     return result;
+ }
+ 
  function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
      console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
      console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
