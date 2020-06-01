@@ -1,0 +1,39 @@
+<!-- Block copy -->
+<div class="upload">Copy to Mfs path</div><br>
+<form method="POST">
+    
+    Source<input name="pathSource" type="text" placeholder="Path or hash"><br>
+    Target<input name="pathTarget" type="text" placeholder="Path"><br>
+    <input type="button" onclick="copyHashOrMfsToMfs()" value="Copy Source">
+    <div class="greenBackground" id="fileCopied"></div>
+</form><br>
+
+<script>
+	 function provideByName (name) {
+	     console.log('provideByName.input.name', name);
+	     let element = document.getElementsByName(name)[0];
+	     console.log('provideByName.element', element);
+	     let data = element.value;
+	     console.log('provideByName.data', data);
+	     return data;
+	 }
+
+ function copyHashOrMfsToMfs() {
+     console.log('copyHashOrMfsToMfs');
+     
+     var from = provideByName("pathSource");
+     let to   = provideByName("pathTarget");
+     
+     if ( from.charAt(0) != '/') {
+	 from = '/ipfs/' + from;
+     }
+     
+     var url = api_url + 'files/cp?arg='+from+'&arg='+to
+     return fetchPostText(url)
+     	 .then(validate)
+	 .then(resp => resp.statusText)
+	 .then(callback('fileCopied'))
+	 .catch(logError)
+ }
+ 
+</script>

@@ -13,15 +13,12 @@
  function createHeaderOfTable (table) {
      console.log('createHeaderOfTable.input.table:', table);
 
-     var hid = document.getElementsByClassName('hiddenForFile')[0];
      let tr = createElementTable (table,'tr', '');
 
      createElementTable (tr, 'th', 'Pin');
-     if (hid.hidden != true) {
-	 createElementTable (tr, 'th', 'Type');
-	 createElementTable (tr, 'th', 'Name');
-     }
-
+     createElementTable (tr, 'th', 'Type');
+     createElementTable (tr, 'th', 'Name');
+     
      createElementTable (tr, 'th', 'Hash')   
  }
 
@@ -57,14 +54,8 @@
      but += name;
      if (type == 1){
 	 but += '" onclick="addNameOnInputMfsPath(this.value)"';
-
-	 var hid = document.getElementsByClassName('hiddenForFile')[0];
-	 hid.hidden = false
-	 var hid = document.getElementsByClassName('hiddenForDir')[0];
-	 hid.hidden = true
-	 
      } else {
-	 but += '" onclick="displayFileOptions(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
+	 but += '" onclick="createTableForFileOfNameOfHash(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
 	 console.log('createNameButtonOfMfsDirPath.but',but);
      }
      but += '>';

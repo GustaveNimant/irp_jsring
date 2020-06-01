@@ -25,9 +25,6 @@
  function getCurrentMfsDirectory(){
      console.log('getCurrentMfsDirectory.entering');
 
-     var hid = document.getElementsByClassName('hiddenForFile')[0];
-     hid.hidden = false;
-
      let form = getFormOfName("CurrentMfsDirectoryForm");
      let mfspath = mfsPathOfForm(form);
      console.log('getCurrentMfsDirectory.mfspath',mfspath);
