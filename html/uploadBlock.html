@@ -13,40 +13,41 @@
 <script>
  
  function uploadFileToCurrentMfs() {
-     console.log('uploadFileToCurrentMfs.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      
      let form = getFormOfName("UploadForm");
-     console.log('uploadFileToCurrentMfs.form:',form);
-     console.log('uploadFileToCurrentMfs.form.elements:',form.elements);
+     console.log(callee+'form:',form);
+     console.log(callee+'form.elements:',form.elements);
      
      let fakepath = valueInputFileOfFormOfNameOfId("UploadForm", "nameoffile", "FakePathId"); 
-     console.log('uploadFileToCurrentMfs.fakepath:',fakepath);
+     console.log(callee+'fakepath:',fakepath);
 
      let mfsdir = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
-     console.log('uploadFileToCurrentMfs.mfsdir:',mfsdir);
+     console.log(callee+'mfsdir:',mfsdir);
 
      let mfsdirOld = mfsdir;
      let file = form.elements[0].files[0];
-     console.log('uploadFileToCurrentMfs.form.element[0].files:',form.elements[0].files);
-     console.log('uploadFileToCurrentMfs.file:',file)
+     console.log(callee+'form.element[0].files:',form.elements[0].files);
+     console.log(callee+'file:',file)
 
      if (document.getElementById('UploadIdNew').checked) {
 	 var name = document.getElementById('idUploadKeptName').value;
-	 console.log('uploadFileToCurrentMfs.name:',name);
+	 console.log(callee+'name:',name);
      } else {
 	 var name = form.elements[0]['files'][0].name;
-	 console.log('uploadFileToCurrentMfs.old.name:',name);
+	 console.log(callee+'old.name:',name);
      }
-     console.log('uploadFileToCurrentMfs.name:',name);
+     console.log(callee+'name:',name);
      mfsdir += '/';
-     console.log('uploadFileToCurrentMfs.mfsdir 1:',mfsdir);
+     console.log(callee+'mfsdir 1:',mfsdir);
      mfsdir += name;
-     console.log('uploadFileToCurrentMfs.mfsdir 2:',mfsdir);
+     console.log(callee+'mfsdir 2:',mfsdir);
 
      let reader = new FileReader();
      reader.onload = event => {
 	 const content_on_load = event.target.result;
-	 console.log('uploadFileToCurrentMfs.content_on_load:',content_on_load)
+	 console.log(callee+'content_on_load:',content_on_load)
 	 writeOfMfsFilePathOfContent(mfsdir, content_on_load)
 		.then(callback('hash'))
      }
@@ -55,20 +56,22 @@
 
      let formData = new FormData();
      formData.append("file", file);
-     console.log('uploadFileToCurrentMfs.formData:',formData)
+     console.log(callee+'.formData:',formData)
      let val = "File '"+name+"' uploaded to "+mfsdirOld
      updateElementOfIdOfValue('fileUploaded', val);
-     console.log ('uploadFileToCurrentMfs.val:', val);
+     console.log (callee+'val:', val);
      document.getElementById('CurrentMfsDirectoryClickId').click();
  }
 
  function writeOfMfsFilePathOfContent(mfsFilePath, content) {
-     console.log('writeOfMfsFilePathOfContent.input.mfsFilePath:',mfsFilePath);
-     console.log('writeOfMfsFilePathOfContent.input.content:',content)
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfsFilePath:',mfsFilePath);
+     console.log(callee+'.input.content:',content)
 
      const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'files/write?arg=' + mfsFilePath + '&create=1';
-     console.log('writeOfMfsFilePathOfContent.url:',url);
+     console.log(callee+'.url:',url);
      return fetchPostTextForm(url, content)
 	 .then( _ => hashOfMfsFilePath(mfsFilePath) )
 	 .then( _ => {document.getElementById('CurrentMfsDirectoryClickId').click()})
@@ -76,23 +79,25 @@
  }
 
  function hashOfMfsFilePath(mfsFilePath) {
-     console.log('hashOfMfsFilePath.input.mfsFilePath:',mfsFilePath);
+     let [callee, caller] = functionNameJS();
+     console.log(callee+'.input.mfsFilePath:',mfsFilePath);
 
      const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
-     console.log('hashOfMfsFilePath : url '+url);
+     console.log(callee+'url',url);
      
-     return fetchGetTextForm(url)
+     let result = fetchGetTextForm(url)
 	 .then( obj => obj.json())
 	 .then( json => {
-	     console.log('hashOfMfsFilePath : json ',json);
-	     console.log("hashOfMfsFilePath : json.Type '"+json.Type+"'");
+	     console.log(callee+'.json',json);
+	     console.log(callee+'json.Type',json.Type);
 	     if (json.Type == "error") {
-		 const message = 'Error from hashOfMfsFilePath : '+json.Message;
-		 console.log("hashOfMfsFilePath : message '"+message+"'")
+		 const message = 'Error from '+callee+' : '+json.Message;
+		 console.log(callee+'.message',message);
 		 updateElementOfIdOfValue("error", message);
 	     }
 	     return json.Hash} )
+     return result;
  }
  
 </script>

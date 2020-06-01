@@ -1,16 +1,16 @@
 <!-- HiddenForDirBlock -->
 <script>
- function saveFileOnIpms () {
-     console.log('saveFileOnIpms:');
+ function saveFileOnIpms () { // Improve 2 hardcoded ids
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      
-     let txtAre = document.getElementById('catOfHash');
-     console.log('saveFileOnIpms:txtAre',txtAre);
-     let content = txtAre.value;
-     console.log('saveFileOnIpms:content',content);
-     txtAre.disabled = true;
+     let texAre = document.getElementById('catOfHash');
+     console.log(callee+'.texAre',texAre);
+     let content = texAre.value;
+     console.log(callee+'.content',content);
+     texAre.disabled = true;
      let butSav = document.getElementById('saveModif');
      butSav.disabled = true;
-     //	     writeOfMfsFilePathOfContent(mfsFilePath, content);
  }
 
 </script>

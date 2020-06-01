@@ -23,11 +23,12 @@
 <script>
  
  function getCurrentMfsDirectory(){
-     console.log('getCurrentMfsDirectory.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
 
      let form = getFormOfName("CurrentMfsDirectoryForm");
      let mfspath = mfsPathOfForm(form);
-     console.log('getCurrentMfsDirectory.mfspath',mfspath);
+     console.log(callee+'.mfspath',mfspath);
 
      updateElementOfIdOfValue ("UploadId", mfspath);
      updateElementOfIdOfValue ("currentMfsDir", mfspath);
@@ -36,7 +37,9 @@
  }
 
  function getFileList (mfsDirPath) {
-     console.log('getFileList.input.mfsDirPath:',mfsDirPath);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfsDirPath:',mfsDirPath);
 
      const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
@@ -50,15 +53,17 @@
  }
 
  function displayJson (json) {
-     console.log('displayJson.input.json:', json);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.json:', json);
      
      let mfsDirPath = json.mfspath
      let entries = json.Entries
-     console.log('displayJson.mfsDirPath:', mfsDirPath);
-     console.log('displayJson.entries:', entries);
+     console.log(callee+'.mfsDirPath:', mfsDirPath);
+     console.log(callee+'.entries:', entries);
      
      table = document.getElementById('ls-result')
-     console.log('displayJson.table:',table);
+     console.log(callee+'.table:',table);
      
      deleteActionsAndErrorTexts();
      deleteAllRowsOfTable (table);
@@ -78,7 +83,8 @@
  }
 
  function deleteActionsAndErrorTexts() {  // Improve
-     console.log('deleteActionsAndErrorTexts.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      
      updateElementOfIdOfValue ('fileUploaded', '');
      updateElementOfIdOfValue ('error', '');
@@ -86,26 +92,28 @@
  }
 
  function getFormOfName(nameForm) {
-     console.log('getFormOfName.nameForm:',nameForm);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.nameForm:',nameForm);
 
      let forms = document.getElementsByName(nameForm);
-     console.log('getFormOfName.forms:',forms);
+     console.log(callee+'.forms:',forms);
 
      let form = forms[0];
      let name = form.name;
-     console.log('getFormOfName.name:',name);
-     console.log('getFormOfName.form:',form);
+     console.log(callee+'.name:',name);
+     console.log(callee+'.form:',form);
 
      let elements = form.elements;
-     console.log('getFormOfName.elements:',elements);
+     console.log(callee+'.elements:',elements);
      for (let e=0; e <elements.length; e++) {
  	 let ele = elements[e];
-	 console.log('getFormOfName.ele:',ele);
-	 console.log('getFormOfName.ele.tag:',ele.tagName);
-	 console.log('getFormOfName.ele.id:',ele.id);
-	 console.log('getFormOfName.ele.type:',ele.type);
-	 console.log('getFormOfName.ele.name:',ele.name);
-	 console.log('getFormOfName.ele.value:',ele.value);
+	 console.log(callee+'.ele:',ele);
+	 console.log(callee+'.ele.tag:',ele.tagName);
+	 console.log(callee+'.ele.id:',ele.id);
+	 console.log(callee+'.ele.type:',ele.type);
+	 console.log(callee+'.ele.name:',ele.name);
+	 console.log(callee+'.ele.value:',ele.value);
      }
 
      return form;
@@ -171,7 +179,6 @@
      console.log ('linkIpfsHash link',link);
      return link;
  }
-
 
 </script>
 <!-- End of CurrentMfsDirectoryBlock -->

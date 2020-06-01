@@ -5,6 +5,7 @@ cat \
     html/uploadBlock.html \
     html/createDirectoryBlock.html \
     html/removeBlock.html \
+    html/copyBlock.html \
     html/pinBlock.html \
     html/currentMfsDirectoryBlock.html \
     html/hiddenForDirBlock.html \

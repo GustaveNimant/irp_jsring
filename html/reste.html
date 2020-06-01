@@ -45,7 +45,7 @@
 
      table = document.getElementById('ls-result');
      deleteAllRowsOfTable (table);
-     createHeaderOfTable (table);
+     createHeaderOfTable (table); // Improve
      
      var tr = createElementTable (table,'tr', '');
      createElementTable (tr, 'td', createPinButtonOfHash (hash));
@@ -81,43 +81,58 @@
      return butDel;
  }
 
- function createTextareaForFileContent() { // Improve reference to saveFileOnIpms()
-     let [callee, caller] = functionNameJS();
-     console.log(callee+'.entering');
-
-     let span = document.createElement("span");
-     span.innerHTML = '<b>Content of file</b>';
-     document.body.appendChild (span);
-
-     var br = document.createElement("br");
-     document.body.appendChild (br);
-     
-     let texAre = document.createElement("textarea");
-     texAre.rows = 20;
-     texAre.cols = 80;
-     texAre.id = "catOfHash";
-     document.body.appendChild (texAre);
-     
-     var br = document.createElement("br");
-     document.body.appendChild (br);
-     
-     let inpBut = document.createElement("input");
-     inpBut.type = "button";
-     inpBut.onclick="saveFileOnIpms()";
-     inpBut.value="Save";
-     inpBut.id="saveModif";
-     document.body.appendChild (inpBut);
-     
-     console.log(callee+'.inpBut:', inpBut);
-     return inpBut;
- }
- 
  function displayFileContentOfHash (hash) {
      let [callee, caller] = functionNameJS();
      console.log(callee+'.input.hash:',hash);
      
      getHash(hash);
      createTextareaForFileContent();
+ }
+
+ function createTextareaForFileContent() { // Improve reference to saveFileOnIpms()
+     let [callee, caller] = functionNameJS();
+     console.log(callee+'.entering');
+
+     var cen = document.createElement ('center');
+     
+     var bol = document.createElement ('b');
+     bol.innerHTML = 'Content of file';
+     
+     var br1 = document.createElement ('br');
+     
+     var spaMes = document.createElement ('span');
+     spaMes.id = 'fileModified';
+     spaMes.className = 'greenBackground';
+     
+     var texAre = document.createElement ('textarea');
+     texAre.rows = 20;
+     texAre.cols = 80;
+     texAre.id = 'catOfHash';
+     texAre.disabled = true;
+     
+     var br2 = document.createElement ('br');
+     var br3 = document.createElement ('br');
+     
+     var inp = document.createElement ('input');
+     inp.type = 'button';
+     inp.value = 'Save';
+     inp.id = 'saveModif';
+     inp.disabled = true;
+     inp.onclick = function () {saveFileOnIpms ()};
+     
+     cen.append (bol);
+     cen.append (br1);
+     cen.append (spaMes);
+     cen.append (br2);
+     cen.append (texAre);
+     cen.append (br3);
+     cen.append (br3);
+     cen.append (inp);
+     
+     console.log (cen.childNodes);
+     
+     document.body.appendChild (cen);
+
  }
 
  function unlockFileEdit () {
