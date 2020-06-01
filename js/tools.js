@@ -33,38 +33,11 @@ function errorMessage (expected, found, cure, caller) {
 }
 
 function functionNameJS () {
-    var stack = new Error().stack;
-    console.log('stack',stack);
-    var stackArray = stack.split('\n');
-    console.log('stackArray',stackArray);
-    var callee = "";
-    callee = stackArray[1].split('@')[0]);
-caller = stackArray[2].split('@')[0]);
-console.log('functionNameJS.callee',callee);
-return [callee, caller];
-}
-
-function functionNameJS__ (mod) {
-    var stack = new Error().stack;
-
-    if (mod === "main") {
-	var caller = ((stack.split('at ')[2]).split(' ')[0]);
-    }
-    else {
-	var AtNeW = stack.split('at new ')[1];
-	if (AtNeW == undefined) {
-	    var At = stack.split('at ');
-	    var caller = ((At[2]).split(' ')[0])
-	    if (caller == undefined) {
-		console.log('stack',stack);
-	    }
-	}
-	else {
-	    var caller = AtNeW.split(' ')[0];
-	}
-    }
-    
-    return mod + ':' + caller.replace('Object.', '');
+    let stack = new Error().stack;
+    let stackArray = stack.split('\n');
+    let callee = stackArray[1].split('@')[0];
+    let caller = stackArray[2].split('@')[0];
+    return [callee, caller];
 }
 
 function getLatestElement (elementArray) {
