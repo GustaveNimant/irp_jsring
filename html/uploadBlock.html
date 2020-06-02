@@ -60,7 +60,7 @@
      let val = "File '"+name+"' uploaded to "+mfsdirOld
      updateElementOfIdOfValue('fileUploaded', val);
      console.log (callee+'val:', val);
-     document.getElementById('CurrentMfsDirectoryClickId').click();
+     getCurrentMfsDirectory();
  }
 
  function writeOfMfsFilePathOfContent(mfsFilePath, content) {
@@ -74,7 +74,7 @@
      console.log(callee+'.url:',url);
      return fetchPostTextForm(url, content)
 	 .then( _ => hashOfMfsFilePath(mfsFilePath) )
-	 .then( _ => {document.getElementById('CurrentMfsDirectoryClickId').click()})
+	 .then( _ => {getCurrentMfsDirectory()})
 	 .catch(logError)
  }
 

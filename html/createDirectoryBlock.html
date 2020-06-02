@@ -28,7 +28,7 @@
      console.log('createDirectory.url:', url);
      
      return fetchPostMkdirForm(path_url, url)
-	 .then(_ => {document.getElementById('CurrentMfsDirectoryClickId').click()})
+	 .then(_ => {getCurrentMfsDirectory()})
 	 .catch(logError)
  }
 
