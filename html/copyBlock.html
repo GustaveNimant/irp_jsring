@@ -8,17 +8,20 @@
 </form><br>
 
 <script>
-	 function provideByName (name) {
-	     console.log('provideByName.input.name', name);
-	     let element = document.getElementsByName(name)[0];
-	     console.log('provideByName.element', element);
-	     let data = element.value;
-	     console.log('provideByName.data', data);
-	     return data;
-	 }
-
+ function provideByName (name) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.name', name);
+     let element = document.getElementsByName(name)[0];
+     console.log(callee+'.element', element);
+     let data = element.value;
+     console.log(callee+'.data', data);
+     return data;
+ }
+ 
  function copyHashOrMfsToMfs() {
-     console.log('copyHashOrMfsToMfs');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      
      var from = provideByName("pathSource");
      let to   = provideByName("pathTarget");

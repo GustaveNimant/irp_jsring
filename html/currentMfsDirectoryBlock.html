@@ -43,7 +43,7 @@
 
      const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
-     console.log('getFileList.url:',url);
+     console.log(callee+'.url:',url);
      return fetch(url, { method: "POST", mode: 'cors'})
 	 .then (validate)
 	 .then (resp => resp.json())
@@ -120,32 +120,38 @@
  }
 
  function mfsPathOfForm(form) {
-     console.log('mfsPathOfForm.input.form:',form);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.form:',form);
 
      let name = form.name;
-     console.log('mfsPathOfForm.name:',name);
+     console.log(callee+'.name:',name);
 
      let result = form.elements[0].value;
-     console.log('mfsPathOfForm.result:',result);
+     console.log(callee+'.result:',result);
      return result;
  }	     
 
  function getHashAndTypeOfMfsPath (mfspath) {
-     console.log('getHashAndTypeOfMfsPath.input.mfspath:',mfspath)
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfspath:',mfspath);
 
      const webui = 'http://127.0.0.1:5001';
      const api_url = webui + '/api/v0/'
      
      var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
      return fetchGetJson(url)
-	 .then( obj => {console.log('getHashAndTypeOfMfsPath obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+	 .then( obj => {console.log(callee+'.obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
 	 .then(callbackTuple ('hash', 'type'))
 	 .catch(logError)
  }
 
  function callbackTuple (tag1, tag2) {
-     console.log('callbackTuple.input.tag1:',tag1)
-     console.log('callbackTuple.input.tag2:',tag2)
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.tag1:',tag1)
+     console.log(callee+'.input.tag2:',tag2)
      
      const substi = ([obj1, obj2]) => {
 	 let url = linkIpfsHash (obj1);
@@ -156,18 +162,22 @@
  }
 
  function validate (resp) {
-     console.log('validate.input.resp:',resp);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.resp:',resp);
      
      if (resp.status >= 200 && resp.status < 300) {
 	 return Promise.resolve(resp)
      } else {
-	 console.log('status:',resp.status)
+	 console.log(callee+'.resp.status:',resp.status)
 	 return Promise.reject(new Error(resp.statusText))
      }
  }
 
  function linkIpfsHash (hash) {
-     console.log ('linkIpfsHash.input.hash:',hash);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log (callee+'.input.hash:',hash);
      
      let api_url = 'http://127.0.0.1:5001/ipfs/';
      let link = '<a href="';
@@ -176,7 +186,7 @@
      link += '" target="_blank">';
      link += hash;
      link += '</a>';
-     console.log ('linkIpfsHash link',link);
+     console.log (callee+'.link:',link);
      return link;
  }
 

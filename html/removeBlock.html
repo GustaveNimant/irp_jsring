@@ -9,10 +9,11 @@
 
 <script>
  function removeElement () {
-     console.log('removeElement.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      
      var mfspath = document.getElementById('idRemoveFileOrDirectory').value;
-     console.log('removeElement.mfspath:',mfspath);
+     console.log(callee+'.mfspath:',mfspath);
      
      let conf_mess = 'Confirm removing of ' + mfspath;
      var conf = confirm(conf_mess);
@@ -22,20 +23,22 @@
  }
  
  function removeOfMfsPath (mfspath) {
-     console.log('removeOfMfsPath.input.mfspath:',mfspath);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfspath:',mfspath);
      
-     console.log('removeOfMfsPath.chopOfMfsPath.mfspath', chopOfMfsPath (mfspath));
+     console.log(callee+'.chopOfMfsPath.mfspath', chopOfMfsPath (mfspath));
      
      let [parent, rootName, basename, ext] = chopOfMfsPath (mfspath);
-     console.log('removeOfMfsPath.parent:',parent);
+     console.log(callee+'.parent:',parent);
      const webui = 'http://127.0.0.1:5001';
      const api_url = webui + '/api/v0/'
 
      var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
-     console.log('removeOfMfsPath.url:'+url);
+     console.log(callee+'.url:',url);
      return fetch(url, { method: "POST", mode: 'cors'})
 	 .then (validate)
-	 .then (resp => {console.log('removeOfMfsPath resp',resp)})
+	 .then (resp => {console.log(callee+'.resp',resp)})
 	 .then (_ => {document.getElementById('CurrentMfsDirectoryId').value = parent})
      	 .then (_ => {getCurrentMfsDirectory()})
 	 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
@@ -44,8 +47,11 @@
  }	 
 
  function updateElementOfIdOfValue (id, value) {
-     console.log('updateElementOfIdOfValue.input.id:',id);
-     console.log('updateElementOfIdOfValue.input.value:',value);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     console.log(callee+'.input.id:',id);
+     console.log(callee+'.input.value:',value);
 
      let doc = document.getElementById(id);
      doc.innerHTML = value;

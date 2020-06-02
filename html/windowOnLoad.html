@@ -4,7 +4,9 @@
  window.onload = displayDirOnLoadWindow();
  
  function displayDirOnLoadWindow() {
-     console.log('displayDirOnLoadWindow.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
      getCurrentMfsDirectory();
  }
 </script>

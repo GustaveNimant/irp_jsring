@@ -12,6 +12,7 @@ cat \
     html/windowOnLoad.html \
     html/tableFunctions.html \
     html/reste.html \
+    html/footBlock.html \
     > f.html
 
 echo "cp f.html "

@@ -21,15 +21,19 @@
 <script>
 
  function checkedRadio () { // Improve reference to id 'UploadIdNew' 
-     console.log ('checkedRadio.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
 
      let rad = document.getElementById('UploadIdNew');
-     console.log ('checkedRadio.rad:',rad);
+     console.log (callee+'.rad:',rad);
      rad.checked = true;
      updateElementOfIdOfValue ('UploadIdNew', rad);
  }
  
  function imageOfType(type) { // Improve reference to hardcoded src
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
      if (type == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
      else { return '<img src="images/folder.png" width="25px" height="25">'; }
  }
@@ -63,7 +67,9 @@
  }
  
  function buttonDeleteFile (name) { // Improve CurrentMfsDirectoryId
-     console.log('buttonDeleteFile.input.name:',name);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.name:',name);
      
      let path = document.getElementById ('CurrentMfsDirectoryId').value;
      if (path == '/') {
@@ -71,13 +77,13 @@
      } else {
 	 var mfspath = path + '/' + name
      }
-     console.log('buttonDeleteFile.mfspath:', mfspath);
+     console.log(callee+'.mfspath:', mfspath);
      let butDel = '<input type="button" value="Delete ';
      butDel += name;
      butDel += '" onclick="removeOfMfsPath(\'';
      butDel += mfspath;
      butDel += '\')">';
-     console.log('buttonDeleteFile.butDel:', butDel);
+     console.log(callee+'.butDel:', butDel);
      return butDel;
  }
 
@@ -129,14 +135,14 @@
      cen.append (br3);
      cen.append (inp);
      
-     console.log (cen.childNodes);
+     console.log (callee+'.cen.childNodes:',cen.childNodes);
      
      document.body.appendChild (cen);
-
  }
 
  function unlockFileEdit () {
-     console.log('unlockFileEdit.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      
      let txtAre = document.getElementById('catOfHash');
      txtAre.disabled = false;
@@ -144,20 +150,20 @@
      butSav.disabled = false;
  }
  
- /* ---------- End file Functions ---------- */
-
  function addNameOfFileOnDeleteBlock(rootName, hash) {
-     console.log('addNameOfFileOnDeleteBlock.input.rootName:',rootName);
-     console.log('addNameOfFileOnDeleteBlock.input.hash:',hash);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.rootName:',rootName);
+     console.log(callee+'.input.hash:',hash);
 
      var mfsdir = document.getElementById('CurrentMfsDirectoryId').value;
-     console.log('addNameOfFileOnDeleteBlock.mfsdir',mfsdir);
+     console.log(callee+'.mfsdir',mfsdir);
      if (mfsdir != '/') {
 	 var path = mfsdir + '/' + rootName;
      }else {
 	 var path = mfsdir + rootName;
      }
-     console.log('addNameOfFileOnDeleteBlock path',path);
+     console.log(callee+'.path:',path);
      document.getElementById('idRemoveButton').disabled = false;
      var del = document.getElementById('idRemoveFileOrDirectory');
      del.value = path;
@@ -165,7 +171,9 @@
  }
 
  function getHash(hash) { // Improve reference to catOfHash 
-     console.log('getHash.input.hash:',hash)
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.hash:',hash)
 
      if (hash == "") {
 	 alert("Hash must be filled out");
@@ -174,24 +182,21 @@
      const webui = 'http://127.0.0.1:5001';
      const api_url = webui + '/api/v0/';
      var url = api_url + 'cat?&arg='+hash
-     console.log('getHash.url',url);
-
+     console.log(callee+'.url:',url);
+     
      return fetchGetTextCors(url)
 	 .then( obj => { return Promise.resolve(obj) })
 	 .then(callback('catOfHash'))
 	 .catch(logError)
  }
-
  
  function IpfsException (message) {
-     console.log('IpfsException.input.message:',message)
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.message:',message)
      
      this.message = message;
      this.name = "IpfsException";
  }
 
-
 </script>
-
-    </body>
-</html>
