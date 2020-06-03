@@ -188,15 +188,43 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
      doc.innerHTML = value;
  }
 
+function updateInputTextOfFormOfNameOfIdOfValue(forNam, curNam, curId, value) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    
+    console.log(callee+'.input.forNam',forNam);
+    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.curId',curId);
+    console.log(callee+'.input.value',value);
+    
+    let form = getFormOfName(forNam);
+     
+     let elements = form.elements;
+     console.log(callee+'.elements:',elements);
+     
+     for (let e=0; e <elements.length; e++) {
+	 let ele = elements[e];
+	 if(ele.tagName == "INPUT" && ele.type == "text"){
+	     if (ele.id == curId && ele.name == curNam) {
+		 ele.value = value
+	     }
+	 }
+     }
+     console.log(callee+'.result:',result);
+
+ }
+ 
  function valueInputFileOfFormOfNameOfId(forNam, curNam, curId) {
-     console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
-     console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
-     console.log('valueInputTextOfFormOfNameOfId.input.curId',curId);
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.forNam',forNam);
+     console.log(callee+'.input.curNam',curNam);
+     console.log(callee+'.input.curId',curId);
 
      let form = getFormOfName(forNam);
      
      let elements = form.elements;
-     console.log('valueInputTextOfFormOfNameOfId.elements:',elements);
+     console.log(callee+'.elements:',elements);
      
      var result = "";
      for (let e=0; e <elements.length; e++) {
@@ -207,7 +235,7 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
 	     }
 	 }
      }
-     console.log('valueInputTextOfFormOfNameOfId.result:',result);
+     console.log(callee+'.result:',result);
 
      if(result == "") {
 	 throw "No such Input File element in Form '" + forNam + "' '" + curNam + "' '"+ curId
@@ -216,6 +244,8 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
  }
 
  function valueInputRadioOfFormOfNameOfId(forNam, curNam, curId) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
      console.log('valueInputRadioOfFormOfNameOfId.input.forNam',forNam);
      console.log('valueInputRadioOfFormOfNameOfId.input.curNam',curNam);
      console.log('valueInputRadioOfFormOfNameOfId.input.curId',curId);
@@ -243,14 +273,16 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
  }
  
  function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
-     console.log('valueInputTextOfFormOfNameOfId.input.forNam',forNam);
-     console.log('valueInputTextOfFormOfNameOfId.input.curNam',curNam);
-     console.log('valueInputTextOfFormOfNameOfId.input.curId',curId);
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.forNam',forNam);
+     console.log(callee+'.input.curNam',curNam);
+     console.log(callee+'.input.curId',curId);
 
      let form = getFormOfName(forNam);
      
      let elements = form.elements;
-     console.log('valueInputTextOfFormOfNameOfId.elements:',elements);
+     console.log(callee+'.elements:',elements);
      
      var result = "";
      for (let e=0; e <elements.length; e++) {
@@ -261,7 +293,7 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
 	     }
 	 }
      }
-     console.log('valueInputTextOfFormOfNameOfId.result:',result);
+     console.log(callee+'.result:',result);
 
      if(result == "") {
 	 throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
@@ -270,6 +302,8 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
  }
  
  function valueInputOfNameOfId(curNam, curId) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
      console.log('valueInputOfNameOfId.input.curNam',curNam);
      console.log('valueInputOfNameOfId.input.curId',curId);
      
@@ -289,12 +323,16 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
 // Json
 
  function sizeOfJsonOfKey (json, key) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
      let siz = json[key]['Size']
      if (siz > 0) { return ' ('+siz+' octets) '; }
      else {return "";}
  }
 
  function typeOfJsonOfKey (json, key) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
      console.log ('typeOfJsonOfKey.input.json:', json);
      console.log ('typeOfJsonOfKey.input.key:', key);
 
@@ -304,6 +342,8 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
  }
 
  function typeImageOfJsonOfKey (json, key) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
      console.log('typeImageOfJsonOfKey.input.json',json);
      console.log('typeImageOfJsonOfKey.input.key',key);
 

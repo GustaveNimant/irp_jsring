@@ -22,12 +22,7 @@
 	 var back = navArr.pop();
 	 console.log(callee+'.navArray.pop 2:',back);
 
-	 let mfsDirPath = document.getElementById("CurrentMfsDirectoryId"); // Improve
-
-	 console.log(callee+'.mfsDirPath:',mfsDirPath);
-	 mfsDirPath.value = back;
-	 console.log(callee+'.mfsDirPath:',mfsDirPath);
-	 
+	 updateInputTextOfFormOfNameOfIdOfValue ("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId", back);
 	 getCurrentMfsDirectory();
      }
      console.log(callee+'.navArr.Output:',navArr);
