@@ -1,14 +1,15 @@
 #!/bin/bash
 
 file=$1
-root=`echo $1 |sed 's/.html//'`
+root=`echo $1 |sed 's/\.([a-z]+//'`
 echo "root is $root"
 echo "run callee_and_caller_to_log.sh $file to produce e.log"
 
-cut -d" " e.log -f3-6 | sed -e 's/ called by f.html:.*$/ called by main/' \
-			    -e 's/ called by /" -> "/' \
+cut -d" " e.log -f3-6 | sed -e 's/ called by /" -> "/' \
 			    -e 's/^/"/' \
-			    -e 's/$/"/' > ${root}.log
+			    -e 's/$/"/' \
+			    -e 's/^\(.*\) -> \(.*\)/\2 -> \1/' \
+			    > ${root}.log
 
 echo "digraph dgn {" > ${root}.dot
 sort -u ${root}.log >> ${root}.dot

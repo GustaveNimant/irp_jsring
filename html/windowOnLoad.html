@@ -6,8 +6,31 @@
  function displayDirOnLoadWindow() {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-
+     
      getCurrentMfsDirectory();
  }
-</script>
+
+ function goBack() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input:',navArr);
+     console.log(callee+'.navArray.length:',navArr.length);
+
+     if (navArr.length != 1) {
+	 var back = navArr.pop();
+	 console.log(callee+'.navArray.pop 1:',back);
+	 var back = navArr.pop();
+	 console.log(callee+'.navArray.pop 2:',back);
+
+	 let mfsDirPath = document.getElementById("CurrentMfsDirectoryId"); // Improve
+
+	 console.log(callee+'.mfsDirPath:',mfsDirPath);
+	 mfsDirPath.value = back;
+	 console.log(callee+'.mfsDirPath:',mfsDirPath);
+	 
+	 getCurrentMfsDirectory();
+     }
+     console.log(callee+'.navArr.Output:',navArr);
+ }
+</script> 
 <!-- End of WindowOnLoad -->

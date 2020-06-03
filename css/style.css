@@ -71,3 +71,14 @@
 	     font-weight: bold;
 	     text-align: center;
 	 }
+	 
+	 .butBack {
+	     background:#0A6BB3;
+	     border-radius:10px;
+	 }
+	 
+	 .butBack:hover {
+	     cursor:pointer;
+	     border: 2px solid;
+	     border-color:#8E9493;
+	 }

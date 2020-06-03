@@ -1,6 +1,7 @@
 <!-- CurrentMfsDirectoryBlock -->
 <form method="POST" name="CurrentMfsDirectoryForm">
     <center>
+	<img src="images/back.png" width="30" height="25" title="Click to Go Back" onclick="goBack()">
 	<span class="title">
 	    Current Mfs directory <input type="text" name="CurrentMfsDirectoryName" id="CurrentMfsDirectoryId" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
 	    <input type="button" onClick="getCurrentMfsDirectory()" id="CurrentMfsDirectoryClickId" value="Display">
@@ -21,7 +22,7 @@
 </div>
 
 <script>
- 
+
  function getCurrentMfsDirectory(){
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
@@ -29,7 +30,10 @@
      let form = getFormOfName("CurrentMfsDirectoryForm");
      let mfspath = mfsPathOfForm(form);
      console.log(callee+'.mfspath',mfspath);
-
+     
+     navArr.push (mfspath);
+     console.log(callee+'.mfspath has been pushed in navArr:',navArr);
+     
      updateElementOfIdOfValue ("UploadId", mfspath);
      updateElementOfIdOfValue ("currentMfsDir", mfspath);
      getHashAndTypeOfMfsPath (mfspath);
@@ -41,6 +45,10 @@
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.mfsDirPath:',mfsDirPath);
 
+     if (mfsDirPath == "") {
+	 errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
+     }
+     
      const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
      console.log(callee+'.url:',url);
@@ -51,7 +59,7 @@
 	 .then (displayJson)
 	 .catch(err => {console.log(err); logError(err)})
  }
-
+ 
  function displayJson (json) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
@@ -127,8 +135,12 @@
      let name = form.name;
      console.log(callee+'.name:',name);
 
-     let result = form.elements[0].value;
+     let result = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+
      console.log(callee+'.result:',result);
+     if (result == "") {
+	 errorMessage ('result were not empty',result, "Check", caller);
+     }
      return result;
  }	     
 

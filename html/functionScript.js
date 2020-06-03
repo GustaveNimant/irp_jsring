@@ -28,7 +28,6 @@ function baseName(mfspath){
      return butMod;
  }
 
-
  function callback (tag) {
      console.log('callback.input.tag:',tag)
      
@@ -97,12 +96,23 @@ function baseName(mfspath){
      document.getElementById(tag).innerHTML = value
  }
 
+function errorMessage (expected, found, cure, caller) {
+    console.log ('\n\nError in',caller);
+    console.log ('Expecting',expected);
+    console.log ('Found',found);
+    console.log ('Cure',cure);
+    var stack = new Error().stack;
+    console.log ('stack',stack);
+    throw "exit";
+}
+
 function functionNameJS () {
-     let stack = new Error().stack;
-     let stackArray = stack.split('\n');
-     let callee = stackArray[1].split('@')[0];
-     let caller = stackArray[2].split('@')[0];
-     return [callee, caller];
+    let stack = new Error().stack;
+    let stackArray = stack.split('\n');
+    let callee = stackArray[1].split('@')[0];
+    let caller = stackArray[2].split('@')[0];
+    if (caller == "") {caller = "main"};
+    return [callee, caller];
  }
 
 function logErrorOfHash (err, hash) { // Improve no reference to id "error"
