@@ -218,42 +218,69 @@ function updateElementOfIdOfValue (id, value) {
     doc.innerHTML = value;
 }
 
-function updateInputTextOfFormOfNameOfIdOfValue(forNam, curNam, curId, value) {
+function checkOfFormOfNameOfId(forNam, inpNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.forNam',forNam);
-    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.inpNam',inpNam);
     console.log(callee+'.input.curId',curId);
-    console.log(callee+'.input.value',value);
-    
-    let form = getFormOfName(forNam);
-    
-    let elements = form.elements;
-    console.log(callee+'.elements:',elements);
 
-    var count = 0;
-    for (let e=0; e <elements.length; e++) {
-	let ele = elements[e];
-	if(ele.tagName == "INPUT" && ele.type == "text"){
-	    if (ele.id == curId && ele.name == curNam) {
-		count++;
-		ele.value = value
-	    }
-	}
+    if (forNam == "") {
+	errorMessage ('form Name were not empty', forNam, "Check", caller)   
     }
-    
-    console.log(callee+'.count:',count);
-    if( count == 0) {
-	errorMessage ('couple (name, id) exits as unique', count+' ('+name+', '+id+')', "Check", caller)   
-
+    if (inpNam == "") {
+	errorMessage ('input Name were not empty', inpNam, "Check", caller)   
+    }
+    if (curId == "") {
+	errorMessage ('Id were not empty', curId, "Check", caller)   
     }
 }
 
-function valueInputFileOfFormOfNameOfId(forNam, curNam, curId) {
+function elementInputTextOfFormOfNameOfIdOfValue(forNam, inpNam, curId) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    
+    checkOfFormOfNameOfId(forNam, inpNam, curId);
+    
+    let form = getFormOfName(forNam);
+    let elements = form.elements;
+    console.log(callee+'.elements:',elements);
+    
+    var count = 0;
+    var element = ""
+    for (let e=0; e <elements.length; e++) {
+	let ele = elements[e];
+	if(ele.tagName == "INPUT" && ele.type == "text"){
+	    if (ele.id == curId && ele.name == inpNam) {
+		count++;
+		element = ele;
+	    }
+	}
+    }
+
+    console.log(callee+'.element:',element);
+    console.log(callee+'.count:',count);
+    if( count != 1) {
+	errorMessage ('couple (name, id) exits as unique', count+' ('+element.name+', '+element.id+')', "Check", caller)   
+
+    }
+    return element;
+}
+function updateInputTextOfFormOfNameOfIdOfValue(forNam, inpNam, curId, value) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.value',value);
+    
+    checkOfFormOfNameOfId(forNam, inpNam, curId);
+    let element = elementInputTextOfFormOfNameOfIdOfValue(forNam, inpNam, curId);
+    element.value = value;
+}
+
+function valueInputFileOfFormOfNameOfId(forNam, inpNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.forNam',forNam);
-    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.inpNam',inpNam);
     console.log(callee+'.input.curId',curId);
     
     let form = getFormOfName(forNam);
@@ -265,7 +292,7 @@ function valueInputFileOfFormOfNameOfId(forNam, curNam, curId) {
     for (let e=0; e <elements.length; e++) {
 	let ele = elements[e];
 	if(ele.tagName == "INPUT" && ele.type == "file"){
-	    if (ele.id == curId && ele.name == curNam) {
+	    if (ele.id == curId && ele.name == inpNam) {
 		result = ele.value
 	    }
 	}
@@ -273,16 +300,16 @@ function valueInputFileOfFormOfNameOfId(forNam, curNam, curId) {
     console.log(callee+'.result:',result);
 
     if(result == "") {
-	throw "No such Input File element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+	throw "No such Input File element in Form '" + forNam + "' '" + inpNam + "' '"+ curId
     }
     return result;
 }
 
-function valueInputRadioOfFormOfNameOfId(forNam, curNam, curId) {
+function valueInputRadioOfFormOfNameOfId(forNam, inpNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.forNam',forNam);
-    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.inpNam',inpNam);
     console.log(callee+'.input.curId',curId);
     
     let form = getFormOfName(forNam);
@@ -294,7 +321,7 @@ function valueInputRadioOfFormOfNameOfId(forNam, curNam, curId) {
     for (let e=0; e <elements.length; e++) {
 	let ele = elements[e];
 	if(ele.tagName == "INPUT" && ele.type == "radio"){
-	    if (ele.id == curId && ele.name == curNam) {
+	    if (ele.id == curId && ele.name == inpNam) {
 		result = ele.value
 	    }
 	}
@@ -302,16 +329,16 @@ function valueInputRadioOfFormOfNameOfId(forNam, curNam, curId) {
     console.log(callee+'.result:',result);
     
     if(result == "") {
-	throw "No such Input Radio element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+	throw "No such Input Radio element in Form '" + forNam + "' '" + inpNam + "' '"+ curId
     }
     return result;
 }
 
-function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
+function valueInputTextOfFormOfNameOfId(forNam, inpNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.forNam',forNam);
-    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.inpNam',inpNam);
     console.log(callee+'.input.curId',curId);
 
     let form = getFormOfName(forNam);
@@ -323,7 +350,7 @@ function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
     for (let e=0; e <elements.length; e++) {
 	let ele = elements[e];
 	if(ele.tagName == "INPUT" && ele.type == "text"){
-	    if (ele.id == curId && ele.name == curNam) {
+	    if (ele.id == curId && ele.name == inpNam) {
 		result = ele.value
 	    }
 	}
@@ -331,18 +358,18 @@ function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
     console.log(callee+'.result:',result);
 
     if(result == "") {
-	throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+	throw "No such Input Text element in Form '" + forNam + "' '" + inpNam + "' '"+ curId
     }
     return result;
 }
 
-function valueInputOfNameOfId(curNam, curId) {
+function valueInputOfNameOfId(inpNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.inpNam',inpNam);
     console.log(callee+'.input.curId',curId);
     
-    let names = document.getElementsByName(curNam);
+    let names = document.getElementsByName(inpNam);
     console.log(callee+'.names',names);
 
     var result = "";

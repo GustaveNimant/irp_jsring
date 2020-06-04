@@ -13,6 +13,6 @@ cat \
     code/tableFunctions.html \
     code/reste.html \
     code/footBlock.html \
-    > f.html
+    > F.html
 
-echo "cp f.html "
+echo "cp F.html "
