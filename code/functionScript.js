@@ -1,108 +1,128 @@
 /**
-* these function should Not refer to any hardcoded id 
-*/
+ * these function should Not refer to any hardcoded id 
+ */
 
 function baseName(mfspath){
-     console.log('baseName.input.mfspath:',mfspath);
-     
-     var base = new String(mfspath).substring(mfspath.lastIndexOf('/') + 1); 
-     if(base.lastIndexOf(".") != -1) {       
-	 base = base.substring(0, base.lastIndexOf("."));
-     }
-     console.log('baseName.result:',result);
-     return base;
- }
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.mfspath:',mfspath);
+    
+    var base = new String(mfspath).substring(mfspath.lastIndexOf('/') + 1); 
+    if(base.lastIndexOf(".") != -1) {       
+	base = base.substring(0, base.lastIndexOf("."));
+    }
+    console.log(callee+'.result:',result);
+    return base;
+}
 
 // Button
 
- function buttonCopyFile (name) {
-     console.log('buttonCopyFile.input.name:',name);
-     let butCop = '<input type="button" value="Copy ' + name + '" onclick="">';
-     return butCop;
- }
- 
- function buttonModifyFile (name) {
-     console.log('buttonModifyFile.input.name:',name);
-     
-     let butMod = '<input type="button" value="Modify ' + name + '" onclick="unlockFileEdit ()">';
-     return butMod;
- }
+function buttonCopyFile (name) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.name:',name);
+    
+    let result = '<input type="button" value="Copy ' + name + '" onclick="">';
+    console.log(callee+'.result:',result);
+    return result;
+}
 
- function callback (tag) {
-     console.log('callback.input.tag:',tag)
-     
-     const result = obj => {
-	 displayByIdOfTagOfValue(tag, obj); 
-     };
-     return result
- }
- 
- function callbackIpfsIo (tag) {
-     console.log('callbackIpfsIo.input.tag:',tag)
+function buttonModifyFile (name) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.name:',name);
+    
+    let result = '<input type="button" value="Modify ' + name + '" onclick="unlockFileEdit ()">';
+    console.log(callee+'.result:',result);
+    return result;
+}
 
-     const substi = obj => {
-	 let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-	 displayByIdOfTagOfValue(tag, text);
-     };
-     return substi
- }
- 
- function callbackIpfsLocal (tag) {
-     console.log('callbackIpfsLocal.input.tag:',tag)
+function callback (tag) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.tag:',tag);
+    
+    const result = obj => {
+	displayByIdOfTagOfValue(tag, obj); 
+    };
+    
+    console.log(callee+'.result:',result);
+    return result
+}
 
-     const substi = obj => {
-	 let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-	 displayByIdOfTagOfValue(tag, text);
-     };
-     return substi
- }
+function callbackIpfsIo (tag) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.tag:',tag);
 
- function chopOfMfsPath(mfspath){
-     console.log('chopOfMfsPath.input.mfspath:',mfspath);
-     // MfsPath is decomposed into
-     //   [ParentDirectory, BaseName, RootName, Extension]
-     // Ex.: "/my/ceci/Z_block.txt" =>
-     //     ["/my/ceci", "Z_block.txt", "Z_block", ".txt" ]
-     if (mfspath.match('/./')) {
-	 [parent,basename] = mfspath.split('/./')
-     } else {
-	 let p = mfspath.lastIndexOf('/')
-	 // console.log('p: '+p)
-	 if (p != 0) {
-	     parent = mfspath.substr(0,p)
-	     basename = mfspath.substr(p+1)
-	 } else {
-	     parent = '/';
-	     basename = mfspath.substr(1)
-	 }
-     }
-     let d = basename.lastIndexOf('.')
-     if (d != -1) {
-	 rootName = basename.substr(0,d)
-	 ext = basename.substr(d)
-     } else {
-	 rootName = basename
-	 ext = ''
-     }
-     let result = [parent, baseName, rootName, ext]; 
-     console.log('chopOfMfsPath.result:',result);
-     return result;
- }
+    const substi = obj => {
+	let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
+	displayByIdOfTagOfValue(tag, text);
+    };
+    return substi
+}
 
- function displayByIdOfTagOfValue (tag, value) {
-     console.log('displayByIdOfTagOfValue.input.tag:',tag)
-     console.log('displayByIdOfTagOfValue.input.value:',value)
-     
-     document.getElementById(tag).innerHTML = value
- }
+function callbackIpfsLocal (tag) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.tag:',tag);
+
+    const substi = obj => {
+	let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
+	displayByIdOfTagOfValue(tag, text);
+    };
+    return substi
+}
+
+function chopOfMfsPath(mfspath){
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.mfspath:',mfspath);
+    // MfsPath is decomposed into
+    //   [ParentDirectory, BaseName, RootName, Extension]
+    // Ex.: "/my/ceci/Z_block.txt" =>
+    //     ["/my/ceci", "Z_block.txt", "Z_block", ".txt" ]
+    if (mfspath.match('/./')) {
+	[parent,basename] = mfspath.split('/./')
+    } else {
+	let p = mfspath.lastIndexOf('/')
+	if (p != 0) {
+	    parent = mfspath.substr(0,p)
+	    basename = mfspath.substr(p+1)
+	} else {
+	    parent = '/';
+	    basename = mfspath.substr(1)
+	}
+    }
+    let d = basename.lastIndexOf('.')
+    if (d != -1) {
+	rootName = basename.substr(0,d)
+	ext = basename.substr(d)
+    } else {
+	rootName = basename
+	ext = ''
+    }
+    let result = [parent, baseName, rootName, ext]; 
+    console.log(callee+'.result:',result);
+    return result;
+}
+
+function displayByIdOfTagOfValue (tag, value) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.tag:',tag);
+    console.log(callee+'.input.value:',value)
+    
+    document.getElementById(tag).innerHTML = value
+}
 
 function errorMessage (expected, found, cure, caller) {
-    console.log ('\n\nError in',caller);
-    console.log ('Expecting',expected);
-    console.log ('Found',found);
-    console.log ('Cure',cure);
+    console.error ('\n\nError in',caller);
+    console.error ('Expecting',expected);
+    console.error ('Found',found);
+    console.error ('Cure',cure);
     var stack = new Error().stack;
-    console.log ('stack',stack);
+    console.error ('stack',stack);
     throw "exit";
 }
 
@@ -113,243 +133,258 @@ function functionNameJS () {
     let caller = stackArray[2].split('@')[0];
     if (caller == "") {caller = "main"};
     return [callee, caller];
- }
+}
 
 function logErrorOfHash (err, hash) { // Improve no reference to id "error"
-     console.log("logErrorOfHash.input.err:",err);
-     console.log("logErrorOfHash.input.hash:",hash);
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.err:',err);
+    console.log(callee+'input.hash:',hash);
+    
+    const message = err.message;
+    console.log(callee+'.message:',message);
+    displayByIdOfTagOfValue("error", message); // Improve
+    
+    switch (message){
+    case "Internal Server Error":
+	var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
+	displayByIdOfTagOfValue("error", text);
+	
+	break;
+	
+    default:
+	console.log(callee+'.default.err:',œerr);
+    } // switch
+}
 
-     const message = err.message;
-     console.log("logError.message:'"+message+"'");
-     displayByIdOfTagOfValue("error", message);
-     switch (message){
-	 case "Internal Server Error":
-	     var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
-	     displayByIdOfTagOfValue("error", text);
-	     
-	     break;
-	     
-	 default:
-	     console.log("logError.default.err:'"+err+"'");
-     } // switch
- }
- 
- function logError (err) {
-     console.log("logError.input.err:",err);
-     
-     const message = err.message;
-     console.log("logError : message '"+message+"'");
-     displayByIdOfTagOfValue("error", message);
-     switch (message){
-	     
-	 case "NetworkError when attempting to fetch resource.":
-	     var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
-	     displayByIdOfTagOfValue("error", text); 
-	     break;
+function logError (err) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.err:',err);
+    
+    const message = err.message;
+    console.log(callee+'message',message);
+    displayByIdOfTagOfValue("error", message);
+    switch (message){
+	
+    case "NetworkError when attempting to fetch resource.":
+	var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
+	displayByIdOfTagOfValue("error", text); 
+	break;
+	
+    case "Failed to fetch":
+	var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
+	displayByIdOfTagOfValue("error", text); 
+	break;	     
+	
+    case "Internal Server Error":
+	//			 var text = "Internal Server Error because ipfs file path was uncorrect";
+	//			 displayByIdOfTagOfValue("error", text); 
+	return false;
+	break;
+	
+    case "Cannot read property 'length' of null":
+	console.log(callee+'.Cannot read property length of null');
+	displayByIdOfTagOfValue("error", '');
+	var dir = document.getElementById('CurrentMfsDirectoryId').value;
+	console.log(callee+'.dir', dir);
+	updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	break;
+	
+    case "entries is null":
+        console.log(callee+':entries is null');
+	displayByIdOfTagOfValue("error", '');
+	var dir = document.getElementById('CurrentMfsDirectoryId').value;
+	console.log(callee+'.dir', dir);
+	updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	break;
 
-	 case "Failed to fetch":
-	     var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
-	     displayByIdOfTagOfValue("error", text); 
-	     break;	     
+    case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
+	displayByIdOfTagOfValue("error", '');
+	break;
+	
+    default:
+	console.log(callee+'"default err:',);
+    } // switch
+}
 
-	 case "Internal Server Error":
-	     //			 var text = "Internal Server Error because ipfs file path was uncorrect";
-	     //			 displayByIdOfTagOfValue("error", text); 
-	     return false;
-	     break;
-	     
-	 case "Cannot read property 'length' of null":
-	     console.log('logError', "Cannot read property 'length' of null");
-	     displayByIdOfTagOfValue("error", '');
-	     var dir = document.getElementById('CurrentMfsDirectoryId').value;
-	     console.log('logError dir', dir);
-	     updateElementOfIdOfValue('h3-title', dir + ' is empty');
-	     break;
+function updateElementOfIdOfValue (id, value) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.id',id);
+    console.log(callee+'.input.value',value);
 
-	 case "entries is null":
-	     console.log('logError', 'entries is null');
-	     displayByIdOfTagOfValue("error", '');
-	     var dir = document.getElementById('CurrentMfsDirectoryId').value;
-	     console.log('logError dir', dir);
-	     updateElementOfIdOfValue('h3-title', dir + ' is empty');
-	     break;
-
-	 case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
-	     displayByIdOfTagOfValue("error", '');
-	     break;
-	     
-	 default:
-	     console.log("logError : default err '"+err+"'");
-     } // switch
- }
-
- function updateElementOfIdOfValue (id, value) {
-     let doc = document.getElementById(id);
-     doc.innerHTML = value;
- }
+    let doc = document.getElementById(id);
+    doc.innerHTML = value;
+}
 
 function updateInputTextOfFormOfNameOfIdOfValue(forNam, curNam, curId, value) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-    
     console.log(callee+'.input.forNam',forNam);
     console.log(callee+'.input.curNam',curNam);
     console.log(callee+'.input.curId',curId);
     console.log(callee+'.input.value',value);
     
     let form = getFormOfName(forNam);
-     
-     let elements = form.elements;
-     console.log(callee+'.elements:',elements);
-     
-     for (let e=0; e <elements.length; e++) {
-	 let ele = elements[e];
-	 if(ele.tagName == "INPUT" && ele.type == "text"){
-	     if (ele.id == curId && ele.name == curNam) {
-		 ele.value = value
-	     }
-	 }
-     }
-     console.log(callee+'.result:',result);
+    
+    let elements = form.elements;
+    console.log(callee+'.elements:',elements);
 
- }
- 
- function valueInputFileOfFormOfNameOfId(forNam, curNam, curId) {
+    var count = 0;
+    for (let e=0; e <elements.length; e++) {
+	let ele = elements[e];
+	if(ele.tagName == "INPUT" && ele.type == "text"){
+	    if (ele.id == curId && ele.name == curNam) {
+		count++;
+		ele.value = value
+	    }
+	}
+    }
+    
+    console.log(callee+'.count:',count);
+    if( count == 0) {
+	errorMessage ('couple name and id were unique', count+' ('+name+', '+id+')', "Check", caller)   
+
+    }
+}
+
+function valueInputFileOfFormOfNameOfId(forNam, curNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.forNam',forNam);
-     console.log(callee+'.input.curNam',curNam);
-     console.log(callee+'.input.curId',curId);
+    console.log(callee+'.input.forNam',forNam);
+    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.curId',curId);
+    
+    let form = getFormOfName(forNam);
+    
+    let elements = form.elements;
+    console.log(callee+'.elements:',elements);
+    
+    var result = "";
+    for (let e=0; e <elements.length; e++) {
+	let ele = elements[e];
+	if(ele.tagName == "INPUT" && ele.type == "file"){
+	    if (ele.id == curId && ele.name == curNam) {
+		result = ele.value
+	    }
+	}
+    }
+    console.log(callee+'.result:',result);
 
-     let form = getFormOfName(forNam);
-     
-     let elements = form.elements;
-     console.log(callee+'.elements:',elements);
-     
-     var result = "";
-     for (let e=0; e <elements.length; e++) {
-	 let ele = elements[e];
-	 if(ele.tagName == "INPUT" && ele.type == "file"){
-	     if (ele.id == curId && ele.name == curNam) {
-		 result = ele.value
-	     }
-	 }
-     }
-     console.log(callee+'.result:',result);
+    if(result == "") {
+	throw "No such Input File element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+    }
+    return result;
+}
 
-     if(result == "") {
-	 throw "No such Input File element in Form '" + forNam + "' '" + curNam + "' '"+ curId
-     }
-     return result;
- }
-
- function valueInputRadioOfFormOfNameOfId(forNam, curNam, curId) {
+function valueInputRadioOfFormOfNameOfId(forNam, curNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-     console.log('valueInputRadioOfFormOfNameOfId.input.forNam',forNam);
-     console.log('valueInputRadioOfFormOfNameOfId.input.curNam',curNam);
-     console.log('valueInputRadioOfFormOfNameOfId.input.curId',curId);
-     
-     let form = getFormOfName(forNam);
-     
-     let elements = form.elements;
-     console.log('valueInputRadioOfFormOfNameOfId.elements:',elements);
-     
-     var result = "";
-     for (let e=0; e <elements.length; e++) {
-	 let ele = elements[e];
-	 if(ele.tagName == "INPUT" && ele.type == "radio"){
-	     if (ele.id == curId && ele.name == curNam) {
-		 result = ele.value
-	     }
-	 }
-     }
-     console.log('valueInputRadioOfFormOfNameOfId.result:',result);
-     
-     if(result == "") {
-	 throw "No such Input Radio element in Form '" + forNam + "' '" + curNam + "' '"+ curId
-     }
-     return result;
- }
- 
- function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
+    console.log(callee+'.input.forNam',forNam);
+    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.curId',curId);
+    
+    let form = getFormOfName(forNam);
+    
+    let elements = form.elements;
+    console.log(callee+'.elements:',elements);
+    
+    var result = "";
+    for (let e=0; e <elements.length; e++) {
+	let ele = elements[e];
+	if(ele.tagName == "INPUT" && ele.type == "radio"){
+	    if (ele.id == curId && ele.name == curNam) {
+		result = ele.value
+	    }
+	}
+    }
+    console.log(callee+'.result:',result);
+    
+    if(result == "") {
+	throw "No such Input Radio element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+    }
+    return result;
+}
+
+function valueInputTextOfFormOfNameOfId(forNam, curNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.forNam',forNam);
-     console.log(callee+'.input.curNam',curNam);
-     console.log(callee+'.input.curId',curId);
+    console.log(callee+'.input.forNam',forNam);
+    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.curId',curId);
 
-     let form = getFormOfName(forNam);
-     
-     let elements = form.elements;
-     console.log(callee+'.elements:',elements);
-     
-     var result = "";
-     for (let e=0; e <elements.length; e++) {
-	 let ele = elements[e];
-	 if(ele.tagName == "INPUT" && ele.type == "text"){
-	     if (ele.id == curId && ele.name == curNam) {
-		 result = ele.value
-	     }
-	 }
-     }
-     console.log(callee+'.result:',result);
+    let form = getFormOfName(forNam);
+    
+    let elements = form.elements;
+    console.log(callee+'.elements:',elements);
+    
+    var result = "";
+    for (let e=0; e <elements.length; e++) {
+	let ele = elements[e];
+	if(ele.tagName == "INPUT" && ele.type == "text"){
+	    if (ele.id == curId && ele.name == curNam) {
+		result = ele.value
+	    }
+	}
+    }
+    console.log(callee+'.result:',result);
 
-     if(result == "") {
-	 throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
-     }
-     return result;
- }
- 
- function valueInputOfNameOfId(curNam, curId) {
+    if(result == "") {
+	throw "No such Input Text element in Form '" + forNam + "' '" + curNam + "' '"+ curId
+    }
+    return result;
+}
+
+function valueInputOfNameOfId(curNam, curId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-     console.log('valueInputOfNameOfId.input.curNam',curNam);
-     console.log('valueInputOfNameOfId.input.curId',curId);
-     
-     let names = document.getElementsByName(curNam);
-     console.log('valueInputOfNameOfId.names',names);
+    console.log(callee+'.input.curNam',curNam);
+    console.log(callee+'.input.curId',curId);
+    
+    let names = document.getElementsByName(curNam);
+    console.log(callee+'.names',names);
 
-     var result = "";
-     for (let n=0; n <names.length; n++) {
-	 if (names[n].id == curId) {
-	     result = names[n].value;
-	 }
-     }
-     console.log('valueInputOfNameOfId.result',result);
-     return result
- }
+    var result = "";
+    for (let n=0; n <names.length; n++) {
+	if (names[n].id == curId) {
+	    result = names[n].value;
+	}
+    }
+    console.log(callee+'.result',result);
+    return result
+}
 
 // Json
 
- function sizeOfJsonOfKey (json, key) {
+function sizeOfJsonOfKey (json, key) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-     let siz = json[key]['Size']
-     if (siz > 0) { return ' ('+siz+' octets) '; }
-     else {return "";}
- }
+    let siz = json[key]['Size']
+    if (siz > 0) { return ' ('+siz+' octets) '; }
+    else {return "";}
+}
 
- function typeOfJsonOfKey (json, key) {
+function typeOfJsonOfKey (json, key) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-     console.log ('typeOfJsonOfKey.input.json:', json);
-     console.log ('typeOfJsonOfKey.input.key:', key);
+    console.log(callee+'.input.json:', json);
+    console.log(callee+'.input.key:', key);
 
-     let result = json[key]['Type'];
-     console.log ('typeOfJsonOfKey.result:', result);
-     return result;
- }
+    let result = json[key]['Type'];
+    console.log(callee+'.result:', result);
+    return result;
+}
 
- function typeImageOfJsonOfKey (json, key) {
+function typeImageOfJsonOfKey (json, key) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-     console.log('typeImageOfJsonOfKey.input.json',json);
-     console.log('typeImageOfJsonOfKey.input.key',key);
+    console.log(callee+'.input.json',json);
+    console.log(callee+'.input.key',key);
 
-     let type = typeOfJsonOfKey (json, key);
-     result = imageOfType(type);
-     console.log ('typeImageOfJsonOfKey.result:', result);
-     return result;
- }
+    let type = typeOfJsonOfKey (json, key);
+    result = imageOfType(type);
+    console.log (callee+'.result:', result);
+    return result;
+}
 

@@ -12,7 +12,7 @@
      console.log(callee+'.input.url:',url);
 
      return fetch(url, { method: "GET"} )
-	 .then( resp => {console.log('fetchGetJson.resp',resp); return resp.json()} )
+	 .then( resp => {console.log(callee+'.resp',resp); return resp.json()} )
  }
 
  function fetchGetPinned (url) {
@@ -21,7 +21,7 @@
      console.log(callee+'.input.url:',url);
 
      return fetch(url,{ method: "GET"} )
-	 .then( resp => {console.log('fetchGetPinned resp',resp.ok); return resp.ok} )
+	 .then( resp => {console.log(callee+'.resp.ok',resp.ok); return resp.ok} )
  }
 
  function fetchPostMkdirForm(mfspath, url) {
