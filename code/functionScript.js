@@ -244,7 +244,7 @@ function updateInputTextOfFormOfNameOfIdOfValue(forNam, curNam, curId, value) {
     
     console.log(callee+'.count:',count);
     if( count == 0) {
-	errorMessage ('couple name and id were unique', count+' ('+name+', '+id+')', "Check", caller)   
+	errorMessage ('couple (name, id) exits as unique', count+' ('+name+', '+id+')', "Check", caller)   
 
     }
 }

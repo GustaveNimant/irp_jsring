@@ -1,8 +1,8 @@
 <!-- Block copy -->
 <div class="whiteOnDarkBlue">Copy to Mfs path</div><br>
-<form method="POST" name="CopyBlock">
-    Source<input name="pathSource" type="text" placeholder="Path or hash"><br>
-    Target<input name="pathTarget" type="text" placeholder="Path"><br>
+<form method="POST" name="CopyForm">
+    Source<input type="text" name="CopyName" id="pathSourceId" placeholder="Path or hash"><br>
+    Target<input type="text" name="CopyName" id="pathTargetId" placeholder="Path"><br>
     <input type="button" onclick="copyHashOrMfsToMfs()" value="Copy Source">
     <div class="greenBackground" id="fileCopied"></div>
 </form><br>
@@ -23,8 +23,8 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     var from = provideByName("pathSource");
-     let to   = provideByName("pathTarget");
+     var from = valueInputTextOfFormOfNameOfId("CopyForm", "CopyName", "pathSourceId");
+     let to   = valueInputTextOfFormOfNameOfId("CopyForm", "CopyName", "pathTargetId");
      
      if ( from.charAt(0) != '/') {
 	 from = '/ipfs/' + from;

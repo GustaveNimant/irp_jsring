@@ -4,22 +4,25 @@
 	<img src="images/back.png" width="30" height="25" title="Click to Go Back" onclick="goBack()">
 	<span class="title">
 	    Current Mfs directory <input type="text" name="CurrentMfsDirectoryName" id="CurrentMfsDirectoryId" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
-	    <input type="button" onClick="getCurrentMfsDirectory()" id="CurrentMfsDirectoryClickId" value="Display">
+	    <input type="button" onClick="getCurrentMfsDirectory()" value="Display">
 	    <input type="button" onClick="document.location.reload(true)" value="Reset page">
 	</span>
-	<pre id="ls"></pre>
+	<!-- <pre id="ls"></pre> -->
+    </center>
 </form>
 
-<div class="typeAndHash">
-    <div>This Mfs <b><span id="type">type</span></b> has Hash <b><span id="hash">hash</span></b></div>
-    <span style="color:red" id="error"></span>
-    <div>
-    </center>	    
-    <table id=ls-result>
-	<tr><th colspan=4><h3 id="h3-title" class="whiteOnDarkBlue"></h3></th>
-    </table>
+<center>
+    <div class="typeAndHash">
+	<div>This Mfs <b><span id="type">type</span></b> has Hash <b><span id="hash">hash</span></b></div>
+	<span style="color:red" id="error"></span>
+	<div>
+</center>
+
+<table id=ls-result>
+    <tr><th colspan=4><h3 id="h3-title" class="whiteOnDarkBlue"></h3></th>
+</table>
+	</div>
     </div>
-</div>
 
 <script>
 
