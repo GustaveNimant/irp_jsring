@@ -11,7 +11,7 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     let msfDirPath = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     let msfDirPath = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
      console.log(callee+'.mfsDirPath:',msfDirPath);
 
      let mfsDirName = document.getElementById('CreateDirectoryId').value;

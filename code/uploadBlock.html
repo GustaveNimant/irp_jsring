@@ -20,10 +20,10 @@
      console.log(callee+'form:',form);
      console.log(callee+'form.elements:',form.elements);
      
-     let fakepath = valueInputFileOfFormOfNameOfId("UploadForm", "nameoffile", "FakePathId"); 
+     let fakepath = valueInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "FakePathId"); 
      console.log(callee+'fakepath:',fakepath);
 
-     let mfsdir = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
      console.log(callee+'mfsdir:',mfsdir);
 
      let mfsdirOld = mfsdir;
