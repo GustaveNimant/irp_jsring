@@ -1,18 +1,18 @@
 #!/bin/bash
 
 cat \
-    html/headBlock.html \
-    html/uploadBlock.html \
-    html/createDirectoryBlock.html \
-    html/removeBlock.html \
-    html/copyBlock.html \
-    html/pinBlock.html \
-    html/currentMfsDirectoryBlock.html \
-    html/hiddenForDirBlock.html \
-    html/windowOnLoad.html \
-    html/tableFunctions.html \
-    html/reste.html \
-    html/footBlock.html \
+    code/headBlock.html \
+    code/uploadBlock.html \
+    code/createDirectoryBlock.html \
+    code/removeBlock.html \
+    code/copyBlock.html \
+    code/pinBlock.html \
+    code/currentMfsDirectoryBlock.html \
+    code/hiddenForDirBlock.html \
+    code/windowOnLoad.html \
+    code/tableFunctions.html \
+    code/reste.html \
+    code/footBlock.html \
     > f.html
 
 echo "cp f.html "
