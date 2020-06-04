@@ -6,11 +6,12 @@ function checkOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId) {
     console.log(callee+'.input.inpNam',inpNam);
     console.log(callee+'.input.curId',curId);
 
+    let type_a = ["file", "text"];
     if (forNam == "") {
 	errorMessage ('form Name were not empty', forNam, "Check", caller)   
     }
-    if (inpTyp == "") {
-	errorMessage ('input Type were not empty', inpTyp, "Check", caller)   
+    if (! type_a.includes (inpTyp)) {
+	errorMessage ('input Type were "text" or "file"', inpTyp, "Check", caller)   
     }
     if (inpNam == "") {
 	errorMessage ('input Name were not empty', inpNam, "Check", caller)   

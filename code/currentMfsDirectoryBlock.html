@@ -162,33 +162,6 @@
 	 .catch(logError)
  }
 
- function callbackTuple (tag1, tag2) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.tag1:',tag1)
-     console.log(callee+'.input.tag2:',tag2)
-     
-     const substi = ([obj1, obj2]) => {
-	 let url = linkIpfsHash (obj1);
-	 updateElementOfIdOfValue(tag1, url);
-	 updateElementOfIdOfValue(tag2, obj2);
-     };
-     return substi
- }
-
- function validate (resp) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.resp:',resp);
-     
-     if (resp.status >= 200 && resp.status < 300) {
-	 return Promise.resolve(resp)
-     } else {
-	 console.log(callee+'.resp.status:',resp.status)
-	 return Promise.reject(new Error(resp.statusText))
-     }
- }
-
  function linkIpfsHash (hash) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);

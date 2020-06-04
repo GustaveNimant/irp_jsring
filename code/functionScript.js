@@ -1,7 +1,6 @@
 /**
  * these function should Not refer to any hardcoded id 
  */
-
 function baseName(mfspath){
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
@@ -74,6 +73,20 @@ function callbackIpfsLocal (tag) {
     return substi
 }
 
+ function callbackTuple (tag1, tag2) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.tag1:',tag1)
+     console.log(callee+'.input.tag2:',tag2)
+     
+     const substi = ([obj1, obj2]) => {
+	 let url = linkIpfsHash (obj1);
+	 updateElementOfIdOfValue(tag1, url);
+	 updateElementOfIdOfValue(tag2, obj2);
+     };
+     return substi
+ }
+
 function chopOfMfsPath(mfspath){
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
@@ -107,13 +120,22 @@ function chopOfMfsPath(mfspath){
     return result;
 }
 
-function displayByIdOfTagOfValue (tag, value) {
+function displayByIdOfTagOfValue (id, value) { // Improve 
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.tag:',tag);
+    console.log(callee+'.input.id:',id);
     console.log(callee+'.input.value:',value)
     
-    document.getElementById(tag).innerHTML = value
+    document.getElementById(id).innerHTML = value
+}
+
+function functionNameJS () {
+    let stack = new Error().stack;
+    let stackArray = stack.split('\n');
+    let callee = stackArray[1].split('@')[0];
+    let caller = stackArray[2].split('@')[0];
+    if (caller == "") {caller = "main"};
+    return [callee, caller];
 }
 
 function errorMessage (expected, found, cure, caller) {
@@ -124,15 +146,6 @@ function errorMessage (expected, found, cure, caller) {
     var stack = new Error().stack;
     console.error ('stack',stack);
     throw "exit";
-}
-
-function functionNameJS () {
-    let stack = new Error().stack;
-    let stackArray = stack.split('\n');
-    let callee = stackArray[1].split('@')[0];
-    let caller = stackArray[2].split('@')[0];
-    if (caller == "") {caller = "main"};
-    return [callee, caller];
 }
 
 function logErrorOfHash (err, hash) { // Improve no reference to id "error"
@@ -218,24 +231,18 @@ function updateElementOfIdOfValue (id, value) {
     doc.innerHTML = value;
 }
 
-function valueInputOfNameOfId(inpNam, curId) {
-    let [callee, caller] = functionNameJS();
-    console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.inpNam',inpNam);
-    console.log(callee+'.input.curId',curId);
-    
-    let names = document.getElementsByName(inpNam);
-    console.log(callee+'.names',names);
-
-    var result = "";
-    for (let n=0; n <names.length; n++) {
-	if (names[n].id == curId) {
-	    result = names[n].value;
-	}
-    }
-    console.log(callee+'.result',result);
-    return result
-}
+ function validate (resp) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.resp:',resp);
+     
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     } else {
+	 console.log(callee+'.resp.status:',resp.status)
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
 
 // Json
 
