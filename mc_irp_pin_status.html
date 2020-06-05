@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+ input: name=hash
+ output: button.img.pinimg
+ action: input.type=button checkpin
+
+
+ What we want ?
+
+ 1. update output on name change
+ 2. toggle pin on icon's click
+
+-->
+<html>
+    <body>
+	<div><!-- pseudo form -->
+	    Ipfs Hash <input name="hash"
+        type="text" value="" size="50px" placeholder="some hash">
+      <button name=pin onclick="togglePinStatus(this.ParentNode,this.value)" value="?")><img class=pinimg style="height: 24px;"></button>
+	    <input type="button" onClick="updatePinButton()" value="check pin">
+	</div>
+
+	<p style="color:green" id="result"></p>
+	<p style="color:red" id="error"></p>
+	
+
+<!-- michel's
+	<script src="../snippets/js/essential.js"></script>
+	<script src="https://michel47.github.io/snippets/js/essential.js"></script>
+	<script src="https://willforge.github.io/jsring/js/ipfs.js"></script>
+-->
+
+	<!-- note: api_url is defined in ipfs.js -->
+
+	<script>
+
+  var stored = {};
+  var path = 'button'
+
+  async function updatePinButton() { // main
+    let status = await provide_status(path);
+    return display_PinButton(status);
+  }
+
+  async function provide_status(path) {
+    path += '/status'
+    let hash = getDataHash(path);
+    if (typeof(stored['status']) != 'undefined' && stored['status'] != null) { // re-use
+      return stored['status']
+    } else { // re-build
+      let status = await build_PinStatus(hash)
+      return status;
+    }
+  }
+
+  function display_PinButton(status) { // output
+    let bt = document.getElementsByName('pin')[0]
+    let img = bt.getElementsByTagName('img')[0]
+    img.src = 'images/pinned-'+status+'-200.png';
+    bt.value = status
+    console.log('display: status='+status);
+    stored['display'] = 'ok';
+    return true;
+  }
+
+  function getDataHash(path) { // get data (input)
+    let inel = document.getElementsByName('hash')[0]
+    let hash = inel.value;
+    if (hash != stored['hash']) {
+      console.log('getdata: '+path+'/hash=',hash)
+      clear_path(path+'/hash')
+    } else {
+      console.log('getdata: '+path+'/hash',hash)
+    }
+    stored['hash'] = hash;
+    return hash;
+  }
+
+  function clear_path(path) {
+    console.log('clearpath: '+path);
+    let vars = path.split('/');
+    for (let i = 0; i < vars.length -1 ; i++) {
+      console.log('clear: '+vars[i]+' was: '+stored[vars[i]]);
+      stored[vars[i]] = null;
+    }
+  }
+
+
+ function build_PinStatus(hash) { // build & store
+  let status;
+   if (hash.match(/8bV/)) { status = 'direct'; }
+   else if (hash.match(/qco/)) { status = 'unpinned'; }
+   else { status = 'indirect'; }
+  stored['status'] = status;
+  return status
+ }  
+
+
+ 
+
+	</script>
+    </body>
+</html>
+
