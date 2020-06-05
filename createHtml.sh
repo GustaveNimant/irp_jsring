@@ -1,16 +1,29 @@
 #!/bin/bash
 
-cat \
-    html/headBlock.html \
-    html/uploadBlock.html \
-    html/createDirectoryBlock.html \
-    html/removeBlock.html \
-    html/pinBlock.html \
-    html/currentMfsDirectoryBlock.html \
-    html/hiddenForDirBlock.html \
-    html/windowOnLoad.html \
-    html/tableFunctions.html \
-    html/reste.html \
-    > f.html
+echo '<div id="leftSideBlock">' > A.html
+echo '</div>' > B.html
+	    
 
-echo "cp f.html "
+cat \
+    A.html \
+    code/uploadBlock.html \
+    code/createDirectoryBlock.html \
+    code/removeBlock.html \
+    code/copyBlock.html \
+    code/repoStats.html \
+    code/pinBlock.html \
+    B.html \
+    > C.html
+
+cat \
+    code/headBlock.html \
+    C.html \
+    code/currentMfsDirectoryBlock.html \
+    code/hiddenForDirBlock.html \
+    code/windowOnLoad.html \
+    code/tableFunctions.html \
+    code/reste.html \
+    code/footBlock.html \
+    > F.html
+
+echo "cp F.html "

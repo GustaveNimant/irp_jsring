@@ -1,0 +1,929 @@
+<!-- HeadBlock -->
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="utf-8">
+	<title>Mfs Files Management</title>
+	<link rel="stylesheet" href="css/style.css"> 
+	<script src="https://michel47.github.io/snippets/js/essential.js"></script>
+	<script src="https://willforge.github.io/jsring/js/ipfs.js"></script>
+	<script src="html/functionScript.js"></script>
+	<script src="html/ipfsScript.js"></script>
+    </head>
+    <body>
+
+	<div class="header">List of MFS Files and Directories</div>
+	
+	<div id="leftSideBlock">
+		
+		<!-- End of HeadBlock -->
+<!-- UploadBlock -->
+<div class="whiteOnDarkBlue">Upload file to <span id="UploadId">Mfs Directory</span></div><br>
+
+<form method="POST" name="UploadForm">
+    <input type="file"  name="nameoffile" id="FakePathId"><br>
+    <input type="radio" name="nameoffile" id="UploadIdOld" checked>Upload with name kept<br>
+    <input type="radio" name="nameoffile" id="UploadIdNew">
+    <input type="text"  name="nameoffile" id="idUploadKeptName" onchange="checkedRadio()" placeholder="Upload with name changed"><br>
+    <input type="button" onclick="uploadFileToCurrentMfs()" value="Upload"><br>
+    <div class="fileUploadedAndRemoved" id="fileUploaded"></div>
+</form><br>
+
+<script>
+ 
+ function uploadFileToCurrentMfs() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     let form = getFormOfName("UploadForm");
+     console.log(callee+'form:',form);
+     console.log(callee+'form.elements:',form.elements);
+     
+     let fakepath = valueInputFileOfFormOfNameOfId("UploadForm", "nameoffile", "FakePathId"); 
+     console.log(callee+'fakepath:',fakepath);
+
+     let mfsdir = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     console.log(callee+'mfsdir:',mfsdir);
+
+     let mfsdirOld = mfsdir;
+     let file = form.elements[0].files[0];
+     console.log(callee+'form.element[0].files:',form.elements[0].files);
+     console.log(callee+'file:',file)
+
+     if (document.getElementById('UploadIdNew').checked) {
+	 var name = document.getElementById('idUploadKeptName').value;
+	 console.log(callee+'name:',name);
+     } else {
+	 var name = form.elements[0]['files'][0].name;
+	 console.log(callee+'old.name:',name);
+     }
+     console.log(callee+'name:',name);
+     mfsdir += '/';
+     console.log(callee+'mfsdir 1:',mfsdir);
+     mfsdir += name;
+     console.log(callee+'mfsdir 2:',mfsdir);
+
+     let reader = new FileReader();
+     reader.onload = event => {
+	 const content_on_load = event.target.result;
+	 console.log(callee+'content_on_load:',content_on_load)
+	 writeOfMfsFilePathOfContent(mfsdir, content_on_load)
+		.then(callback('hash'))
+     }
+
+     reader.readAsText(file,'UTF-8') 
+
+     let formData = new FormData();
+     formData.append("file", file);
+     console.log(callee+'.formData:',formData)
+     let val = "File '"+name+"' uploaded to "+mfsdirOld
+     updateElementOfIdOfValue('fileUploaded', val);
+     console.log (callee+'val:', val);
+     getCurrentMfsDirectory();
+ }
+
+ function writeOfMfsFilePathOfContent(mfsFilePath, content) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfsFilePath:',mfsFilePath);
+     console.log(callee+'.input.content:',content)
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/write?arg=' + mfsFilePath + '&create=1';
+     console.log(callee+'.url:',url);
+     return fetchPostTextForm(url, content)
+	 .then( _ => hashOfMfsFilePath(mfsFilePath) )
+	 .then( _ => {getCurrentMfsDirectory()})
+	 .catch(logError)
+ }
+
+ function hashOfMfsFilePath(mfsFilePath) {
+     let [callee, caller] = functionNameJS();
+     console.log(callee+'.input.mfsFilePath:',mfsFilePath);
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
+     console.log(callee+'url',url);
+     
+     let result = fetchGetTextForm(url)
+	 .then( obj => obj.json())
+	 .then( json => {
+	     console.log(callee+'.json',json);
+	     console.log(callee+'json.Type',json.Type);
+	     if (json.Type == "error") {
+		 const message = 'Error from '+callee+' : '+json.Message;
+		 console.log(callee+'.message',message);
+		 updateElementOfIdOfValue("error", message);
+	     }
+	     return json.Hash} )
+     return result;
+ }
+ 
+</script>
+<!-- End of UploadBlock -->
+<!-- CreateDirectoryBlock -->
+<div class="whiteOnDarkBlue">Create directory to <span id="currentMfsDir"></span></div><br>
+<form method="POST" name="CreateDirectoryForm">
+    <input type="text" name="CreateDirectoryName" id="CreateDirectoryId"><br>
+    <input type="button" name="CreateDirectoryName" onclick="createDirectory()" value="Create Directory"><br>
+    <div class="fileUploadedAndRemoved" id="directoryCreated"></div>
+</form><br>
+
+<script>
+ function createDirectory() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     let msfDirPath = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     console.log(callee+'.mfsDirPath:',msfDirPath);
+
+     let mfsDirName = document.getElementById('CreateDirectoryId').value;
+     console.log(callee+'.mfsDirName:',mfsDirName);
+     
+     if (msfDirPath == '/'){
+	 var path_url = msfDirPath + mfsDirName;
+     }else {
+	 var path_url = msfDirPath + '/' + mfsDirName;
+     }
+     console.log(callee+'.path_url:',path_url);
+     
+     const api_url = 'http://127.0.0.1:5001/api/v0/';
+     var url = api_url + 'files/mkdir?arg=' + path_url;
+     console.log(callee+'.url:', url);
+     
+     return fetchPostMkdirForm(path_url, url)
+	 .then(_ => {getCurrentMfsDirectory()})
+	 .catch(logError)
+ }
+
+</script>
+<!-- End of CreateDirectoryBlock -->
+<!-- RemoveBlock -->
+<div class="whiteOnDarkBlue">Remove file or directory</div><br>
+
+<form method="POST" name="RemoveForm">
+    <input type="text" id="idRemoveFileOrDirectory" disabled><br>
+    <input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
+    <div class="fileUploadedAndRemoved" id="fileRemoved"></div>
+</form><br>
+
+<script>
+ function removeElement () {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     var mfspath = document.getElementById('idRemoveFileOrDirectory').value;
+     console.log(callee+'.mfspath:',mfspath);
+     
+     let conf_mess = 'Confirm removing of ' + mfspath;
+     var conf = confirm(conf_mess);
+     if (conf == true) {
+	 removeOfMfsPath (mfspath)
+     }		 
+ }
+ 
+ function removeOfMfsPath (mfspath) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfspath:',mfspath);
+     
+     console.log(callee+'.chopOfMfsPath.mfspath', chopOfMfsPath (mfspath));
+     
+     let [parent, rootName, basename, ext] = chopOfMfsPath (mfspath);
+     console.log(callee+'.parent:',parent);
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/'
+
+     var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
+     console.log(callee+'.url:',url);
+     return fetch(url, { method: "POST", mode: 'cors'})
+	 .then (validate)
+	 .then (resp => {console.log(callee+'.resp',resp)})
+	 .then (_ => {document.getElementById('CurrentMfsDirectoryId').value = parent})
+     	 .then (_ => {getCurrentMfsDirectory()})
+	 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
+	 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('CurrentMfsDirectoryId').value})
+	 .catch(err => logError(err))
+ }	 
+
+ function updateElementOfIdOfValue (id, value) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     console.log(callee+'.input.id:',id);
+     console.log(callee+'.input.value:',value);
+
+     let doc = document.getElementById(id);
+     doc.innerHTML = value;
+ }
+
+</script>
+<!-- End of RemoveBlock -->
+<!-- Block copy -->
+<div class="whiteOnDarkBlue">Copy to Mfs path</div><br>
+<form method="POST" name="CopyBlock">
+    Source<input name="pathSource" type="text" placeholder="Path or hash"><br>
+    Target<input name="pathTarget" type="text" placeholder="Path"><br>
+    <input type="button" onclick="copyHashOrMfsToMfs()" value="Copy Source">
+    <div class="greenBackground" id="fileCopied"></div>
+</form><br>
+
+<script>
+ function provideByName (name) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.name', name);
+     let element = document.getElementsByName(name)[0];
+     console.log(callee+'.element', element);
+     let data = element.value;
+     console.log(callee+'.data', data);
+     return data;
+ }
+ 
+ function copyHashOrMfsToMfs() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     var from = provideByName("pathSource");
+     let to   = provideByName("pathTarget");
+     
+     if ( from.charAt(0) != '/') {
+	 from = '/ipfs/' + from;
+     }
+     
+     var url = api_url + 'files/cp?arg='+from+'&arg='+to
+     return fetchPostText(url)
+     	 .then(validate)
+	 .then(resp => resp.statusText)
+	 .then(callback('fileCopied'))
+	 .catch(logError)
+ }
+ 
+</script>
+<!-- PinBlock -->
+<div class="whiteOnDarkBlue">Meaning of the Pins</div>
+<img style="height: 24px;" src="images/pinned-unpinned-200.png">unpinned
+<img style="height: 24px;" src="images/pinned-recursive-200.png">recursive
+<img style="height: 24px;" src="images/pinned-direct-200.png">direct<br>
+<img style="height: 24px;" src="images/pinned-indirect-200.png">indirect
+<img style="height: 24px;" src="images/pinned-indirect-through-200.png">indirect through 
+
+</div> <!--<div id="leftSideBlock">  -->
+
+<script>
+ function createPinButtonOfHash (hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.hash:',hash);
+
+     let but = '<button type="submit" class="pinButton" onclick="togglePinStatus(this.value, this.name)" name="'+hash+'">';
+
+     but += '<img src="images/questionmark.png" class="' + hash + '" style="height: 24px;">';
+     but += '</button>';
+     console.log(callee+'.but:', but);
+
+     updatePinButtonOfHash(hash);
+     return but;
+ }
+
+ function togglePinStatus(status, hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.status:',status);
+     console.log(callee+'.input.hash:',hash);
+     
+     if (status == 'unpinned' || status == 'indirect-through') {
+	 return ipfsPinAdd(hash)
+	     .then( _ => { updatePinButtonOfHash(hash) })
+	 console.log(callee+'.status:',status); // Improve
+     } else if (status == 'direct' || status == 'recursive' || status == 'indirect-through')  {
+	 return ipfsPinRm(hash)
+	     .then( _ => { updatePinButtonOfHash(hash) })
+     } else {
+	 console.log(callee+'.status:',status); // Improve
+     }
+ }
+ 
+ function updatePinButtonOfHash(hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     // Update button defined in createPinButtonOfHash (hash)
+     // with name=hash. Toggling by clicking.
+     console.log(callee+'.input.hash:',hash);
+
+     return getPinStatus(hash)
+	 .then( status => {
+	     console.log(callee+'.status 1:',status);
+	     //status : 'pinned-indirect through Qma84TiiJye6mp4iJZ8ZtZBWqNEqJ3JyAfMXFXy94jgE2A'
+	     if (status.indexOf('through') >= 0) {
+		 let string = status.split(' ');
+		 console.log(callee+'.string:',string);
+		 var thrHash = string[2];
+		 console.log(callee+'.through.hash:', thrHash);
+		 var status = string[0]+'-'+string[1];
+	     }
+	     console.log(callee+'.status 2:',status);
+	     img = document.getElementsByClassName(hash)[0];
+	     if ( thrHash ) {
+		 img.title = 'indirect through ' + thrHash;
+	     } else {
+		 img.title = status;
+	     }
+	     img.src = 'images/pinned-'+status+'-200.png';
+	     button = document.getElementsByName(hash)[0];
+	     button.value = status;
+	     console.log(callee+'.img:',img);
+	     console.log(callee+'.button:',button);
+	 })
+	 .catch(logError)
+ }
+ 
+ function getPinStatus(hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.hash:',hash);
+     
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+     return fetchRespNoCatch(url)
+	 .then( obj => {
+	     let status;
+	     if (typeof(obj.Code) == 'undefined') {
+		 status = obj.Keys[hash].Type
+	     } else {
+		 status = 'unpinned'
+	     }
+	     console.log(callee+': '+hash+" \u21A6",status);
+	     return status
+	 })
+	 .catch( obj => { logError('getPinStatus.catch',obj) })
+ }
+
+ function ipfsPinAdd(hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.hash:',hash);
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'pin/add?arg=/ipfs/'+hash+'&progress=true'
+     console.log(callee+'.url',url)
+     return fetchGetText(url)
+	 .then(text => { console.log(callee+'.text',text); })
+	 .catch(err => logErrorOfHash (err, hash))
+ }
+
+ function ipfsPinRm(hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.hash:',hash);
+     
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'pin/rm?arg=/ipfs/'+hash
+     console.log(callee+'.url',url)
+     return fetchGetJson(url)
+	 .then( json => { console.log(callee+'.json',json);
+	     return json.Pins  // Improve when not pinned or indirect
+	 })
+	 .catch(err => logErrorOfHash (err, hash))
+ } 
+ 
+</script>
+<!-- End of PinBlock -->
+<!-- CurrentMfsDirectoryBlock -->
+<form method="POST" name="CurrentMfsDirectoryForm">
+    <center>
+	<span class="title">
+	    Current Mfs directory <input type="text" name="CurrentMfsDirectoryName" id="CurrentMfsDirectoryId" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
+	    <input type="button" onClick="getCurrentMfsDirectory()" id="CurrentMfsDirectoryClickId" value="Display">
+	    <input type="button" onClick="document.location.reload(true)" value="Reset page">
+	</span>
+	<pre id="ls"></pre>
+</form>
+
+<div class="typeAndHash">
+    <div>This Mfs <b><span id="type">type</span></b> has Hash <b><span id="hash">hash</span></b></div>
+    <span style="color:red" id="error"></span>
+    <div>
+    </center>	    
+    <table id=ls-result>
+	<tr><th colspan=4><h3 id="h3-title" class="whiteOnDarkBlue"></h3></th>
+    </table>
+    </div>
+</div>
+
+<script>
+ 
+ function getCurrentMfsDirectory(){
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     let form = getFormOfName("CurrentMfsDirectoryForm");
+     let mfspath = mfsPathOfForm(form);
+     console.log(callee+'.mfspath',mfspath);
+
+     updateElementOfIdOfValue ("UploadId", mfspath);
+     updateElementOfIdOfValue ("currentMfsDir", mfspath);
+     getHashAndTypeOfMfsPath (mfspath);
+     getFileList (mfspath)
+ }
+
+ function getFileList (mfsDirPath) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfsDirPath:',mfsDirPath);
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
+     console.log(callee+'.url:',url);
+     return fetch(url, { method: "POST", mode: 'cors'})
+	 .then (validate)
+	 .then (resp => resp.json())
+	 .then (body => { body.mfspath = mfsDirPath; return body})
+	 .then (displayJson)
+	 .catch(err => {console.log(err); logError(err)})
+ }
+
+ function displayJson (json) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.json:', json);
+     
+     let mfsDirPath = json.mfspath
+     let entries = json.Entries
+     console.log(callee+'.mfsDirPath:', mfsDirPath);
+     console.log(callee+'.entries:', entries);
+     
+     table = document.getElementById('ls-result')
+     console.log(callee+'.table:',table);
+     
+     deleteActionsAndErrorTexts();
+     deleteAllRowsOfTable (table);
+     updateElementOfIdOfValue ('h3-title', mfsDirPath);
+
+     try {
+	 if (entries == null) throw "entries is null"		 
+     } catch (e) {
+	 logError(e);
+     }
+
+     if (entries.length != 0){
+	 createHeaderOfTable (table);
+     }
+     
+     createTableOfEntriesOfMfsDirPath (entries, mfsDirPath);
+ }
+
+ function deleteActionsAndErrorTexts() {  // Improve
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     updateElementOfIdOfValue ('fileUploaded', '');
+     updateElementOfIdOfValue ('error', '');
+     updateElementOfIdOfValue ('fileRemoved', '');
+ }
+
+ function getFormOfName(nameForm) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.nameForm:',nameForm);
+
+     let forms = document.getElementsByName(nameForm);
+     console.log(callee+'.forms:',forms);
+
+     let form = forms[0];
+     let name = form.name;
+     console.log(callee+'.name:',name);
+     console.log(callee+'.form:',form);
+
+     let elements = form.elements;
+     console.log(callee+'.elements:',elements);
+     for (let e=0; e <elements.length; e++) {
+ 	 let ele = elements[e];
+	 console.log(callee+'.ele:',ele);
+	 console.log(callee+'.ele.tag:',ele.tagName);
+	 console.log(callee+'.ele.id:',ele.id);
+	 console.log(callee+'.ele.type:',ele.type);
+	 console.log(callee+'.ele.name:',ele.name);
+	 console.log(callee+'.ele.value:',ele.value);
+     }
+
+     return form;
+ }
+
+ function mfsPathOfForm(form) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.form:',form);
+
+     let name = form.name;
+     console.log(callee+'.name:',name);
+
+     let result = form.elements[0].value;
+     console.log(callee+'.result:',result);
+     return result;
+ }	     
+
+ function getHashAndTypeOfMfsPath (mfspath) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfspath:',mfspath);
+
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/'
+     
+     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
+     return fetchGetJson(url)
+	 .then( obj => {console.log(callee+'.obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+	 .then(callbackTuple ('hash', 'type'))
+	 .catch(logError)
+ }
+
+ function callbackTuple (tag1, tag2) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.tag1:',tag1)
+     console.log(callee+'.input.tag2:',tag2)
+     
+     const substi = ([obj1, obj2]) => {
+	 let url = linkIpfsHash (obj1);
+	 updateElementOfIdOfValue(tag1, url);
+	 updateElementOfIdOfValue(tag2, obj2);
+     };
+     return substi
+ }
+
+ function validate (resp) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.resp:',resp);
+     
+     if (resp.status >= 200 && resp.status < 300) {
+	 return Promise.resolve(resp)
+     } else {
+	 console.log(callee+'.resp.status:',resp.status)
+	 return Promise.reject(new Error(resp.statusText))
+     }
+ }
+
+ function linkIpfsHash (hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log (callee+'.input.hash:',hash);
+     
+     let api_url = 'http://127.0.0.1:5001/ipfs/';
+     let link = '<a href="';
+     link += api_url;
+     link += hash;
+     link += '" target="_blank">';
+     link += hash;
+     link += '</a>';
+     console.log (callee+'.link:',link);
+     return link;
+ }
+
+</script>
+<!-- End of CurrentMfsDirectoryBlock -->
+<!-- HiddenForDirBlock -->
+<script>
+ function saveFileOnIpms () { // Improve 2 hardcoded ids
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     let texAre = document.getElementById('catOfHash');
+     console.log(callee+'.texAre',texAre);
+     let content = texAre.value;
+     console.log(callee+'.content',content);
+     texAre.disabled = true;
+     let butSav = document.getElementById('saveModif');
+     butSav.disabled = true;
+ }
+
+</script>
+<!-- End of HiddenForDirBlock -->
+<!-- WindowOnLoad -->
+<script>
+ 
+ window.onload = displayDirOnLoadWindow();
+ 
+ function displayDirOnLoadWindow() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     getCurrentMfsDirectory();
+ }
+</script>
+<!-- End of WindowOnLoad -->
+<!-- Table Functions -->
+<script>
+ function deleteAllRowsOfTable (table) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.table:', table);
+
+     var i = 1;  // Be careful with deleteRow : length is modified.
+     while (table.rows[i]) {
+	 console.log(callee+'.row i',i,table.rows[i].innerHTML);
+	 table.deleteRow(i);
+     }
+ }
+
+ function createHeaderOfTable (table) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.table:', table);
+
+     let tr = createElementTable (table,'tr', '');
+
+     createElementTable (tr, 'th', 'Pin');
+     createElementTable (tr, 'th', 'Type');
+     createElementTable (tr, 'th', 'Name');
+     
+     createElementTable (tr, 'th', 'Hash')   
+ }
+
+ function createTableOfEntriesOfMfsDirPath (entries, mfsDirPath){
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.entries:', entries);
+     console.log(callee+'.input.mfsDirPath:', mfsDirPath);
+
+     for (let i=0; i < entries.length; i++) {
+
+	 var hash = entries[i]['Hash'];
+	 var name = entries[i]['Name']; 
+	 let type = entries[i]['Type'];
+
+	 console.log(callee+'.hash:',hash);
+	 console.log(callee+'.name:',name);
+	 console.log(callee+'.type:',type);
+
+	 let tr = createElementTable (table,'tr', '');
+	 createElementTable (tr, 'td', createPinButtonOfHash (hash));
+	 createElementTable (tr, 'td', typeImageOfJsonOfKey (entries, i)); 
+	 createElementTable (tr, 'td', createNameButtonOfMfsDirPath(mfsDirPath,name,type,hash));
+	 createElementTable (tr, 'td', linkIpfsHash (hash));
+     }
+ }
+
+ function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfspath:',mfspath);
+     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.type:',type);
+     console.log(callee+'.input.hash:',hash);
+
+     let but = '<input type="button" id="nameButton" value="';
+     but += name;
+     if (type == 1){
+	 but += '" onclick="addNameOnInputMfsPath(this.value)"';
+     } else {
+	 but += '" onclick="createTableForFileOfNameOfHash(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
+	 console.log(callee+'.but',but);
+     }
+     but += '>';
+     return but;
+ }
+
+ function addNameOnInputMfsPath (mfspath) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log (callee+'.input.mfspath:', mfspath);
+
+     let oldMfsdir = document.getElementById('CurrentMfsDirectoryId').value;
+     console.log (callee+'.oldMfsdir:', oldMfsdir);
+     let path = oldMfsdir;
+     if (oldMfsdir == '/'){
+	 path += mfspath;
+     } else {
+	 path += '/';
+	 path += mfspath;
+     }
+     console.log (callee+'.path:', path);
+     var del = document.getElementById('idRemoveFileOrDirectory');
+     del.value = path;
+     var mfsdir = document.getElementById('CurrentMfsDirectoryId');
+     mfsdir.value = path;
+     document.getElementById('idRemoveButton').disabled = false;
+     getCurrentMfsDirectory();
+ }
+
+ function createElementTable (ele, tag, value) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     let doc = document.createElement (tag);
+     doc.style = "padding:7px";
+     doc.innerHTML = value;
+     ele.appendChild (doc);
+     return doc;
+ }
+ 
+</script>
+
+<!-- End of Table Functions -->
+<!-- HeadBlock -->
+
+<!-- UploadBlock -->
+
+<!-- CreateDirectoryBlock -->
+
+<!-- RemoveBlock -->
+
+<!-- PinBlock -->
+
+<!-- CurrentMfsDirectoryBlock -->
+
+<!-- HiddenForDirBlock -->
+
+<!-- WindowOnLoad -->
+
+<!-- Table Functions -->
+
+<!-- Pin Functions -->
+
+<script>
+
+ function checkedRadio () { // Improve reference to id 'UploadIdNew' 
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     let rad = document.getElementById('UploadIdNew');
+     console.log (callee+'.rad:',rad);
+     rad.checked = true;
+     updateElementOfIdOfValue ('UploadIdNew', rad);
+ }
+ 
+ function imageOfType(type) { // Improve reference to hardcoded src
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     if (type == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
+     else { return '<img src="images/folder.png" width="25px" height="25">'; }
+ }
+
+ /* ---------- File Functions ---------- */
+
+ function createTableForFileOfNameOfHash (name, hash) { // Improve reference to h3-title and ls-result 
+     let [callee, caller] = functionNameJS();
+     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.hash:',hash);
+     
+     updateElementOfIdOfValue ('h3-title',name);
+
+     table = document.getElementById('ls-result');
+     deleteAllRowsOfTable (table);
+     createHeaderOfTable (table); // Improve
+     
+     var tr = createElementTable (table,'tr', '');
+     createElementTable (tr, 'td', createPinButtonOfHash (hash));
+     createElementTable (tr, 'td', linkIpfsHash (hash));
+
+     var tr = createElementTable (table,'tr', '');
+     createElementTable (tr, 'td', buttonCopyFile (name));
+     createElementTable (tr, 'td', buttonModifyFile (name));
+
+     var tr = createElementTable (table,'tr', '');
+     createElementTable (tr, 'td', buttonDeleteFile (name));
+
+     console.log (callee+'.table:', table);
+     displayFileContentOfHash(hash);
+ }
+ 
+ function buttonDeleteFile (name) { // Improve CurrentMfsDirectoryId
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.name:',name);
+     
+     let path = document.getElementById ('CurrentMfsDirectoryId').value;
+     if (path == '/') {
+	 var mfspath = path + name
+     } else {
+	 var mfspath = path + '/' + name
+     }
+     console.log(callee+'.mfspath:', mfspath);
+     let butDel = '<input type="button" value="Delete ';
+     butDel += name;
+     butDel += '" onclick="removeOfMfsPath(\'';
+     butDel += mfspath;
+     butDel += '\')">';
+     console.log(callee+'.butDel:', butDel);
+     return butDel;
+ }
+
+ function displayFileContentOfHash (hash) {
+     let [callee, caller] = functionNameJS();
+     console.log(callee+'.input.hash:',hash);
+     
+     getHash(hash);
+     createTextareaForFileContent();
+ }
+
+ function createTextareaForFileContent() { // Improve reference to saveFileOnIpms()
+     let [callee, caller] = functionNameJS();
+     console.log(callee+'.entering');
+
+     var cen = document.createElement ('center');
+     
+     var bol = document.createElement ('b');
+     bol.innerHTML = 'Content of file';
+     
+     var br1 = document.createElement ('br');
+     
+     var spaMes = document.createElement ('span');
+     spaMes.id = 'fileModified';
+     spaMes.className = 'greenBackground';
+     
+     var texAre = document.createElement ('textarea');
+     texAre.rows = 20;
+     texAre.cols = 80;
+     texAre.id = 'catOfHash';
+     texAre.disabled = true;
+     
+     var br2 = document.createElement ('br');
+     var br3 = document.createElement ('br');
+     
+     var inp = document.createElement ('input');
+     inp.type = 'button';
+     inp.value = 'Save';
+     inp.id = 'saveModif';
+     inp.disabled = true;
+     inp.onclick = function () {saveFileOnIpms ()};
+     
+     cen.append (bol);
+     cen.append (br1);
+     cen.append (spaMes);
+     cen.append (br2);
+     cen.append (texAre);
+     cen.append (br3);
+     cen.append (br3);
+     cen.append (inp);
+     
+     console.log (callee+'.cen.childNodes:',cen.childNodes);
+     
+     document.body.appendChild (cen);
+ }
+
+ function unlockFileEdit () {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     let txtAre = document.getElementById('catOfHash');
+     txtAre.disabled = false;
+     let butSav = document.getElementById('saveModif');
+     butSav.disabled = false;
+ }
+ 
+ function addNameOfFileOnDeleteBlock(rootName, hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.rootName:',rootName);
+     console.log(callee+'.input.hash:',hash);
+
+     var mfsdir = document.getElementById('CurrentMfsDirectoryId').value;
+     console.log(callee+'.mfsdir',mfsdir);
+     if (mfsdir != '/') {
+	 var path = mfsdir + '/' + rootName;
+     }else {
+	 var path = mfsdir + rootName;
+     }
+     console.log(callee+'.path:',path);
+     document.getElementById('idRemoveButton').disabled = false;
+     var del = document.getElementById('idRemoveFileOrDirectory');
+     del.value = path;
+     getHash(hash);
+ }
+
+ function getHash(hash) { // Improve reference to catOfHash 
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.hash:',hash)
+
+     if (hash == "") {
+	 alert("Hash must be filled out");
+	 return false;
+     }
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/';
+     var url = api_url + 'cat?&arg='+hash
+     console.log(callee+'.url:',url);
+     
+     return fetchGetTextCors(url)
+	 .then( obj => { return Promise.resolve(obj) })
+	 .then(callback('catOfHash'))
+	 .catch(logError)
+ }
+ 
+ function IpfsException (message) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.message:',message)
+     
+     this.message = message;
+     this.name = "IpfsException";
+ }
+
+</script>
+
+    </body>
+</html>

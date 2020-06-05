@@ -1,0 +1,31 @@
+<!-- WindowOnLoad -->
+<script>
+ 
+ window.onload = displayDirOnLoadWindow();
+ 
+ function displayDirOnLoadWindow() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     getCurrentMfsDirectory();
+ }
+
+ function goBack() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input:',navArr);
+     console.log(callee+'.navArray.length:',navArr.length);
+
+     if (navArr.length != 1) {
+	 var back = navArr.pop();
+	 console.log(callee+'.navArray.pop 1:',back);
+	 var back = navArr.pop();
+	 console.log(callee+'.navArray.pop 2:',back);
+
+	 updateInputOfFormOfTypeOfNameOfIdOfValue ("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId", back);
+	 getCurrentMfsDirectory();
+     }
+     console.log(callee+'.navArr.Output:',navArr);
+ }
+</script> 
+<!-- End of WindowOnLoad -->

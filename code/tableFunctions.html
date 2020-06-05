@@ -1,33 +1,36 @@
 <!-- Table Functions -->
 <script>
  function deleteAllRowsOfTable (table) {
-     console.log('deleteAllRowsOfTable.input.table:', table);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.table:', table);
 
      var i = 1;  // Be careful with deleteRow : length is modified.
      while (table.rows[i]) {
-	 console.log('displayJson Row i',i,table.rows[i].innerHTML);
+	 console.log(callee+'.row i',i,table.rows[i].innerHTML);
 	 table.deleteRow(i);
      }
  }
 
  function createHeaderOfTable (table) {
-     console.log('createHeaderOfTable.input.table:', table);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.table:', table);
 
-     var hid = document.getElementsByClassName('hiddenForFile')[0];
      let tr = createElementTable (table,'tr', '');
 
      createElementTable (tr, 'th', 'Pin');
-     if (hid.hidden != true) {
-	 createElementTable (tr, 'th', 'Type');
-	 createElementTable (tr, 'th', 'Name');
-     }
-
+     createElementTable (tr, 'th', 'Type');
+     createElementTable (tr, 'th', 'Name');
+     
      createElementTable (tr, 'th', 'Hash')   
  }
 
  function createTableOfEntriesOfMfsDirPath (entries, mfsDirPath){
-     console.log('createTableOfEntriesOfMfsDirPath.input.entries:', entries);
-     console.log('createTableOfEntriesOfMfsDirPath.input.mfsDirPath:', mfsDirPath);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.entries:', entries);
+     console.log(callee+'.input.mfsDirPath:', mfsDirPath);
 
      for (let i=0; i < entries.length; i++) {
 
@@ -35,9 +38,9 @@
 	 var name = entries[i]['Name']; 
 	 let type = entries[i]['Type'];
 
-	 console.log('createTableOfEntriesOfMfsDirPath.hash:',hash);
-	 console.log('createTableOfEntriesOfMfsDirPath.name:',name);
-	 console.log('createTableOfEntriesOfMfsDirPath.type:',type);
+	 console.log(callee+'.hash:',hash);
+	 console.log(callee+'.name:',name);
+	 console.log(callee+'.type:',type);
 
 	 let tr = createElementTable (table,'tr', '');
 	 createElementTable (tr, 'td', createPinButtonOfHash (hash));
@@ -48,34 +51,32 @@
  }
 
  function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
-     console.log('createNameButtonOfMfsDirPath.input.mfspath:',mfspath);
-     console.log('createNameButtonOfMfsDirPath.input.name:',name);
-     console.log('createNameButtonOfMfsDirPath.input.type:',type);
-     console.log('createNameButtonOfMfsDirPath.input.hash:',hash);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfspath:',mfspath);
+     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.type:',type);
+     console.log(callee+'.input.hash:',hash);
 
      let but = '<input type="button" id="nameButton" value="';
      but += name;
      if (type == 1){
 	 but += '" onclick="addNameOnInputMfsPath(this.value)"';
-
-	 var hid = document.getElementsByClassName('hiddenForFile')[0];
-	 hid.hidden = false
-	 var hid = document.getElementsByClassName('hiddenForDir')[0];
-	 hid.hidden = true
-	 
      } else {
-	 but += '" onclick="displayFileOptions(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
-	 console.log('createNameButtonOfMfsDirPath.but',but);
+	 but += '" onclick="createTableForFileOfNameOfHash(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
+	 console.log(callee+'.but',but);
      }
      but += '>';
      return but;
  }
 
  function addNameOnInputMfsPath (mfspath) {
-     console.log ('addNameOnInputMfsPath.input.mfspath:', mfspath);
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log (callee+'.input.mfspath:', mfspath);
 
      let oldMfsdir = document.getElementById('CurrentMfsDirectoryId').value;
-     console.log ('addNameOnInputMfsPath.oldMfsdir:', oldMfsdir);
+     console.log (callee+'.oldMfsdir:', oldMfsdir);
      let path = oldMfsdir;
      if (oldMfsdir == '/'){
 	 path += mfspath;
@@ -83,16 +84,19 @@
 	 path += '/';
 	 path += mfspath;
      }
-     console.log ('addNameOnInputMfsPath.path:', path);
+     console.log (callee+'.path:', path);
      var del = document.getElementById('idRemoveFileOrDirectory');
      del.value = path;
      var mfsdir = document.getElementById('CurrentMfsDirectoryId');
      mfsdir.value = path;
      document.getElementById('idRemoveButton').disabled = false;
-     document.getElementById('CurrentMfsDirectoryClickId').click();
+     getCurrentMfsDirectory();
  }
 
  function createElementTable (ele, tag, value) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
      let doc = document.createElement (tag);
      doc.style = "padding:7px";
      doc.innerHTML = value;

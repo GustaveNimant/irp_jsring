@@ -32,27 +32,12 @@ function errorMessage (expected, found, cure, caller) {
     throw "exit";
 }
 
-function functionNameJS (mod) {
-    var stack = new Error().stack;
-
-    if (mod === "main") {
-	var caller = ((stack.split('at ')[2]).split(' ')[0]);
-    }
-    else {
-	var AtNeW = stack.split('at new ')[1];
-	if (AtNeW == undefined) {
-	    var At = stack.split('at ');
-	    var caller = ((At[2]).split(' ')[0])
-	    if (caller == undefined) {
-		console.log('stack',stack);
-	    }
-	}
-	else {
-	    var caller = AtNeW.split(' ')[0];
-	}
-    }
-    
-    return mod + ':' + caller.replace('Object.', '');
+function functionNameJS () {
+    let stack = new Error().stack;
+    let stackArray = stack.split('\n');
+    let callee = stackArray[1].split('@')[0];
+    let caller = stackArray[2].split('@')[0];
+    return [callee, caller];
 }
 
 function getLatestElement (elementArray) {

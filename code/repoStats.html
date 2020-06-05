@@ -1,0 +1,56 @@
+<!-- repoStats  -->
+	<div class="whiteOnDarkBlue">Repo Stats</div><br>
+	<div id="idRepoStats">
+	</div>
+	<br>
+	<script>
+	 
+	 function getRepoStats() {
+	     let [callee, caller] = functionNameJS();
+	     console.log('Entering in',callee,'called by',caller);
+             
+	     const api_url = 'http://127.0.0.1:5001/api/v0/';
+	     let  url = api_url + 'stats/repo?human=true';
+	     console.log(callee, 'url ', url);
+	     return fetch(url, { method: "POST", mode: 'cors'})
+	     /* 		 .then (validate) */
+		 .then (resp => resp.json())
+		 .then (body => {console.log(callee, body);displayValuesRepoStatsOfBody(body)})
+	 }
+
+	 function displayValuesRepoStatsOfBody (body) {
+	     let [callee, caller] = functionNameJS();
+	     console.log('Entering in',callee,'called by',caller); 
+
+	     var htmlStr = '';
+	     var repSiz = body.RepoSize;
+	     var repSiz = convertSizeOfValue(repSiz);
+	     htmlStr += 'Repo Size : ' + repSiz + '<br>';
+	     var stoMax = body.StorageMax;
+	     var stoMax = convertSizeOfValue(stoMax);
+	     htmlStr += 'Storage Max : ' + stoMax + '<br>';
+	     var numObj = body.NumObjects;
+	     htmlStr += 'Number Objects : ' + numObj + '<br>';
+	     var repPat = body.RepoPath;
+	     htmlStr += 'Repo Path : ' + repPat + '<br>';
+	     var repVer = body.Version;
+	     htmlStr += 'Repo Version : ' + repVer + '<br>';
+	     console.log ('html str : ',htmlStr);
+	     updateElementOfIdOfValue('idRepoStats', htmlStr);
+	 }
+
+	 function convertSizeOfValue(value){
+	     let [callee, caller] = functionNameJS();
+	     console.log('Entering in',callee,'called by',caller);
+
+	     value = Math.abs(parseInt(value, 10));
+	     var def = [[1, 'octets'], [1024, 'ko'], [1024*1024, 'Mo'], [1024*1024*1024, 'Go'], [1024*1024*1024*1024, 'To']];
+	     for(var i=0; i<def.length; i++){
+		 if(value<def[i][0]) return (value/def[i-1][0]).toFixed(2)+' '+def[i-1][1];
+	     }
+	 }
+
+	 getRepoStats();	 
+	 
+	</script>
+<!-- End of repoStats -->

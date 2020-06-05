@@ -1,34 +1,36 @@
 <!-- CreateDirectoryBlock -->
-<div class="whiteOnDarkBlue">Create directory to <span id="currentMfsDir"></span></div><br>
 <form method="POST" name="CreateDirectoryForm">
+    <div class="whiteOnDarkBlue">Create directory to <span id="currentMfsDir"></span></div><br>
+
     <input type="text" name="CreateDirectoryName" id="CreateDirectoryId"><br>
     <input type="button" name="CreateDirectoryName" onclick="createDirectory()" value="Create Directory"><br>
-    <div class="fileUploadedAndRemoved" id="directoryCreated"></div>
+    <!-- <div class="fileUploadedAndRemoved" id="directoryCreated"></div> -->
 </form><br>
 
 <script>
  function createDirectory() {
-     console.log('createDirectory.entering');
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      
-     let msfDirPath = valueInputTextOfFormOfNameOfId("CurrentMfsDirectoryForm", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
-     console.log('createDirectory.mfsDirPath:',msfDirPath);
+     let msfDirPath = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     console.log(callee+'.mfsDirPath:',msfDirPath);
 
      let mfsDirName = document.getElementById('CreateDirectoryId').value;
-     console.log('createDirectory.mfsDirName:',mfsDirName);
+     console.log(callee+'.mfsDirName:',mfsDirName);
      
      if (msfDirPath == '/'){
 	 var path_url = msfDirPath + mfsDirName;
      }else {
 	 var path_url = msfDirPath + '/' + mfsDirName;
      }
-     console.log('createDirectory.path_url:',path_url);
+     console.log(callee+'.path_url:',path_url);
      
      const api_url = 'http://127.0.0.1:5001/api/v0/';
      var url = api_url + 'files/mkdir?arg=' + path_url;
-     console.log('createDirectory.url:', url);
+     console.log(callee+'.url:', url);
      
      return fetchPostMkdirForm(path_url, url)
-	 .then(_ => {document.getElementById('CurrentMfsDirectoryClickId').click()})
+	 .then(_ => {getCurrentMfsDirectory()})
 	 .catch(logError)
  }
 

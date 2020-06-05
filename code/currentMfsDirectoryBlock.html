@@ -1,0 +1,182 @@
+<!-- CurrentMfsDirectoryBlock -->
+<form method="POST" name="CurrentMfsDirectoryForm">
+    <center>
+	<img src="images/back.png" width="30" height="25" title="Click to Go Back" onclick="goBack()">
+	<span class="title">
+	    Current Mfs directory <input type="text" name="CurrentMfsDirectoryName" id="CurrentMfsDirectoryId" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
+	    <input type="button" onClick="getCurrentMfsDirectory()" value="Display">
+	    <input type="button" onClick="document.location.reload(true)" value="Reset page">
+	</span>
+	<!-- <pre id="ls"></pre> -->
+    </center>
+</form>
+
+<center>
+    <div class="typeAndHash">
+	<div>This Mfs <b><span id="type">type</span></b> has Hash <b><span id="hash">hash</span></b></div>
+	<span style="color:red" id="error"></span>
+	<div>
+</center>
+
+<table id=ls-result>
+    <tr><th colspan=4><h3 id="h3-title" class="whiteOnDarkBlue"></h3></th>
+</table>
+	</div>
+    </div>
+
+<script>
+
+ function getCurrentMfsDirectory(){
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     let form = getFormOfName("CurrentMfsDirectoryForm");
+     let mfspath = mfsPathOfForm(form);
+     console.log(callee+'.mfspath',mfspath);
+     
+     navArr.push (mfspath);
+     console.log(callee+'.mfspath has been pushed in navArr:',navArr);
+     
+     updateElementOfIdOfValue ("UploadId", mfspath);
+     updateElementOfIdOfValue ("currentMfsDir", mfspath);
+     getHashAndTypeOfMfsPath (mfspath);
+     getFileList (mfspath)
+ }
+
+ function getFileList (mfsDirPath) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfsDirPath:',mfsDirPath);
+
+     if (mfsDirPath == "") {
+	 errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
+     }
+     
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
+     console.log(callee+'.url:',url);
+     return fetch(url, { method: "POST", mode: 'cors'})
+	 .then (validate)
+	 .then (resp => resp.json())
+	 .then (body => { body.mfspath = mfsDirPath; return body})
+	 .then (displayJson)
+	 .catch(err => {console.log(err); logError(err)})
+ }
+ 
+ function displayJson (json) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.json:', json);
+     
+     let mfsDirPath = json.mfspath
+     let entries = json.Entries
+     console.log(callee+'.mfsDirPath:', mfsDirPath);
+     console.log(callee+'.entries:', entries);
+     
+     table = document.getElementById('ls-result')
+     console.log(callee+'.table:',table);
+     
+     deleteActionsAndErrorTexts();
+     deleteAllRowsOfTable (table);
+     updateElementOfIdOfValue ('h3-title', mfsDirPath);
+
+     try {
+	 if (entries == null) throw "entries is null"		 
+     } catch (e) {
+	 logError(e);
+     }
+
+     if (entries.length != 0){
+	 createHeaderOfTable (table);
+     }
+     
+     createTableOfEntriesOfMfsDirPath (entries, mfsDirPath);
+ }
+
+ function deleteActionsAndErrorTexts() {  // Improve
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     
+     updateElementOfIdOfValue ('fileUploaded', '');
+     updateElementOfIdOfValue ('error', '');
+     updateElementOfIdOfValue ('fileRemoved', '');
+ }
+
+ function getFormOfName(nameForm) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.nameForm:',nameForm);
+
+     let forms = document.getElementsByName(nameForm);
+     console.log(callee+'.forms:',forms);
+
+     let form = forms[0];
+     let name = form.name;
+     console.log(callee+'.name:',name);
+     console.log(callee+'.form:',form);
+
+     let elements = form.elements;
+     console.log(callee+'.elements:',elements);
+     for (let e=0; e <elements.length; e++) {
+ 	 let ele = elements[e];
+	 console.log(callee+'.ele:',ele);
+	 console.log(callee+'.ele.tag:',ele.tagName);
+	 console.log(callee+'.ele.id:',ele.id);
+	 console.log(callee+'.ele.type:',ele.type);
+	 console.log(callee+'.ele.name:',ele.name);
+	 console.log(callee+'.ele.value:',ele.value);
+     }
+
+     return form;
+ }
+
+ function mfsPathOfForm(form) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.form:',form);
+
+     let name = form.name;
+     console.log(callee+'.name:',name);
+
+     let result = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+
+     console.log(callee+'.result:',result);
+     if (result == "") {
+	 errorMessage ('result were not empty',result, "Check", caller);
+     }
+     return result;
+ }	     
+
+ function getHashAndTypeOfMfsPath (mfspath) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.mfspath:',mfspath);
+
+     const webui = 'http://127.0.0.1:5001';
+     const api_url = webui + '/api/v0/'
+     
+     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
+     return fetchGetJson(url)
+	 .then( obj => {console.log(callee+'.obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+	 .then(callbackTuple ('hash', 'type'))
+	 .catch(logError)
+ }
+
+ function linkIpfsHash (hash) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log (callee+'.input.hash:',hash);
+     
+     let api_url = 'http://127.0.0.1:5001/ipfs/';
+     let link = '<a href="';
+     link += api_url;
+     link += hash;
+     link += '" target="_blank">';
+     link += hash;
+     link += '</a>';
+     console.log (callee+'.link:',link);
+     return link;
+ }
+
+</script>
+<!-- End of CurrentMfsDirectoryBlock -->
