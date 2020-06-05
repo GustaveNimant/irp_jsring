@@ -17,7 +17,7 @@
 	    Ipfs Hash <input name="hash"
         type="text" value="" size="50px" placeholder="some hash">
       <button name=pin onclick="togglePinStatus(this.ParentNode,this.value)" value="?")><img class=pinimg style="height: 24px;"></button>
-	    <input type="button" onClick="updatePinButton()" value="check pin">
+	    <input type="button" onClick="updatePinButton('button')" value="check pin">
 	</div>
 
 	<p style="color:green" id="result"></p>
@@ -35,16 +35,25 @@
 	<script>
 
   var stored = {};
-  var path = 'button'
 
-  async function updatePinButton() { // main
-    let status = await provide_status(path);
+  async function updatePinButton(path) { // main
+    let status = await provide_status(path+'/status');
     return display_PinButton(status);
   }
 
+  /*
+  async function provide(path) {
+    let what = path.split('/')[-1];
+    var provide_func = {
+      "status": provide_status
+    };
+    value = (provide_func[what])(path)
+    return value
+  }
+  */
+
   async function provide_status(path) {
-    path += '/status'
-    let hash = getDataHash(path);
+    let hash = getDataHash(path+'/hash');
     if (typeof(stored['status']) != 'undefined' && stored['status'] != null) { // re-use
       return stored['status']
     } else { // re-build
@@ -67,10 +76,10 @@
     let inel = document.getElementsByName('hash')[0]
     let hash = inel.value;
     if (hash != stored['hash']) {
-      console.log('getdata: '+path+'/hash=',hash)
-      clear_path(path+'/hash')
+      console.log('getdata: '+path+'='+hash)
+      clear_path(path)
     } else {
-      console.log('getdata: '+path+'/hash',hash)
+      console.log('getdata: '+path,hash)
     }
     stored['hash'] = hash;
     return hash;
