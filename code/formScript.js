@@ -76,3 +76,30 @@ function valueInputOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId) {
     return result;
 }
 
+ function getFormOfName(nameForm) {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.nameForm:',nameForm);
+
+     let forms = document.getElementsByName(nameForm);
+     console.log(callee+'.forms:',forms);
+
+     let form = forms[0];
+     let name = form.name;
+     console.log(callee+'.name:',name);
+     console.log(callee+'.form:',form);
+
+     let elements = form.elements;
+     console.log(callee+'.elements:',elements);
+     for (let e=0; e <elements.length; e++) {
+ 	 let ele = elements[e];
+	 console.log(callee+'.ele:',ele);
+	 console.log(callee+'.ele.tag:',ele.tagName);
+	 console.log(callee+'.ele.id:',ele.id);
+	 console.log(callee+'.ele.type:',ele.type);
+	 console.log(callee+'.ele.name:',ele.name);
+	 console.log(callee+'.ele.value:',ele.value);
+     }
+
+     return form;
+ }
