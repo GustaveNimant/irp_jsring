@@ -24,131 +24,133 @@
 	</div>
     </div>
 
-<script>
+    <script>
 
- function getCurrentMfsDirectory(){
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
+     function getCurrentMfsDirectory(){
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
 
-     let form = getFormOfName("CurrentMfsDirectoryForm");
-     let mfspath = mfsPathOfForm(form);
-     console.log(callee+'.mfspath',mfspath);
-     
-     navArr.push (mfspath);
-     console.log(callee+'.mfspath has been pushed in navArr:',navArr);
-     
-     updateElementOfIdOfValue ("UploadId", mfspath);
-     updateElementOfIdOfValue ("currentMfsDir", mfspath);
-     getHashAndTypeOfMfsPath (mfspath);
-     getFileList (mfspath)
- }
+	 let form = getFormOfName("CurrentMfsDirectoryForm");
+	 let mfspath = mfsPathOfForm(form);
+	 console.log(callee+'.mfspath',mfspath);
+	 
+	 navArr.push (mfspath);
+	 console.log(callee+'.mfspath has been pushed in navArr:',navArr);
 
- function getFileList (mfsDirPath) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.mfsDirPath:',mfsDirPath);
-
-     if (mfsDirPath == "") {
-	 errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
-     }
-     
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
-     console.log(callee+'.url:',url);
-     return fetch(url, { method: "POST", mode: 'cors'})
-	 .then (validate)
-	 .then (resp => resp.json())
-	 .then (body => { body.mfspath = mfsDirPath; return body})
-	 .then (displayJson)
-	 .catch(err => {console.log(err); logError(err)})
- }
- 
- function displayJson (json) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.json:', json);
-     
-     let mfsDirPath = json.mfspath
-     let entries = json.Entries
-     console.log(callee+'.mfsDirPath:', mfsDirPath);
-     console.log(callee+'.entries:', entries);
-     
-     table = document.getElementById('ls-result')
-     console.log(callee+'.table:',table);
-     
-     deleteActionsAndErrorTexts();
-     deleteAllRowsOfTable (table);
-     updateElementOfIdOfValue ('h3-title', mfsDirPath);
-
-     try {
-	 if (entries == null) throw "entries is null"		 
-     } catch (e) {
-	 logError(e);
+	 updateOfSpanIdOfDivIdOfText("currentMfsDir", "CreateDirectoryDivId", mfspath);
+	 
+	 updateElementOfIdOfValue ("UploadId", mfspath);
+	 //	 updateElementOfIdOfValue ("currentMfsDir", mfspath);
+	 getHashAndTypeOfMfsPath (mfspath);
+	 getFileList (mfspath)
      }
 
-     if (entries.length != 0){
-	 createHeaderOfTable (table);
+     function getFileList (mfsDirPath) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.mfsDirPath:',mfsDirPath);
+
+	 if (mfsDirPath == "") {
+	     errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
+	 }
+	 
+	 const api_url = 'http://127.0.0.1:5001/api/v0/'
+	 var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
+	 console.log(callee+'.url:',url);
+	 return fetch(url, { method: "POST", mode: 'cors'})
+	     .then (validate)
+	     .then (resp => resp.json())
+	     .then (body => { body.mfspath = mfsDirPath; return body})
+	     .then (displayJson)
+	     .catch(err => {console.log(err); logError(err)})
      }
      
-     createTableOfEntriesOfMfsDirPath (entries, mfsDirPath);
- }
+     function displayJson (json) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.json:', json);
+	 
+	 let mfsDirPath = json.mfspath
+	 let entries = json.Entries
+	 console.log(callee+'.mfsDirPath:', mfsDirPath);
+	 console.log(callee+'.entries:', entries);
+	 
+	 table = document.getElementById('ls-result')
+	 console.log(callee+'.table:',table);
+	 
+	 deleteActionsAndErrorTexts();
+	 deleteAllRowsOfTable (table);
+	 updateElementOfIdOfValue ('h3-title', mfsDirPath);
 
- function deleteActionsAndErrorTexts() {  // Improve
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     
-     updateElementOfIdOfValue ('fileUploaded', '');
-     updateElementOfIdOfValue ('error', '');
-     updateElementOfIdOfValue ('fileRemoved', '');
- }
+	 try {
+	     if (entries == null) throw "entries is null"		 
+	 } catch (e) {
+	     logError(e);
+	 }
 
- function mfsPathOfForm(form) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.form:',form);
-
-     let name = form.name;
-     console.log(callee+'.name:',name);
-
-     let result = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
-
-     console.log(callee+'.result:',result);
-     if (result == "") {
-	 errorMessage ('result were not empty',result, "Check", caller);
+	 if (entries.length != 0){
+	     createHeaderOfTable (table);
+	 }
+	 
+	 createTableOfEntriesOfMfsDirPath (entries, mfsDirPath);
      }
-     return result;
- }	     
 
- function getHashAndTypeOfMfsPath (mfspath) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.mfspath:',mfspath);
+     function deleteActionsAndErrorTexts() {  // Improve
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 
+	 updateElementOfIdOfValue ('fileUploaded', '');
+	 updateElementOfIdOfValue ('error', '');
+	 updateElementOfIdOfValue ('fileRemoved', '');
+     }
 
-     const webui = 'http://127.0.0.1:5001';
-     const api_url = webui + '/api/v0/'
-     
-     var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
-     return fetchGetJson(url)
-	 .then( obj => {console.log(callee+'.obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
-	 .then(callbackTuple ('hash', 'type'))
-	 .catch(logError)
- }
+     function mfsPathOfForm(form) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.form:',form);
 
- function linkIpfsHash (hash) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log (callee+'.input.hash:',hash);
-     
-     let api_url = 'http://127.0.0.1:5001/ipfs/';
-     let link = '<a href="';
-     link += api_url;
-     link += hash;
-     link += '" target="_blank">';
-     link += hash;
-     link += '</a>';
-     console.log (callee+'.link:',link);
-     return link;
- }
+	 let name = form.name;
+	 console.log(callee+'.name:',name);
 
-</script>
-<!-- End of CurrentMfsDirectoryBlock -->
+	 let result = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+
+	 console.log(callee+'.result:',result);
+	 if (result == "") {
+	     errorMessage ('result were not empty',result, "Check", caller);
+	 }
+	 return result;
+     }	     
+
+     function getHashAndTypeOfMfsPath (mfspath) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.mfspath:',mfspath);
+
+	 const webui = 'http://127.0.0.1:5001';
+	 const api_url = webui + '/api/v0/'
+	 
+	 var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
+	 return fetchGetJson(url)
+	     .then( obj => {console.log(callee+'.obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+	     .then(callbackTuple ('hash', 'type'))
+	     .catch(logError)
+     }
+
+     function linkIpfsHash (hash) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log (callee+'.input.hash:',hash);
+	 
+	 let api_url = 'http://127.0.0.1:5001/ipfs/';
+	 let link = '<a href="';
+	 link += api_url;
+	 link += hash;
+	 link += '" target="_blank">';
+	 link += hash;
+	 link += '</a>';
+	 console.log (callee+'.link:',link);
+	 return link;
+     }
+
+    </script>
+    <!-- End of CurrentMfsDirectoryBlock -->
