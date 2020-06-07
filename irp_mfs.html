@@ -1,0 +1,93 @@
+
+<body>
+<input name=current_dir value="/">
+
+<div id=current_dir>
+<table id=table_of_content>
+<tr id=row0 class=onerow style="display:none">
+<td class=pin_status></td>
+<td class=file_name></td>
+<td class=file_hash></td>
+<td class=file_type></td>
+</tr>
+</table>
+</div>
+</div>
+
+
+
+<script>
+affiche_current_dir();
+
+async function affiche_current_dir() {
+  let table_of_content = provide_table_of_content();
+  build_affiche_current_dir(table_of_content);
+}
+async function provide_table_of_content() {
+  let mfs_path = getInputMfsPath(); # Data
+  // build
+  let table_of_content = await getMfsDir(mfs_path);
+  return { "dirname":mfs_path,"TOC":table_of_content };
+}
+
+async function build_affiche_current_dir (table) {
+ let mfs_path = table.dirname
+ let table_of_content = table.TOC
+
+ foreach (items in table_of_content) {
+   let pin_status = await providePinStatus()
+   let filename = items.Name
+   let hash = items.hash
+   let type = items.type
+   affiche_row(pin_status,filename,hash,type);
+ }
+}
+
+function affiche_row (pin_status,filename,hash,type) {
+   let e = document.getElementById('table_of_content');
+   let row = e.row[0] // ???
+   row.getElementsByClassName('pin_status').innerHTML = pin_status;
+   row.getElementsByClassName('filename').innerHTML = filename;
+   row.getElementsByClassName('hash').innerHTML = hash;
+   row.getElementsByClassName('type').innerHTML = type;
+   let newrow = document.createElement('td');
+   newrow.innerHTML = row.innerHTML;
+   newrow.style.display = block;
+   document.insertBefore(newrow,row) // ???
+   
+   
+}
+
+function getInputMfsPath() {
+  let e = document.getElementsByName('current_dir')[0]
+  let mfs_path = e.value;
+  return mfs_path;
+}
+
+function providePinStatus {
+   let mfs_path = provideMfsPathName();
+   let pin_status = getPinStatus(mfs_path);
+   return pin_status;
+}
+
+function provideMfsPathName() {
+  let filename = provideFileName();
+  let dirname = provideDirName();
+  return dirname + '/' +filename;
+}
+function provideFileName() {
+  let idx = provideInde();
+  let table = provideTable();
+  return table.TOC[idx].Name;
+}
+function provideDirName();
+  let table = provideTable();
+}
+
+
+</script>
+
+</body>
+
+
+

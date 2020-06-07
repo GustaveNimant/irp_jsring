@@ -1,0 +1,36 @@
+
+digraph IRP {
+
+ a [label="affiche_current_dir"] // (all rows)
+ a -> table_of_content
+
+
+ table_of_content -> affiche_table [dir="none"]
+ affiche_table [shape="box"]
+ { rank=same; table_of_content affiche_table}
+
+
+ table_of_content -> items
+ table_of_content -> mfs_path
+
+
+ items -> affiche_row [dir="none"]
+ affiche_row [shape="box"]
+ { rank=same; items affiche_row}
+
+ items -> pin_status
+ items -> file_name
+ items -> file_hash
+ items -> file_type
+
+
+
+
+ file_type -> "directory"
+ file_type -> file
+
+ file -> file_content
+
+
+}
+
