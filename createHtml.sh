@@ -19,9 +19,9 @@ cat \
     code/headBlock.html \
     C.html \
     code/currentMfsDirectoryBlock.html \
-    code/hiddenForDirBlock.html \
     code/windowOnLoad.html \
-    code/tableFunctions.html \
+    code/tableDirectoryFunctions.html \
+    code/tableFileFunctions.html \
     code/reste.html \
     code/footBlock.html \
     > F.html

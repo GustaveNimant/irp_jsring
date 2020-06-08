@@ -76,6 +76,22 @@ function valueInputOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId) {
     return result;
 }
 
+function fileInputOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+
+    let element = elementInputOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId);
+    console.log(callee+'.element:',element);
+    result = element.files[0];
+
+    console.log(callee+'.result:',result);
+
+    if(result == "") {
+	throw "No such Input element in Form '" + forNam + "' '" + inpTyp + "' '" + inpNam + "' '"+ curId
+    }
+    return result;
+}
+
  function getFormOfName(nameForm) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);

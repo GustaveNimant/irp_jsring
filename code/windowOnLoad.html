@@ -13,8 +13,9 @@
  function goBack() {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input:',navArr);
-     console.log(callee+'.navArray.length:',navArr.length);
+
+     console.log(callee+'.navArr:',navArr);
+     console.log(callee+'.navArr.length:',navArr.length);
 
      if (navArr.length != 1) {
 	 var back = navArr.pop();
