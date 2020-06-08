@@ -17,32 +17,34 @@
      console.log('Entering in',callee,'called by',caller);
      
      let form = getFormOfName("UploadForm");
-     console.log(callee+'form:',form);
-     console.log(callee+'form.elements:',form.elements);
+     console.log(callee+'.form:',form);
+     console.log(callee+'.form.elements:',form.elements);
      
      let fakepath = valueInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "FakePathId"); 
-     console.log(callee+'fakepath:',fakepath);
+     console.log(callee+'.fakepath:',fakepath);
 
      let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
-     console.log(callee+'mfsdir:',mfsdir);
+     console.log(callee+'.mfsdir:',mfsdir);
 
      let mfsdirOld = mfsdir;
-     let file = form.elements[0].files[0];
-     console.log(callee+'form.element[0].files:',form.elements[0].files);
-     console.log(callee+'file:',file)
-
+     let file = fileInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "FakePathId"); 
+     //     let file = form.elements[0].files[0]; // Improve ?
+//     console.log(callee+'form.element[0].files:',form.elements[0].files);
+     console.log(callee+'.file:',file)
+     
      if (document.getElementById('UploadIdNew').checked) {
 	 var name = document.getElementById('idUploadKeptName').value;
-	 console.log(callee+'name:',name);
+	 console.log(callee+'.name:',name);
      } else {
-	 var name = form.elements[0]['files'][0].name;
-	 console.log(callee+'old.name:',name);
+//	 var name = form.elements[0]['files'][0].name;
+	 var name = file.name; // To be verified
+	 console.log(callee+'.old.name:',name);
      }
-     console.log(callee+'name:',name);
+     console.log(callee+'.name:',name);
      mfsdir += '/';
-     console.log(callee+'mfsdir 1:',mfsdir);
+     console.log(callee+'.mfsdir 1:',mfsdir);
      mfsdir += name;
-     console.log(callee+'mfsdir 2:',mfsdir);
+     console.log(callee+'.mfsdir 2:',mfsdir);
 
      let reader = new FileReader();
      reader.onload = event => {
@@ -56,10 +58,11 @@
 
      let formData = new FormData();
      formData.append("file", file);
+
      console.log(callee+'.formData:',formData)
      let val = "File '"+name+"' uploaded to "+mfsdirOld
      updateElementOfIdOfValue('fileUploaded', val);
-     console.log (callee+'val:', val);
+     console.log (callee+'.val:', val);
      getCurrentMfsDirectory();
  }
 
@@ -84,7 +87,7 @@
 
      const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
-     console.log(callee+'url',url);
+     console.log(callee+'.url',url);
      
      let result = fetchGetTextForm(url)
 	 .then( obj => obj.json())
