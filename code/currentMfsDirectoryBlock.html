@@ -38,9 +38,7 @@
 	 console.log(callee+'.mfspath has been pushed in navArr:',navArr);
 
 	 updateOfSpanIdOfDivIdOfText("currentMfsDir", "CreateDirectoryDivId", mfspath);
-	 
 	 updateElementOfIdOfValue ("UploadId", mfspath);
-	 //	 updateElementOfIdOfValue ("currentMfsDir", mfspath);
 	 getHashAndTypeOfMfsPath (mfspath);
 	 getFileList (mfspath)
      }
@@ -131,7 +129,8 @@
 	 
 	 var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
 	 return fetchGetJson(url)
-	     .then( obj => {console.log(callee+'.obj',obj); return Promise.resolve([obj.Hash, obj.Type]) })
+	     .then( obj => {console.log(callee+'.obj',obj);
+		 return Promise.resolve([obj.Hash, obj.Type]) })
 	     .then(callbackTuple ('hash', 'type'))
 	     .catch(logError)
      }

@@ -2,13 +2,13 @@
 <div class="whiteOnDarkBlue" id="CreateDirectoryDivId">Create directory to <span id="currentMfsDir"></span></div><br>
 
 <form method="POST" name="CreateDirectoryForm">
-
     <input type="text" name="CreateDirectoryName" id="CreateDirectoryId"><br>
     <input type="button" name="CreateDirectoryName" onclick="createDirectory()" value="Create Directory"><br>
     <!-- <div class="fileUploadedAndRemoved" id="directoryCreated"></div> -->
 </form><br>
 
 <script>
+
  function createDirectory() {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
