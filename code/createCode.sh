@@ -10,7 +10,7 @@ cat \
     currentMfsDirectoryBlock.html \
     hiddenForDirBlock.html \
     windowOnLoad.html \
-    tableFunctions.html \
+    tableDirectoryFunctions.html \
     reste.html \
     footBlock.html \
     > f.html

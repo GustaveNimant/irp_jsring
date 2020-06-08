@@ -46,7 +46,7 @@
      reader.onload = event => {
 	 const content_on_load = event.target.result;
 	 console.log(callee+'content_on_load:',content_on_load)
-	 writeOfMfsFilePathOfContent(mfsdir, content_on_load)
+	 writeOfMfsFilePathOfContent(mfsdir, content_on_load) // Improve mfsdir also file
 		.then(callback('hash'))
      }
 

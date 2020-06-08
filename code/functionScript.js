@@ -16,26 +16,6 @@ function baseName(mfspath){
 
 // Button
 
-function buttonCopyFile (name) {
-    let [callee, caller] = functionNameJS();
-    console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.name:',name);
-    
-    let result = '<input type="button" value="Copy ' + name + '" onclick="">';
-    console.log(callee+'.result:',result);
-    return result;
-}
-
-function buttonModifyFile (name) {
-    let [callee, caller] = functionNameJS();
-    console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.name:',name);
-    
-    let result = '<input type="button" value="Modify ' + name + '" onclick="unlockFileEdit ()">';
-    console.log(callee+'.result:',result);
-    return result;
-}
-
 function callback (tag) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
@@ -131,7 +111,7 @@ function displayByIdOfTagOfValue (id, value) { // Improve
 
 function functionNameJS () {
     let stack = new Error().stack;
-    console.log('functionNameJS.stack:',stack);
+//    console.log('functionNameJS.stack:',stack);
 
     var callee;
     var caller;
@@ -154,7 +134,7 @@ function functionNameJS () {
 	caller = stackArray[2].split('@')[0];
 	if (caller == "") {caller = "main"};
     }
-    console.log('functionNameJS.stackArray:',stackArray);
+//    console.log('functionNameJS.stackArray:',stackArray);
     return [callee, caller];
 }
 
