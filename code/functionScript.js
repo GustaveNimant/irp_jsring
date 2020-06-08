@@ -131,10 +131,30 @@ function displayByIdOfTagOfValue (id, value) { // Improve
 
 function functionNameJS () {
     let stack = new Error().stack;
-    let stackArray = stack.split('\n');
-    let callee = stackArray[1].split('@')[0];
-    let caller = stackArray[2].split('@')[0];
-    if (caller == "") {caller = "main"};
+    console.log('functionNameJS.stack:',stack);
+
+    var callee;
+    var caller;
+    var stackArray= [];
+    
+    if (stack.match("at ")) {
+	stackArray = stack.split('at ');
+	callee = stackArray[2].split(' ')[0];
+	if (stackArray[3] == undefined) {
+	    caller = "main";
+	}
+	else{
+	    caller = stackArray[3].split(' ')[0];
+	}
+	if(caller.match("http:")){caller = "main"};
+    }
+    else {
+	stackArray = stack.split('\n');
+	callee = stackArray[1].split('@')[0];
+	caller = stackArray[2].split('@')[0];
+	if (caller == "") {caller = "main"};
+    }
+    console.log('functionNameJS.stackArray:',stackArray);
     return [callee, caller];
 }
 

@@ -28,23 +28,19 @@
 
      let mfsdirOld = mfsdir;
      let file = fileInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "FakePathId"); 
-     //     let file = form.elements[0].files[0]; // Improve ?
-//     console.log(callee+'form.element[0].files:',form.elements[0].files);
      console.log(callee+'.file:',file)
      
      if (document.getElementById('UploadIdNew').checked) {
 	 var name = document.getElementById('idUploadKeptName').value;
 	 console.log(callee+'.name:',name);
      } else {
-//	 var name = form.elements[0]['files'][0].name;
-	 var name = file.name; // To be verified
+	 var name = file.name;
 	 console.log(callee+'.old.name:',name);
      }
      console.log(callee+'.name:',name);
      mfsdir += '/';
-     console.log(callee+'.mfsdir 1:',mfsdir);
      mfsdir += name;
-     console.log(callee+'.mfsdir 2:',mfsdir);
+     console.log(callee+'.mfsdir:',mfsdir);
 
      let reader = new FileReader();
      reader.onload = event => {
@@ -59,10 +55,12 @@
      let formData = new FormData();
      formData.append("file", file);
 
+     // emit a message when upload is done
      console.log(callee+'.formData:',formData)
      let val = "File '"+name+"' uploaded to "+mfsdirOld
      updateElementOfIdOfValue('fileUploaded', val);
      console.log (callee+'.val:', val);
+
      getCurrentMfsDirectory();
  }
 
