@@ -127,7 +127,8 @@
 	 const webui = 'http://127.0.0.1:5001';
 	 const api_url = webui + '/api/v0/'
 	 
-	 var url = api_url + 'files/stat?&arg='+mfspath+'&hash=true&type=true'
+	 var url = api_url + 'files/stat?arg='+mfspath+'&hash=true&type=true'
+	 console.log(callee+'.url:',url);
 	 return fetchGetJson(url)
 	     .then( obj => {console.log(callee+'.obj',obj);
 		 return Promise.resolve([obj.Hash, obj.Type]) })
