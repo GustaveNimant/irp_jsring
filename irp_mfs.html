@@ -1,9 +1,32 @@
 
 <body>
-<input name=current_dir value="/">
+<form>
+<pre>
+Inputs:
+dir: <input name=current_dir value="/">
+<button onclick="affiche_current_dir();">click</button>
+<input id=source name=src value="/etc/source">
+<input id=target name=dst value="destination">
+<textarea name=text>
+</textarea>
+</pre>
+</form>
+<hr>
+InOuts:
+<script> 
+ var currentfile = "dreyh";
+ var map = { "filename":"dreyh" }
+</script>
+<hr>
+Outputs:
+<h3 id=h3-title></h3>
+<span id=ip></span>
+<span class=ip id=ip1></span>
+<span class=ip id=ip2></span>
+<hr>
 
 <div id=current_dir>
-<table id=table_of_content>
+<table id=table_of_content border=1>
 <tr id=row0 class=onerow style="display:none">
 <td class=pin_status></td>
 <td class=file_name></td>
@@ -15,47 +38,60 @@
 </div>
 
 
-
+<script src="https://michel47.github.io/snippets/js/essential.js"></script>
 <script>
+var stored = {};
+const api_url = 'http://127.0.0.1:5001/api/v0/'
+
 affiche_current_dir();
 
+// IRP Rules :
+// -----------
+// no (variable) parameter in provide
+// only builds have arguments...
+// getdata can also have arguments (leaves)
+
+
 async function affiche_current_dir() {
-  let table_of_content = provide_table_of_content();
-  build_affiche_current_dir(table_of_content);
+  let table = await provide_table();
+  build_affiche_current_dir(table);
 }
-async function provide_table_of_content() {
-  let mfs_path = getInputMfsPath(); # Data
+async function provide_table() {
+  let mfs_path = getInputMfsPath(); // Data
   // build
   let table_of_content = await getMfsDir(mfs_path);
   return { "dirname":mfs_path,"TOC":table_of_content };
 }
 
 async function build_affiche_current_dir (table) {
+ console.log('build_affiche_current_dir.table:',table)
  let mfs_path = table.dirname
  let table_of_content = table.TOC
 
- foreach (items in table_of_content) {
-   let pin_status = await providePinStatus()
-   let filename = items.Name
-   let hash = items.hash
-   let type = items.type
+ for (item of table_of_content) {
+   console.log('build_affiche_current_dir.item:',item)
+   stored['item'] = item;
+   let filename = item.Name
+   let pin_status = await providePinStatus('item') // provide
+   let hash = item.Hash
+   let type = item.Type
+   let size = item.Size
    affiche_row(pin_status,filename,hash,type);
  }
 }
 
-function affiche_row (pin_status,filename,hash,type) {
+function affiche_row (pin_status,filename,hash,type) { // build
+   console.log('affiche_row:',filename)
    let e = document.getElementById('table_of_content');
-   let row = e.row[0] // ???
-   row.getElementsByClassName('pin_status').innerHTML = pin_status;
-   row.getElementsByClassName('filename').innerHTML = filename;
-   row.getElementsByClassName('hash').innerHTML = hash;
-   row.getElementsByClassName('type').innerHTML = type;
-   let newrow = document.createElement('td');
+   let row = e.rows[0];
+   row.getElementsByClassName('pin_status')[0].innerHTML = pin_status;
+   row.getElementsByClassName('file_name')[0].innerHTML = filename;
+   row.getElementsByClassName('file_hash')[0].innerHTML = hash;
+   row.getElementsByClassName('file_type')[0].innerHTML = type;
+   let newrow = e.insertRow(1);
    newrow.innerHTML = row.innerHTML;
-   newrow.style.display = block;
-   document.insertBefore(newrow,row) // ???
-   
-   
+   newrow.style.display = 'table';
+   console.log('newrow: ',newrow);
 }
 
 function getInputMfsPath() {
@@ -64,26 +100,47 @@ function getInputMfsPath() {
   return mfs_path;
 }
 
-function providePinStatus {
-   let mfs_path = provideMfsPathName();
-   let pin_status = getPinStatus(mfs_path);
+async function providePinStatus(item) {
+  let dirname = getCurrentDir();
+  let filename = stored[item].Name;
+  let hash = stored[item].Hash;
+   let mfs_path = dirname+'/'+filename
+   let pin_status = await getPinStatus(hash);
    return pin_status;
 }
 
-function provideMfsPathName() {
-  let filename = provideFileName();
-  let dirname = provideDirName();
-  return dirname + '/' +filename;
-}
-function provideFileName() {
-  let idx = provideInde();
-  let table = provideTable();
-  return table.TOC[idx].Name;
-}
-function provideDirName();
-  let table = provideTable();
+function getCurrentDir() {
+  let e = document.getElementsByName('current_dir')[0]
+  return e.value;
 }
 
+async function getMfsDir(mfs_path) {
+   let  url = api_url + 'files/ls?arg='+mfs_path+'&long=true&U=true'
+   return fetchRespCatch(url)
+   .then(obj => {
+     let table_of_content = obj.Entries;
+     console.log('getMfsDir: ',table_of_content);
+     return table_of_content
+   })
+   .catch( obj => { logError('getMfsDir.catch',obj) })
+
+}
+function getPinStatus(hash) { // build
+   let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+   return fetchRespNoCatch(url)
+   .then( obj => {
+       let status;
+       if (typeof(obj.Code) == 'undefined') {
+         status = obj.Keys[hash].Type
+       } else {
+         status = 'unpinned'
+       }
+       console.log('getPinStatus: '+hash+" \u21A6",status);
+       return status
+   })
+   .catch( obj => { logError('getPinStatus.catch',obj) })
+
+}
 
 </script>
 
