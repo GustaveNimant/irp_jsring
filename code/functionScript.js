@@ -53,7 +53,7 @@ function callbackIpfsLocal (tag) {
     return substi
 }
 
- function callbackTuple (tag1, tag2) {
+ function callbackTuple (tag1, tag2) { // Improve tag => id
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.tag1:',tag1)
@@ -100,7 +100,7 @@ function chopOfMfsPath(mfspath){
     return result;
 }
 
-function displayByIdOfTagOfValue (id, value) { // Improve 
+function displayByIdOfTagOfValue (id, value) { // Improve uncorrect name
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id:',id);
@@ -109,22 +109,14 @@ function displayByIdOfTagOfValue (id, value) { // Improve
     document.getElementById(id).innerHTML = value
 }
 
-function navigatorName () {
-    let navNam = navigator.userAgent;
-//    console.log('navigatorName.navNam',navNam);
-
-    var result = "";
-    if(navNam.match("Firefox")){
-	result = "Firefox";
-    }
-    else if(navNam.match("Chrome")){
-	result = "Chrome";
-    }
-    else {
-	result = "unkown";
-    }
-//    console.log('navigatorName.result',result);
-    return result;
+function errorMessage (expected, found, cure, caller) {
+    console.error ('\n\nError in',caller);
+    console.error ('Expecting',expected);
+    console.error ('Found',found);
+    console.error ('Cure',cure);
+    var stack = new Error().stack;
+    console.error ('stack',stack);
+    throw "exit";
 }
 
 function functionNameJS () {
@@ -136,8 +128,6 @@ function functionNameJS () {
     var caller;
     var stackArray= [];
     let navigator = navigatorName();
-    console.log('functionNameJS.navigator',navigator);
-    // Improve detect browser Netscape
     switch (navigator){
     case "Chrome":
 	stackArray = stack.split('at ');
@@ -159,21 +149,20 @@ function functionNameJS () {
 	break;
 	
     default:
-	throw "unknown navigator";
+	console.error('functionNameJS.navigator',navigator);
+	throw "unknown navigator "+navigator;
     } // switch
 
     return [callee, caller];
 }
 
-function errorMessage (expected, found, cure, caller) {
-    console.error ('\n\nError in',caller);
-    console.error ('Expecting',expected);
-    console.error ('Found',found);
-    console.error ('Cure',cure);
-    var stack = new Error().stack;
-    console.error ('stack',stack);
-    throw "exit";
-}
+function imageOfType(type) { // Improve reference to hardcoded src
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     if (type == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
+     else { return '<img src="images/folder.png" width="25px" height="25">'; }
+ }
 
 function logErrorOfHash (err, hash) { // Improve no reference to id "error"
     let [callee, caller] = functionNameJS();
@@ -246,6 +235,24 @@ function logError (err) {
     default:
 	console.log(callee+'"default err:',);
     } // switch
+}
+
+function navigatorName () {
+    let navNam = navigator.userAgent;
+//    console.log('navigatorName.navNam',navNam);
+
+    var result = "";
+    if(navNam.match("Firefox")){
+	result = "Firefox";
+    }
+    else if(navNam.match("Chrome")){
+	result = "Chrome";
+    }
+    else {
+	result = "unkown";
+    }
+//    console.log('navigatorName.result',result);
+    return result;
 }
 
 function updateElementOfIdOfValue (id, value) {

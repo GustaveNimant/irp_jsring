@@ -11,6 +11,16 @@
 </form><br>
 
 <script>
+
+ function checkedRadio () { // Improve reference to id 'UploadIdNew' 
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     let rad = document.getElementById('UploadIdNew');
+     console.log (callee+'.rad:',rad);
+     rad.checked = true;
+     updateElementOfIdOfValue ('UploadIdNew', rad);
+ }
  
  function uploadFileToCurrentMfs() {
      let [callee, caller] = functionNameJS();
