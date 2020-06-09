@@ -53,7 +53,7 @@ function callbackIpfsLocal (tag) {
     return substi
 }
 
- function callbackTuple (tag1, tag2) {
+ function callbackTuple (tag1, tag2) { // Improve tag => id
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.tag1:',tag1)
@@ -100,42 +100,13 @@ function chopOfMfsPath(mfspath){
     return result;
 }
 
-function displayByIdOfTagOfValue (id, value) { // Improve 
+function displayByIdOfTagOfValue (id, value) { // Improve uncorrect name
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id:',id);
     console.log(callee+'.input.value:',value)
     
     document.getElementById(id).innerHTML = value
-}
-
-function functionNameJS () {
-    let stack = new Error().stack;
-//    console.log('functionNameJS.stack:',stack);
-
-    var callee;
-    var caller;
-    var stackArray= [];
-    
-    if (stack.match("at ")) {
-	stackArray = stack.split('at ');
-	callee = stackArray[2].split(' ')[0];
-	if (stackArray[3] == undefined) {
-	    caller = "main";
-	}
-	else{
-	    caller = stackArray[3].split(' ')[0];
-	}
-	if(caller.match("http:")){caller = "main"};
-    }
-    else {
-	stackArray = stack.split('\n');
-	callee = stackArray[1].split('@')[0];
-	caller = stackArray[2].split('@')[0];
-	if (caller == "") {caller = "main"};
-    }
-//    console.log('functionNameJS.stackArray:',stackArray);
-    return [callee, caller];
 }
 
 function errorMessage (expected, found, cure, caller) {
@@ -147,6 +118,51 @@ function errorMessage (expected, found, cure, caller) {
     console.error ('stack',stack);
     throw "exit";
 }
+
+function functionNameJS () {
+   let stack = new Error().stack;
+ 
+//    console.log('functionNameJS.stack:',stack);
+
+    var callee;
+    var caller;
+    var stackArray= [];
+    let navigator = navigatorName();
+    switch (navigator){
+    case "Chrome":
+	stackArray = stack.split('at ');
+	callee = stackArray[2].split(' ')[0];
+	if (stackArray[3] == undefined) {
+	    caller = "main";
+	}
+	else{
+	    caller = stackArray[3].split(' ')[0];
+	}
+	if(caller.match("http:")){caller = "main"};
+	break;
+	
+    case "Firefox":
+	stackArray = stack.split('\n');
+	callee = stackArray[1].split('@')[0];
+	caller = stackArray[2].split('@')[0];
+	if (caller == "") {caller = "main"};
+	break;
+	
+    default:
+	console.error('functionNameJS.navigator',navigator);
+	throw "unknown navigator "+navigator;
+    } // switch
+
+    return [callee, caller];
+}
+
+function imageOfType(type) { // Improve reference to hardcoded src
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     if (type == 0) { return '<img src="images/file.png" width="25px" height="25">'; }
+     else { return '<img src="images/folder.png" width="25px" height="25">'; }
+ }
 
 function logErrorOfHash (err, hash) { // Improve no reference to id "error"
     let [callee, caller] = functionNameJS();
@@ -219,6 +235,24 @@ function logError (err) {
     default:
 	console.log(callee+'"default err:',);
     } // switch
+}
+
+function navigatorName () {
+    let navNam = navigator.userAgent;
+//    console.log('navigatorName.navNam',navNam);
+
+    var result = "";
+    if(navNam.match("Firefox")){
+	result = "Firefox";
+    }
+    else if(navNam.match("Chrome")){
+	result = "Chrome";
+    }
+    else {
+	result = "unkown";
+    }
+//    console.log('navigatorName.result',result);
+    return result;
 }
 
 function updateElementOfIdOfValue (id, value) {
