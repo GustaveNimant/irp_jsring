@@ -109,15 +109,37 @@ function displayByIdOfTagOfValue (id, value) { // Improve
     document.getElementById(id).innerHTML = value
 }
 
+function navigatorName () {
+    let navNam = navigator.userAgent;
+//    console.log('navigatorName.navNam',navNam);
+
+    var result = "";
+    if(navNam.match("Firefox")){
+	result = "Firefox";
+    }
+    else if(navNam.match("Chrome")){
+	result = "Chrome";
+    }
+    else {
+	result = "unkown";
+    }
+//    console.log('navigatorName.result',result);
+    return result;
+}
+
 function functionNameJS () {
-    let stack = new Error().stack;
+   let stack = new Error().stack;
+ 
 //    console.log('functionNameJS.stack:',stack);
 
     var callee;
     var caller;
     var stackArray= [];
-    
-    if (stack.match("at ")) {
+    let navigator = navigatorName();
+    console.log('functionNameJS.navigator',navigator);
+    // Improve detect browser Netscape
+    switch (navigator){
+    case "Chrome":
 	stackArray = stack.split('at ');
 	callee = stackArray[2].split(' ')[0];
 	if (stackArray[3] == undefined) {
@@ -127,14 +149,19 @@ function functionNameJS () {
 	    caller = stackArray[3].split(' ')[0];
 	}
 	if(caller.match("http:")){caller = "main"};
-    }
-    else {
+	break;
+	
+    case "Firefox":
 	stackArray = stack.split('\n');
 	callee = stackArray[1].split('@')[0];
 	caller = stackArray[2].split('@')[0];
 	if (caller == "") {caller = "main"};
-    }
-//    console.log('functionNameJS.stackArray:',stackArray);
+	break;
+	
+    default:
+	throw "unknown navigator";
+    } // switch
+
     return [callee, caller];
 }
 
