@@ -1,22 +1,24 @@
 
 <body>
-<!--form method=JS -->
-<pre>
+    <!--form method=JS -->
+    <pre>
 Inputs:
 dir: <input name=current_dir value="/">
-<button onclick="affiche_current_dir();">click</button>
-<input id=source name=src value="/etc/source">
-<input id=target name=dst value="destination">
-<textarea name=text>
-</textarea>
-</pre>
-<!-- /form -->
-<hr>
-InOuts:
-<script> 
- var currentfile = "dreyh";
- var map = { "filename":"dreyh" }
-</script>
+	<button onclick="affiche_current_dir();">click</button>
+	<input id=source name=src value="/etc/source">
+	<input id=target name=dst value="destination">
+	<textarea name=text>
+	</textarea>
+    </pre>
+    <!-- /form -->
+    
+    <hr>
+    InOuts:
+    <script> 
+     var currentfile = "dreyh";
+     var map = { "filename":"dreyh" }
+    </script>
+    
 <hr>
 Outputs:
 <h3 id=h3-title></h3>
@@ -26,14 +28,14 @@ Outputs:
 <hr>
 
 <div id=current_dir>
-<table id=table_of_content border=1>
-<tr id=row0 class=onerow style="display:none">
-<td class=pin_status></td>
-<td class=file_name></td>
-<td class=file_hash></td>
-<td class=file_type></td>
-</tr>
-</table>
+    <table id=table_of_content border=1>
+	<tr id=row0 class=onerow style="display:none">
+	    <td class=pin_status></td>
+	    <td class=file_name></td>
+	    <td class=file_hash></td>
+	    <td class=file_type></td>
+	</tr>
+    </table>
 </div>
 </div>
 

@@ -107,3 +107,57 @@ function textOfSpanIdOfDivId(spaId, divId) {
     return result;
 }
 
+// h3 id=h3-title remplacé par span id=h3TitleSpanId name=h3TitleSpanName
+function updateSpanOfIdOfNameOfText(spaId, spaName, text) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.spaId',spaId);
+    console.log(callee+'.input.spaName',spaName);
+    console.log(callee+'.input.text',text);
+    
+    let element = spanOfSpanIdOfName(spaId, spaName);
+    console.log(callee+'.element:',element);
+    element.textContent = text;
+}
+
+function spanOfSpanIdOfName(spaId, name) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.spaId',spaId);
+    console.log(callee+'.input.name',name);
+    
+    let span = spanOfId(spaId);
+    console.log(callee+'.span:',span);
+
+    return span;
+}
+
+function spanOfId(spanId) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.spanId:',spanId);
+    
+    var element = document.getElementById(spanId)
+    console.log(callee+'.element:',element);
+    
+    return element;
+}
+
+// table id=ls-result remplacé par id=tableLsResultId name=tableLsResultName
+function getTableOfIdOfName (tableId, tableName) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.tableId:',tableId);
+    console.log(callee+'.input.tableName:',tableName);
+    
+    let table = document.getElementById(tableId);
+    console.log(callee+'.table:',table);
+
+    let name = table.attributes[1].nodeValue;
+    console.log(callee+'.name:',name);
+
+    if(name != tableName) {
+	throw "Error'" + tableId + "' '" + tableName;
+    }
+    return table;    
+}

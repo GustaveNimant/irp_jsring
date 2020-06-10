@@ -24,7 +24,16 @@
 	     background:#C7F8F6;
 	 }
 
-	 .dbug { border: 1px dotted #0A6BB3 }
+	 .butBack {
+	     background:#0A6BB3;
+	     border-radius:10px;
+	 }
+	 
+	 .butBack:hover {
+	     cursor:pointer;
+	     border: 2px solid;
+	     border-color:#8E9493;
+	 }	 .dbug { border: 1px dotted #0A6BB3 }
 
 	 .fileUploadedAndRemoved {
 	     background:#58F571;
@@ -32,6 +41,10 @@
 	     font-size:80%;
 	 }
 
+	 .greenBackground {
+	     background:#00FF00;
+	 }
+	 
 	 .header {
 	     border-radius: 15px;
 	     padding: 10px;
@@ -72,13 +85,3 @@
 	     text-align: center;
 	 }
 	 
-	 .butBack {
-	     background:#0A6BB3;
-	     border-radius:10px;
-	 }
-	 
-	 .butBack:hover {
-	     cursor:pointer;
-	     border: 2px solid;
-	     border-color:#8E9493;
-	 }

@@ -10,7 +10,6 @@ dir: <input name=current_dir value="/">
 	<textarea name=text>
 	</textarea>
     </pre>
-    <script src="code/functionScript.js"></script>
 
     <!-- /form -->
     <hr>
@@ -41,7 +40,9 @@ dir: <input name=current_dir value="/">
 
 
     <script src="https://michel47.github.io/snippets/js/essential.js"></script>
+    <script src="code/functionScript.js"></script>
     <script>
+     
      var stored = {};
      const api_url = 'http://127.0.0.1:5001/api/v0/'
 
@@ -52,7 +53,6 @@ dir: <input name=current_dir value="/">
      // no (variable) parameter in provide
      // only builds have arguments...
      // getdata can also have arguments (leaves)
-
 
      async function affiche_current_dir() {
 	 let [callee, caller] = functionNameJS();
@@ -70,9 +70,13 @@ dir: <input name=current_dir value="/">
      }
 
      async function build_affiche_current_dir (table) {
-	 console.log('build_affiche_current_dir.table:',table)
-	 let mfs_path = table.dirname
-	 let table_of_content = table.TOC
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.table:',table);
+	 
+	 let mfs_path = table.dirname;
+	 let table_of_content = table.TOC;
+	 console.log(callee+'.table_of_content:',table_of_content);
 
 	 for (item of table_of_content) {
 	     console.log('build_affiche_current_dir.item:',item)
@@ -107,10 +111,17 @@ dir: <input name=current_dir value="/">
      }
 
      async function providePinStatus(item) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.item:',item);
+
 	 let dirname = getCurrentDir();
 	 let filename = stored[item].Name;
+	 console.log(callee+'.filename:',filename);
 	 let hash = stored[item].Hash;
+	 console.log(callee+'.hash:',hash);
 	 let mfs_path = dirname+'/'+filename
+	 console.log(callee+'.mfs_path:',mfs_path);
 	 let pin_status = await getPinStatus(hash);
 	 return pin_status;
      }

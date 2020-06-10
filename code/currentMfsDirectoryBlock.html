@@ -18,8 +18,8 @@
 	<div>
 </center>
 
-<table id=ls-result>
-    <tr><th colspan=4><h3 id="h3-title" class="whiteOnDarkBlue"></h3></th>
+<table id="tableLsResultId" name ="tableLsResultName">
+    <tr><th colspan=4><h3 class="whiteOnDarkBlue"><span id="h3TitleSpanId" name="h3TitleSpanName"></span></h3></th>
 </table>
 	</div>
     </div>
@@ -73,12 +73,12 @@
 	 console.log(callee+'.mfsDirPath:', mfsDirPath);
 	 console.log(callee+'.entries:', entries);
 	 
-	 table = document.getElementById('ls-result')
+	 table = document.getElementById('tableLsResultId')
 	 console.log(callee+'.table:',table);
 	 
 	 deleteActionsAndErrorTexts();
 	 deleteAllRowsOfTable (table);
-	 updateElementOfIdOfValue ('h3-title', mfsDirPath);
+	 updateElementOfIdOfValue ('h3TitleSpanId', mfsDirPath);
 
 	 try {
 	     if (entries == null) throw "entries is null"		 
@@ -88,6 +88,13 @@
 
 	 if (entries.length != 0){
 	     createHeaderOfTable (table);
+	 }
+
+	 // remove textArea for single File if any
+	 var mydiv = document.getElementById("textAreaCenterDivId");
+	 if (mydiv != null) {
+	     console.log(callee+'.mydiv:',mydiv);
+	     mydiv.innerHTML = "";
 	 }
 	 
 	 createTableOfEntriesOfMfsDirPath (entries, mfsDirPath);
