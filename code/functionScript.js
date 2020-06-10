@@ -182,7 +182,7 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
 	break;
 	
     default:
-	console.log(callee+'.default.err:',œerr);
+	console.log(callee+'.default.err:',err);
     } // switch
 }
 

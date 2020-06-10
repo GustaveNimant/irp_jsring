@@ -22,6 +22,28 @@
      updateElementOfIdOfValue ('UploadIdNew', rad);
  }
  
+ function hashOfMfsFilePath(mfsFilePath) {
+     let [callee, caller] = functionNameJS();
+     console.log(callee+'.input.mfsFilePath:',mfsFilePath);
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
+     console.log(callee+'.url',url);
+     
+     let result = fetchGetTextForm(url)
+	 .then( obj => obj.json())
+	 .then( json => {
+	     console.log(callee+'.json',json);
+	     console.log(callee+'json.Type',json.Type);
+	     if (json.Type == "error") {
+		 const message = 'Error from '+callee+' : '+json.Message;
+		 console.log(callee+'.message',message);
+		 updateElementOfIdOfValue("error", message);
+	     }
+	     return json.Hash} )
+     return result;
+ }
+
  function uploadFileToCurrentMfs() {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
@@ -89,27 +111,6 @@
 	 .catch(logError)
  }
 
- function hashOfMfsFilePath(mfsFilePath) {
-     let [callee, caller] = functionNameJS();
-     console.log(callee+'.input.mfsFilePath:',mfsFilePath);
-
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
-     var url = api_url + 'files/stat?arg='+mfsFilePath+'&hash=true'
-     console.log(callee+'.url',url);
-     
-     let result = fetchGetTextForm(url)
-	 .then( obj => obj.json())
-	 .then( json => {
-	     console.log(callee+'.json',json);
-	     console.log(callee+'json.Type',json.Type);
-	     if (json.Type == "error") {
-		 const message = 'Error from '+callee+' : '+json.Message;
-		 console.log(callee+'.message',message);
-		 updateElementOfIdOfValue("error", message);
-	     }
-	     return json.Hash} )
-     return result;
- }
  
 </script>
 <!-- End of UploadBlock -->

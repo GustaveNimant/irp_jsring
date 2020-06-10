@@ -1,0 +1,156 @@
+
+<body>
+    <!--form method=JS -->
+    <pre>
+Inputs:
+dir: <input name=current_dir value="/">
+	<button onclick="affiche_current_dir();">click</button>
+	<input id=source name=src value="/etc/source">
+	<input id=target name=dst value="destination">
+	<textarea name=text>
+	</textarea>
+    </pre>
+    <script src="code/functionScript.js"></script>
+
+    <!-- /form -->
+    <hr>
+    InOuts:
+    <script> 
+     var currentfile = "dreyh";
+     var map = { "filename":"dreyh" }
+    </script>
+    <hr>
+    Outputs:
+    <h3 id=h3-title></h3>
+    <span id=ip></span>
+    <span class=ip id=ip1></span>
+    <span class=ip id=ip2></span>
+    <hr>
+
+    <div id=current_dir>
+	<table id=table_of_content border=1>
+	    <tr id=row0 class=onerow style="display:none">
+		<td class=pin_status></td>
+		<td class=file_name></td>
+		<td class=file_hash></td>
+		<td class=file_type></td>
+	    </tr>
+	</table>
+    </div>
+    </div>
+
+
+    <script src="https://michel47.github.io/snippets/js/essential.js"></script>
+    <script>
+     var stored = {};
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
+
+     affiche_current_dir();
+
+     // IRP Rules :
+     // -----------
+     // no (variable) parameter in provide
+     // only builds have arguments...
+     // getdata can also have arguments (leaves)
+
+
+     async function affiche_current_dir() {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 
+	 let table = await provide_table();
+	 build_affiche_current_dir(table);
+     }
+     
+     async function provide_table() {
+	 let mfs_path = getInputMfsPath(); // Data
+	 // build
+	 let table_of_content = await getMfsDir(mfs_path);
+	 return { "dirname":mfs_path,"TOC":table_of_content };
+     }
+
+     async function build_affiche_current_dir (table) {
+	 console.log('build_affiche_current_dir.table:',table)
+	 let mfs_path = table.dirname
+	 let table_of_content = table.TOC
+
+	 for (item of table_of_content) {
+	     console.log('build_affiche_current_dir.item:',item)
+	     stored['item'] = item;
+	     let filename = item.Name
+	     let pin_status = await providePinStatus('item') // provide
+	     let hash = item.Hash
+	     let type = item.Type
+	     let size = item.Size
+	     affiche_row(pin_status,filename,hash,type);
+	 }
+     }
+
+     function affiche_row (pin_status,filename,hash,type) { // build
+	 console.log('affiche_row:',filename)
+	 let e = document.getElementById('table_of_content');
+	 let row = e.rows[0];
+	 row.getElementsByClassName('pin_status')[0].innerHTML = pin_status;
+	 row.getElementsByClassName('file_name')[0].innerHTML = filename;
+	 row.getElementsByClassName('file_hash')[0].innerHTML = hash;
+	 row.getElementsByClassName('file_type')[0].innerHTML = type;
+	 let newrow = e.insertRow(1);
+	 newrow.innerHTML = row.innerHTML;
+	 newrow.style.display = 'table';
+	 console.log('newrow: ',newrow);
+     }
+
+     function getInputMfsPath() {
+	 let e = document.getElementsByName('current_dir')[0]
+	 let mfs_path = e.value;
+	 return mfs_path;
+     }
+
+     async function providePinStatus(item) {
+	 let dirname = getCurrentDir();
+	 let filename = stored[item].Name;
+	 let hash = stored[item].Hash;
+	 let mfs_path = dirname+'/'+filename
+	 let pin_status = await getPinStatus(hash);
+	 return pin_status;
+     }
+     
+     function getCurrentDir() {
+	 let e = document.getElementsByName('current_dir')[0]
+	 return e.value;
+     }
+
+     async function getMfsDir(mfs_path) {
+	 let  url = api_url + 'files/ls?arg='+mfs_path+'&long=true&U=true'
+	 return fetchRespCatch(url)
+	     .then(obj => {
+		 let table_of_content = obj.Entries;
+		 console.log('getMfsDir: ',table_of_content);
+		 return table_of_content
+	     })
+	     .catch( obj => { logError('getMfsDir.catch',obj) })
+
+     }
+     function getPinStatus(hash) { // build
+	 let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
+	 return fetchRespNoCatch(url)
+	     .then( obj => {
+		 let status;
+		 if (typeof(obj.Code) == 'undefined') {
+		     status = obj.Keys[hash].Type
+		 } else {
+		     status = 'unpinned'
+		 }
+		 console.log('getPinStatus: '+hash+" \u21A6",status);
+		 return status
+	     })
+	     .catch( obj => { logError('getPinStatus.catch',obj) })
+
+     }
+
+    </script>
+
+</body>
+
+
+

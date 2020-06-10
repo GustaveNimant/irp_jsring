@@ -66,14 +66,6 @@
      return result;
  }
 
- function displayFileContentOfHash (hash) {
-     let [callee, caller] = functionNameJS();
-     console.log(callee+'.input.hash:',hash);
-
-     getHash(hash);
-     createTextareaForFileContent();
- }
-
  function createTextareaForFileContent() { // Improve reference to saveFileOnIpms()
      let [callee, caller] = functionNameJS();
      console.log(callee+'.entering');
@@ -119,14 +111,12 @@
      document.body.appendChild (cen);
  }
 
- function unlockFileEdit () {
+ function displayFileContentOfHash (hash) {
      let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.hash:',hash);
 
-     let txtAre = document.getElementById('textAreaFileContentId');
-     txtAre.disabled = false;
-     let butSav = document.getElementById('inputButtonSaveFileOnIpmsId');
-     butSav.disabled = false;
+     getHash(hash);
+     createTextareaForFileContent();
  }
 
  function getHash(hash) { // Improve reference to textAreaFileContentId 
@@ -149,6 +139,16 @@
 	 .catch(logError)
  }
 
+ function unlockFileEdit () {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     let txtAre = document.getElementById('textAreaFileContentId');
+     txtAre.disabled = false;
+     let butSav = document.getElementById('inputButtonSaveFileOnIpmsId');
+     butSav.disabled = false;
+ }
+
  function saveFileOnIpms () { // Improve 2 hardcoded ids
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
@@ -161,16 +161,14 @@
      let filNam = document.getElementById('h3-title').innerHTML;
      console.log(callee+'.filNam:',filNam);
 
-//     let curMfsDir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     //     let curMfsDir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
      let path = document.getElementById ('CurrentMfsDirectoryId').value;
      if (path == '/') {
 	 var mfspath = path + filNam
      } else {
 	 var mfspath = path + '/' + filNam
      }
-
      console.log(callee+'.mfspath:',mfspath);
-
      
      writeOfMfsFilePathOfContent(mfspath, content) ;
      
