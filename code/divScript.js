@@ -153,7 +153,14 @@ function getTableOfIdOfName (tableId, tableName) {
     let table = document.getElementById(tableId);
     console.log(callee+'.table:',table);
 
-    let name = table.attributes[1].nodeValue;
+    /*
+    let attr_a = table.attributes;
+    console.log(callee+'.attr_a:',attr_a);
+
+    let id = attr_a['id'].value;
+    console.log(callee+'.id:',id);
+    */
+    var name = table.attributes['name'].value;
     console.log(callee+'.name:',name);
 
     if(name != tableName) {
