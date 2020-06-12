@@ -1,25 +1,25 @@
 <!-- UploadBlock -->
-<div class="whiteOnDarkBlue">Upload file to <span id="UploadId">Mfs Directory</span></div><br>
+<div class="WhiteOnDarkBlueClass">Upload file to <span id="DivSpanUploadId">Mfs Directory</span></div><br>
 
 <form method="POST" name="UploadForm">
-    <input type="file"  name="nameoffile" id="FakePathId"><br>
-    <input type="radio" name="nameoffile" id="UploadIdOld" checked>Upload with name kept<br>
-    <input type="radio" name="nameoffile" id="UploadIdNew">
-    <input type="text"  name="nameoffile" id="idUploadKeptName" onchange="checkedRadio()" placeholder="Upload with name changed"><br>
+    <input type="file"  name="nameoffile" id="InputFileFakePathId"><br>
+    <input type="radio" name="nameoffile" id="InputRadioUploadOldId" checked>Upload with name kept<br>
+    <input type="radio" name="nameoffile" id="InputRadioUploadNewId">
+    <input type="text"  name="nameoffile" id="InputTextUploadKeptNameId" onchange="checkedRadio()" placeholder="Upload with name changed"><br>
     <input type="button" onclick="uploadFileToCurrentMfs()" value="Upload"><br>
-    <div class="fileUploadedAndRemoved" id="fileUploaded"></div>
+    <div class="FileUploadedAndRemovedClass" id="DivFileUploadedId"></div>
 </form><br>
 
 <script>
 
- function checkedRadio () { // Improve reference to id 'UploadIdNew' 
+ function checkedRadio () { // Improve reference to id 'InputRadioUploadNewId' 
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
 
-     let rad = document.getElementById('UploadIdNew');
+     let rad = document.getElementById('InputRadioUploadNewId');
      console.log (callee+'.rad:',rad);
      rad.checked = true;
-     updateElementOfIdOfValue ('UploadIdNew', rad);
+     updateElementOfIdOfValue ('InputRadioUploadNewId', rad);
  }
  
  function hashOfMfsFilePath(mfsFilePath) {
@@ -38,7 +38,7 @@
 	     if (json.Type == "error") {
 		 const message = 'Error from '+callee+' : '+json.Message;
 		 console.log(callee+'.message',message);
-		 updateElementOfIdOfValue("error", message);
+		 updateElementOfIdOfValue("SpanErrorId", message);
 	     }
 	     return json.Hash} )
      return result;
@@ -52,18 +52,18 @@
      console.log(callee+'.form:',form);
      console.log(callee+'.form.elements:',form.elements);
      
-     let fakepath = valueInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "FakePathId"); 
+     let fakepath = valueInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "InputFileFakePathId"); 
      console.log(callee+'.fakepath:',fakepath);
 
-     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
      console.log(callee+'.mfsdir:',mfsdir);
 
      let mfsdirOld = mfsdir;
-     let file = fileInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "FakePathId"); 
+     let file = fileInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "InputFileFakePathId"); 
      console.log(callee+'.file:',file)
      
-     if (document.getElementById('UploadIdNew').checked) {
-	 var name = document.getElementById('idUploadKeptName').value;
+     if (document.getElementById('InputRadioUploadNewId').checked) {
+	 var name = document.getElementById('InputTextUploadKeptNameId').value;
 	 console.log(callee+'.name:',name);
      } else {
 	 var name = file.name;
@@ -79,7 +79,7 @@
 	 const content_on_load = event.target.result;
 	 console.log(callee+'content_on_load:',content_on_load)
 	 writeOfMfsFilePathOfContent(mfsdir, content_on_load) // Improve mfsdir also file
-		.then(callback('hash'))
+		.then(callback('DivSpanHashId'))
      }
 
      reader.readAsText(file,'UTF-8') 
@@ -90,8 +90,8 @@
      // emit a message when upload is done
      console.log(callee+'.formData:',formData)
      let val = "File '"+name+"' uploaded to "+mfsdirOld
-     updateElementOfIdOfValue('fileUploaded', val);
      console.log (callee+'.val:', val);
+     updateElementOfIdOfValue('DivFileUploadedId', val);
 
      getCurrentMfsDirectory();
  }

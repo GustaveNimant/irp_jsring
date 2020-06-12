@@ -58,7 +58,7 @@
      console.log(callee+'.input.type:',type);
      console.log(callee+'.input.hash:',hash);
 
-     let but = '<input type="button" id="nameButton" value="';
+     let but = '<input type="button" id="InputButtonNameId" class="InputButtonNameClass" value="';
      but += name;
      if (type == 1){
 	 but += '" onclick="addNameOnInputMfsPath(this.value)"';
@@ -76,7 +76,7 @@
      console.log('Entering in',callee,'called by',caller);
      console.log (callee+'.input.mfspath:', mfspath);
 
-     let oldMfsdir = document.getElementById('CurrentMfsDirectoryId').value;
+     let oldMfsdir = document.getElementById('InputTextCurrentMfsDirectoryId').value;
      console.log (callee+'.oldMfsdir:', oldMfsdir);
      let path = oldMfsdir;
      if (oldMfsdir == '/'){
@@ -86,11 +86,11 @@
 	 path += mfspath;
      }
      console.log (callee+'.path:', path);
-     var del = document.getElementById('idRemoveFileOrDirectory');
+     var del = document.getElementById('InputTextRemoveFileOrDirectoryId');
      del.value = path;
-     var mfsdir = document.getElementById('CurrentMfsDirectoryId');
+     var mfsdir = document.getElementById('InputTextCurrentMfsDirectoryId');
      mfsdir.value = path;
-     document.getElementById('idRemoveButton').disabled = false;
+     document.getElementById('InputButtonRemoveId').disabled = false;
      getCurrentMfsDirectory();
  }
 

@@ -1,10 +1,10 @@
 <!-- Block copy -->
-<div class="whiteOnDarkBlue">Copy to Mfs path</div><br>
+<div class="WhiteOnDarkBlueClass">Copy to Mfs path</div><br>
 <form method="POST" name="CopyForm">
-    Source<input type="text" name="CopyName" id="pathSourceId" placeholder="Path or hash"><br>
-    Target<input type="text" name="CopyName" id="pathTargetId" placeholder="Path"><br>
+    Source<input type="text" name="InputTextCopyName" id="InputTextCopyPathSourceId" placeholder="Path or hash"><br>
+    Target<input type="text" name="InputTextCopyName" id="InputTextCopyPathTargetId" placeholder="Path"><br>
     <input type="button" onclick="copyHashOrMfsToMfs()" value="Copy Source">
-    <div class="greenBackground" id="fileCopied"></div>
+    <div class="GreenBackgroundClass" id="DivFileCopiedId"></div>
 </form><br>
 
 <script>
@@ -13,8 +13,8 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     var from = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "CopyName", "pathSourceId");
-     let to   = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "CopyName", "pathTargetId");
+     var from = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId");
+     let to   = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathTargetId");
      
      if ( from.charAt(0) != '/') {
 	 from = '/ipfs/' + from;
@@ -24,7 +24,7 @@
      return fetchPostText(url)
      	 .then(validate)
 	 .then(resp => resp.statusText)
-	 .then(callback('fileCopied'))
+	 .then(callback('DivFileCopiedId'))
 	 .catch(logError)
  }
  

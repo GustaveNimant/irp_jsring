@@ -1,10 +1,9 @@
 <!-- CreateDirectoryBlock -->
-<div class="whiteOnDarkBlue" id="CreateDirectoryDivId">Create directory to <span id="currentMfsDir"></span></div><br>
+<div class="WhiteOnDarkBlueClass" id="DivCreateDirectoryId">Create directory to <span id="DivSpanCreateDirectoryId"></span></div><br>
 
 <form method="POST" name="CreateDirectoryForm">
-    <input type="text" name="CreateDirectoryName" id="CreateDirectoryId"><br>
-    <input type="button" name="CreateDirectoryName" onclick="createDirectory()" value="Create Directory"><br>
-    <!-- <div class="fileUploadedAndRemoved" id="directoryCreated"></div> -->
+    <input type="text" name="InputTextCreateDirectoryName" id="InputTextCreateDirectoryId"><br>
+    <input type="button" name="InputTextCreateDirectoryName" onclick="createDirectory()" value="Create Directory"><br>
 </form><br>
 
 <script>
@@ -13,10 +12,10 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     let msfDirPath = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     let msfDirPath = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
      console.log(callee+'.mfsDirPath:',msfDirPath);
 
-     let mfsDirName = document.getElementById('CreateDirectoryId').value;
+     let mfsDirName = document.getElementById('InputTextCreateDirectoryId').value;
      console.log(callee+'.mfsDirName:',mfsDirName);
      
      if (msfDirPath == '/'){

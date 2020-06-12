@@ -1,4 +1,10 @@
 	 /**
+	  * Naming :
+	  *    function in semiCamelCase
+	  *    Id in PureCamelCase
+	  *    variables : abbreviated or semiCamelCase 
+	  *    file names : lowercase
+	  
 	  * Rules
 	  *   id : Used in span to modify innerHTML.
           *   name : Used in input.( No need of id).

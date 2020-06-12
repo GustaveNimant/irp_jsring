@@ -12,19 +12,19 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
+     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
      if (mfsdir == '/') {
 	 mfspath = mfsdir + file;
      } else {
 	 mfspath = mfsdir + '/' + file;
      }
 
-     let inp = document.getElementById('idRemoveFileOrDirectory');
+     let inp = document.getElementById('InputTextRemoveFileOrDirectoryId');
      inp.value = mfspath;
-     let but = document.getElementById('idRemoveButton');
+     let but = document.getElementById('InputButtonRemoveId');
      but.disabled = false;
      
-     let cop = updateInputOfFormOfTypeOfNameOfIdOfValue("CopyForm", "text", "CopyName", "pathSourceId", mfspath);
+     let cop = updateInputOfFormOfTypeOfNameOfIdOfValue("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId", mfspath);
  }
  
  function createTableForFileOfNameOfHash (name, hash) { 
@@ -33,9 +33,9 @@
      console.log(callee+'.input.hash:',hash);
      updateRemoveFileAndCopyFileOfFile (name);
      
-     updateSpanOfIdOfNameOfText('h3TitleSpanId', 'h3TitleSpanName', name);
+     updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', name);
 
-     table = getTableOfIdOfName ('tableLsResultId', 'tableLsResultName');
+     table = getTableOfIdOfName ('TableLsResultId', 'TableLsResultName');
      
      deleteAllRowsOfTable (table);
      createHeaderForFileOfTable (table);
@@ -75,25 +75,25 @@
      console.log(callee+'.input.action:', action);
      switch (action) {
 	 case "copy" :
-	     let copSou = document.getElementById('pathSourceId');
-	     copSou.className= "greenBackground";
-	     let copTar = document.getElementById('pathTargetId');
-	     copTar.className= "greenBackground";
+	     let copSou = document.getElementById('InputTextCopyPathSourceId');
+	     copSou.className= "GreenBackgroundClass";
+	     let copTar = document.getElementById('InputTextCopyPathTargetId');
+	     copTar.className= "GreenBackgroundClass";
 	     break;
 	 case "delete" :
-	     let del = document.getElementById('idRemoveFileOrDirectory');
+	     let del = document.getElementById('InputTextRemoveFileOrDirectoryId');
 	     del.disabled = false;
-	     del.className= "greenBackground";
+	     del.className= "GreenBackgroundClass";
 	     break;
      }
  }
  
- function buttonDeleteFile (name) { // Improve CurrentMfsDirectoryId
+ function buttonDeleteFile (name) { // Improve InputTextCurrentMfsDirectoryId
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.name:',name);
 
-     let path = document.getElementById ('CurrentMfsDirectoryId').value;
+     let path = document.getElementById ('InputTextCurrentMfsDirectoryId').value;
      if (path == '/') {
 	 var mfspath = path + name
      } else {
@@ -144,7 +144,7 @@
 
      var spaMes = document.createElement ('span');
      spaMes.id = 'fileModified';
-     spaMes.className = 'greenBackground';
+     spaMes.className = 'GreenBackgroundClass';
 
      var texAre = document.createElement ('textarea');
      texAre.rows = 20;
@@ -216,11 +216,11 @@
      let content = texAre.value;
      console.log(callee+'.content:',content);
 
-     let filNam = document.getElementById('h3TitleSpanId').innerHTML;
+     let filNam = document.getElementById('H3SpanTitleId').innerHTML;
      console.log(callee+'.filNam:',filNam);
 
-     //     let curMfsDir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "CurrentMfsDirectoryName", "CurrentMfsDirectoryId");
-     let path = document.getElementById ('CurrentMfsDirectoryId').value;
+     //     let curMfsDir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
+     let path = document.getElementById ('InputTextCurrentMfsDirectoryId').value;
      if (path == '/') {
 	 var mfspath = path + filNam
      } else {

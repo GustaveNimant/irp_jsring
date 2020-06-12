@@ -26,7 +26,7 @@
      console.log(callee+'.input.rootName:',rootName);
      console.log(callee+'.input.hash:',hash);
 
-     var mfsdir = document.getElementById('CurrentMfsDirectoryId').value;
+     var mfsdir = document.getElementById('InputTextCurrentMfsDirectoryId').value;
      console.log(callee+'.mfsdir',mfsdir);
      if (mfsdir != '/') {
 	 var path = mfsdir + '/' + rootName;
@@ -34,8 +34,8 @@
 	 var path = mfsdir + rootName;
      }
      console.log(callee+'.path:',path);
-     document.getElementById('idRemoveButton').disabled = false;
-     var del = document.getElementById('idRemoveFileOrDirectory');
+     document.getElementById('InputButtonRemoveId').disabled = false;
+     var del = document.getElementById('InputTextRemoveFileOrDirectoryId');
      del.value = path;
      getHash(hash);
  }

@@ -107,7 +107,7 @@ function textOfSpanIdOfDivId(spaId, divId) {
     return result;
 }
 
-// h3 id=h3-title remplacé par span id=h3TitleSpanId name=h3TitleSpanName
+// h3 id=h3-title remplacé par span id=H3SpanTitleId name=H3SpanTitleName
 function updateSpanOfIdOfNameOfText(spaId, spaName, text) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
@@ -143,7 +143,7 @@ function spanOfId(spanId) {
     return element;
 }
 
-// table id=ls-result remplacé par id=tableLsResultId name=tableLsResultName
+// table id=ls-result remplacé par id=TableLsResultId name=TableLsResultName
 function getTableOfIdOfName (tableId, tableName) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);

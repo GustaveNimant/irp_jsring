@@ -1,10 +1,10 @@
 <!-- RemoveBlock -->
-<div class="whiteOnDarkBlue">Remove file or directory</div><br>
+<div class="WhiteOnDarkBlueClass">Remove file or directory</div><br>
 
 <form method="POST" name="RemoveForm">
-    <input type="text" id="idRemoveFileOrDirectory" disabled><br>
-    <input type="button" onclick="removeElement()" id="idRemoveButton" value="Remove" disabled><br>
-    <div class="fileUploadedAndRemoved" id="fileRemoved"></div>
+    <input type="text" id="InputTextRemoveFileOrDirectoryId" disabled><br>
+    <input type="button" onclick="removeElement()" id="InputButtonRemoveId" value="Remove" disabled><br>
+    <div class="FileUploadedAndRemovedClass" id="DivFileRemovedId"></div>
 </form><br>
 
 <script>
@@ -12,7 +12,7 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     var mfspath = document.getElementById('idRemoveFileOrDirectory').value;
+     var mfspath = document.getElementById('InputTextRemoveFileOrDirectoryId').value;
      console.log(callee+'.mfspath:',mfspath);
      
      let conf_mess = 'Confirm removing of ' + mfspath;
@@ -39,10 +39,10 @@
      return fetch(url, { method: "POST", mode: 'cors'})
 	 .then (validate)
 	 .then (resp => {console.log(callee+'.resp',resp)})
-	 .then (_ => {document.getElementById('CurrentMfsDirectoryId').value = parent})
+	 .then (_ => {document.getElementById('InputTextCurrentMfsDirectoryId').value = parent})
      	 .then (_ => {getCurrentMfsDirectory()})
-	 .then (_ => {updateElementOfIdOfValue('fileRemoved', 'File or directory deleted')})
-	 .then (_ => {document.getElementById('idRemoveFileOrDirectory').value = document.getElementById('CurrentMfsDirectoryId').value})
+	 .then (_ => {updateElementOfIdOfValue('DivFileRemovedId', 'File or directory deleted')})
+	 .then (_ => {document.getElementById('InputTextRemoveFileOrDirectoryId').value = document.getElementById('InputTextCurrentMfsDirectoryId').value})
 	 .catch(err => logError(err))
  }	 
 

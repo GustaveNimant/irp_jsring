@@ -1,8 +1,7 @@
 #!/bin/bash
 
-echo '<div id="leftSideBlock">' > A.html
+echo '<div class="LeftSideBlockClass">' > A.html
 echo '</div>' > B.html
-	    
 
 cat \
     A.html \
@@ -12,7 +11,6 @@ cat \
     code/copyBlock.html \
     code/repoStats.html \
     code/pinBlock.html \
-    B.html \
     > C.html
 
 cat \

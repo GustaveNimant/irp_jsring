@@ -1,15 +1,8 @@
-	 #leftSideBlock {
-	     float:left;
-	     border:2px solid #0A6BB3;
-	     padding:5px;
-	     background:#ffffff;
-	 }
-
 	 #h3-title {
 	     display: block;
 	 }
 
-	 #nameButton { 
+	 .nameButton { 
 	     background-color:#0A6BB3;
 	     color:#ffffff;
 	     cursor: pointer;
@@ -35,13 +28,13 @@
 	     border-color:#8E9493;
 	 }	 .dbug { border: 1px dotted #0A6BB3 }
 
-	 .fileUploadedAndRemoved {
+	 .FileUploadedAndRemovedClass {
 	     background:#58F571;
 	     text-align: center;
 	     font-size:80%;
 	 }
 
-	 .greenBackground {
+	 .GreenBackgroundClass {
 	     background:#00FF00;
 	 }
 	 
@@ -57,11 +50,24 @@
 	     font:"Fira Sans", serif;
 	 }
 
+	 .InputButtonNameClass { 
+	     background-color:#0A6BB3;
+	     color:#ffffff;
+	     cursor: pointer;
+	 }
+	 
+	 .LeftSideBlockClass {
+	     float:left;
+	     border:2px solid #0A6BB3;
+	     padding:5px;
+	     background:#ffffff;
+	 }
+
 	 .pinButton {
 	     background:#ffffff;
 	 }
 
-	 .title {
+	 .TitleClass {
 	     border-radius: 10px;
 	     padding: 10px;
 	     margin:10px;
@@ -72,12 +78,12 @@
 	     font:"Fira Sans", serif;
 	 }
 
-	 .typeAndHash {
+	 .TypeAndHashClass {
 	     padding:10px;
 	     margin:10px;
 	 }
 
-	 .whiteOnDarkBlue {
+	 .WhiteOnDarkBlueClass {
 	     border-radius:5px;
 	     background:#0A6BB3;
 	     color:white;

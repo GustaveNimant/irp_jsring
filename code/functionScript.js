@@ -16,53 +16,53 @@ function baseName(mfspath){
 
 // Button
 
-function callback (tag) {
+function callback (id) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.tag:',tag);
+    console.log(callee+'.input.id:',id);
     
     const result = obj => {
-	displayByIdOfTagOfValue(tag, obj); 
+	displayOfIdOfValue(id, obj); 
     };
     
     console.log(callee+'.result:',result);
     return result
 }
 
-function callbackIpfsIo (tag) {
+function callbackIpfsIo (id) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.tag:',tag);
+    console.log(callee+'.input.id:',id);
 
     const substi = obj => {
 	let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-	displayByIdOfTagOfValue(tag, text);
+	displayOfIdOfValue(id, text);
     };
     return substi
 }
 
-function callbackIpfsLocal (tag) {
+function callbackIpfsLocal (id) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.tag:',tag);
+    console.log(callee+'.input.id:',id);
 
     const substi = obj => {
 	let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-	displayByIdOfTagOfValue(tag, text);
+	displayOfIdOfValue(id, text);
     };
     return substi
 }
 
- function callbackTuple (tag1, tag2) { // Improve tag => id
+ function callbackOfIdOfId (id1, id2) { 
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.tag1:',tag1)
-     console.log(callee+'.input.tag2:',tag2)
+     console.log(callee+'.input.id1:',id1)
+     console.log(callee+'.input.id2:',id2)
      
      const substi = ([obj1, obj2]) => {
 	 let url = linkIpfsHash (obj1);
-	 updateElementOfIdOfValue(tag1, url);
-	 updateElementOfIdOfValue(tag2, obj2);
+	 updateElementOfIdOfValue(id1, url);
+	 updateElementOfIdOfValue(id2, obj2);
      };
      return substi
  }
@@ -100,7 +100,7 @@ function chopOfMfsPath(mfspath){
     return result;
 }
 
-function displayByIdOfTagOfValue (id, value) { // Improve uncorrect name
+function displayOfIdOfValue (id, value) { // Improve uncorrect name
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id:',id);
@@ -172,12 +172,12 @@ function logErrorOfHash (err, hash) { // Improve no reference to id "error"
     
     const message = err.message;
     console.log(callee+'.message:',message);
-    displayByIdOfTagOfValue("error", message); // Improve
+    displayOfIdOfValue("SpanErrorId", message); // Improve
     
     switch (message){
     case "Internal Server Error":
 	var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
-	displayByIdOfTagOfValue("error", text);
+	displayOfIdOfValue("SpanErrorId", text);
 	
 	break;
 	
@@ -193,28 +193,28 @@ function logError (err) {
     
     const message = err.message;
     console.log(callee+'message',message);
-    displayByIdOfTagOfValue("error", message);
+    displayOfIdOfValue("SpanErrorId", message);
     switch (message){
 	
     case "NetworkError when attempting to fetch resource.":
 	var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
-	displayByIdOfTagOfValue("error", text); 
+	displayOfIdOfValue("SpanErrorId", text); 
 	break;
 	
     case "Failed to fetch":
 	var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
-	displayByIdOfTagOfValue("error", text); 
+	displayOfIdOfValue("SpanErrorId", text); 
 	break;	     
 	
     case "Internal Server Error":
 	//			 var text = "Internal Server Error because ipfs file path was uncorrect";
-	//			 displayByIdOfTagOfValue("error", text); 
+	//			 displayOfIdOfValue("SpanErrorId", text); 
 	return false;
 	break;
 	
     case "Cannot read property 'length' of null":
 	console.log(callee+'.Cannot read property length of null');
-	displayByIdOfTagOfValue("error", '');
+	displayOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
 	updateElementOfIdOfValue('h3-title', dir + ' is empty');
@@ -222,14 +222,14 @@ function logError (err) {
 	
     case "entries is null":
         console.log(callee+':entries is null');
-	displayByIdOfTagOfValue("error", '');
+	displayOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
 	updateElementOfIdOfValue('h3-title', dir + ' is empty');
 	break;
 
     case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
-	displayByIdOfTagOfValue("error", '');
+	displayOfIdOfValue("SpanErrorId", '');
 	break;
 	
     default:
