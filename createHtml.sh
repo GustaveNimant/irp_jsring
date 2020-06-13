@@ -19,7 +19,7 @@ cat \
     code/currentMfsDirectoryBlock.html \
     code/windowOnLoad.html \
     code/tableDirectoryFunctions.html \
-    code/tableFileFunctions.html \
+    code/tableSingleFileFunctions.html \
     code/reste.html \
     code/footBlock.html \
     > F.html

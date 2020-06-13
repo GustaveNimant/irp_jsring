@@ -82,7 +82,7 @@ function fileInputOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId) {
 
     let element = elementInputOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId);
     console.log(callee+'.element:',element);
-    result = element.files[0];
+    result = element.files[0]; // Improve
 
     console.log(callee+'.result:',result);
 

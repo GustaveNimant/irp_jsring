@@ -217,7 +217,7 @@ function logError (err) {
 	displayOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
-	updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	updateElementOfIdOfValue('H3SpanTitleId', dir + ' is empty');
 	break;
 	
     case "entries is null":
@@ -225,7 +225,7 @@ function logError (err) {
 	displayOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
-	updateElementOfIdOfValue('h3-title', dir + ' is empty');
+	updateElementOfIdOfValue('H3SpanTitleId', dir + ' is empty');
 	break;
 
     case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
@@ -263,6 +263,26 @@ function updateElementOfIdOfValue (id, value) {
 
     let doc = document.getElementById(id);
     doc.innerHTML = value;
+}
+
+function valueInputTextOfId(id) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.id:',id);
+
+    let result = document.getElementById(id).value;
+    console.log(callee+'.result:',result);
+    return result;
+}
+
+function innerHTMLSpanOfId(id) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.id:',id);
+
+    let result = document.getElementById(id).innerHTML;
+    console.log(callee+'.result:',result);
+    return result;
 }
 
  function validate (resp) {

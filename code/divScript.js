@@ -107,15 +107,14 @@ function textOfSpanIdOfDivId(spaId, divId) {
     return result;
 }
 
-// h3 id=h3-title remplacé par span id=H3SpanTitleId name=H3SpanTitleName
-function updateSpanOfIdOfNameOfText(spaId, spaName, text) {
+function updateSpanOfIdOfNameOfText(spaId, spaNam, text) { // Improve spaName not used
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.spaId',spaId);
-    console.log(callee+'.input.spaName',spaName);
+    console.log(callee+'.input.spaNam',spaNam);
     console.log(callee+'.input.text',text);
     
-    let element = spanOfSpanIdOfName(spaId, spaName);
+    let element = spanOfSpanIdOfName(spaId, spaNam);
     console.log(callee+'.element:',element);
     element.textContent = text;
 }
@@ -143,7 +142,6 @@ function spanOfId(spanId) {
     return element;
 }
 
-// table id=ls-result remplacé par id=TableLsResultId name=TableLsResultName
 function getTableOfIdOfName (tableId, tableName) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
@@ -153,13 +151,6 @@ function getTableOfIdOfName (tableId, tableName) {
     let table = document.getElementById(tableId);
     console.log(callee+'.table:',table);
 
-    /*
-    let attr_a = table.attributes;
-    console.log(callee+'.attr_a:',attr_a);
-
-    let id = attr_a['id'].value;
-    console.log(callee+'.id:',id);
-    */
     var name = table.attributes['name'].value;
     console.log(callee+'.name:',name);
 

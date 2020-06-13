@@ -1,7 +1,3 @@
-	 #h3-title {
-	     display: block;
-	 }
-
 	 .nameButton { 
 	     background-color:#0A6BB3;
 	     color:#ffffff;
@@ -38,6 +34,10 @@
 	     background:#00FF00;
 	 }
 	 
+	 .H3SpanTitleClass {
+	     display: block;
+	 }
+
 	 .header {
 	     border-radius: 15px;
 	     padding: 10px;
