@@ -8,16 +8,18 @@
      createElementTable (tr, 'th', 'Hash');
  }
 
- function updateRemoveFileAndCopyFileOfFile (file) {
+ function updateRemoveFileAndCopyFileOfFile (filNam) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.filNam:',filNam);
      
-     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
-     if (mfsdir == '/') {
-	 mfspath = mfsdir + file;
+     let dirPat = valueInputTextOfId('InputTextCurrentMfsDirectoryId');
+     if (dirPat == '/') {
+	 mfspath = dirPat + filNam;
      } else {
-	 mfspath = mfsdir + '/' + file;
+	 mfspath = dirPat + '/' + filNam;
      }
+     console.log(callee+'.mfspath:',mfspath);
 
      let inp = document.getElementById('InputTextRemoveFileOrDirectoryId');
      inp.value = mfspath;
@@ -27,13 +29,13 @@
      let cop = updateInputOfFormOfTypeOfNameOfIdOfValue("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId", mfspath);
  }
  
- function createTableOfSingleFileNameOfHash (namFil, hash) { 
+ function createTableOfSingleFileNameOfHash (filNam, hash) { 
      let [callee, caller] = functionNameJS();
-     console.log(callee+'.input.namFil:',namFil);
+     console.log(callee+'.input.filNam:',filNam);
      console.log(callee+'.input.hash:',hash);
-     updateRemoveFileAndCopyFileOfFile (namFil);
+     updateRemoveFileAndCopyFileOfFile (filNam);
      
-     updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', namFil);
+     updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', filNam);
 
      table = getTableOfIdOfName ('TableLsResultId', 'TableLsResultName');
      
@@ -45,23 +47,23 @@
      createElementTable (tr, 'td', linkIpfsHash (hash));
 
      var tr = createElementTable (table,'tr', '');
-     createElementTable (tr, 'td', buttonCopyFile (namFil));
-     createElementTable (tr, 'td', buttonModifyFile (namFil));
+     createElementTable (tr, 'td', buttonCopyFile (filNam));
+     createElementTable (tr, 'td', buttonModifyFile (filNam));
 
      var tr = createElementTable (table,'tr', '');
-     createElementTable (tr, 'td', buttonDeleteFile (namFil));
+     createElementTable (tr, 'td', buttonDeleteFile (filNam));
 
      console.log (callee+'.table:', table);
      displayFileContentOfHash(hash);
  }
 
- function buttonCopyFile (namFil) {
+ function buttonCopyFile (filNam) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.namFil:',namFil);
+     console.log(callee+'.input.filNam:',filNam);
      let action = 'copy';
      let butCop = '<input type="button" value="Copy ';
-     butCop += namFil;
+     butCop += filNam;
      butCop += '" onclick="addGreenBackgroundOfCopyOrRemove(\'';
      butCop += action;
      butCop += '\')">';
@@ -88,21 +90,21 @@
      }
  }
  
- function buttonDeleteFile (namFil) { // Improve InputTextCurrentMfsDirectoryId
+ function buttonDeleteFile (filNam) { // Improve InputTextCurrentMfsDirectoryId
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.namFil:',namFil);
+     console.log(callee+'.input.filNam:',filNam);
 
      let path = document.getElementById ('InputTextCurrentMfsDirectoryId').value;
      if (path == '/') {
-	 var mfspath = path + namFil
+	 var mfspath = path + filNam
      } else {
-	 var mfspath = path + '/' + namFil
+	 var mfspath = path + '/' + filNam
      }
      let action = 'delete';
      console.log(callee+'.mfspath:', mfspath);
      let butDel = '<input type="button" value="Delete ';
-     butDel += namFil;
+     butDel += filNam;
      butDel += '" onclick="addGreenBackgroundOfCopyOrRemove(\'';
      butDel += 'delete';
      butDel += '\')">';
@@ -110,12 +112,12 @@
      return butDel;
  }
 
- function buttonModifyFile (namFil) {
+ function buttonModifyFile (filNam) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.namFil:',namFil);
+     console.log(callee+'.input.filNam:',filNam);
      
-     let result = '<input type="button" value="Modify ' + namFil + '" onclick="unlockFileEdit ()">';
+     let result = '<input type="button" value="Modify ' + filNam + '" onclick="unlockFileEdit ()">';
      console.log(callee+'.result:',result);
      return result;
  }
