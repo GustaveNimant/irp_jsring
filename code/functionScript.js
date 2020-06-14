@@ -255,14 +255,15 @@ function navigatorName () {
     return result;
 }
 
-function updateElementOfIdOfValue (id, value) {
+function updateElementOfIdOfValue (id, val) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id',id);
-    console.log(callee+'.input.value',value);
+    console.log(callee+'.input.val',val);
 
     let doc = document.getElementById(id);
-    doc.innerHTML = value;
+    console.log(callee+'.doc:',doc);
+    doc.innerHTML = val;
 }
 
 function valueInputTextOfId(id) {
@@ -270,7 +271,9 @@ function valueInputTextOfId(id) {
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id:',id);
 
-    let result = document.getElementById(id).value;
+    let doc = document.getElementById(id);
+    console.log(callee+'.doc:',doc);
+    let result = doc.value;
     console.log(callee+'.result:',result);
     return result;
 }
@@ -280,7 +283,9 @@ function innerHTMLSpanOfId(id) {
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id:',id);
 
-    let result = document.getElementById(id).innerHTML;
+    let doc = document.getElementById(id);
+    console.log(callee+'.doc:',doc);
+    let result = doc.innerHTML;
     console.log(callee+'.result:',result);
     return result;
 }
