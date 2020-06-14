@@ -22,7 +22,7 @@ function callback (id) {
     console.log(callee+'.input.id:',id);
     
     const result = obj => {
-	displayOfIdOfValue(id, obj); 
+	updateInnerHTMLOfIdOfValue(id, obj); 
     };
     
     console.log(callee+'.result:',result);
@@ -36,7 +36,7 @@ function callbackIpfsIo (id) {
 
     const substi = obj => {
 	let text = "<a href=https://ipfs.io/ipfs/"+obj+">"+obj+"</a>";
-	displayOfIdOfValue(id, text);
+	updateInnerHTMLOfIdOfValue(id, text);
     };
     return substi
 }
@@ -48,7 +48,7 @@ function callbackIpfsLocal (id) {
 
     const substi = obj => {
 	let text = "<a href=http://127.0.0.1:5001/ipfs/"+obj+">"+obj+"</a>";
-	displayOfIdOfValue(id, text);
+	updateInnerHTMLOfIdOfValue(id, text);
     };
     return substi
 }
@@ -163,12 +163,12 @@ function logErrorOfHash (err, hash) {
     
     const message = err.message;
     console.log(callee+'.message:',message);
-    displayOfIdOfValue("SpanErrorId", message); // Improve
+    updateInnerHTMLOfIdOfValue("SpanErrorId", message); // Improve
     
     switch (message){
     case "Internal Server Error":
 	var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
-	displayOfIdOfValue("SpanErrorId", text);
+	updateInnerHTMLOfIdOfValue("SpanErrorId", text);
 	
 	break;
 	
@@ -184,28 +184,28 @@ function logError (err) {
     
     const message = err.message;
     console.log(callee+'message',message);
-    displayOfIdOfValue("SpanErrorId", message);
+    updateInnerHTMLOfIdOfValue("SpanErrorId", message);
     switch (message){
 	
     case "NetworkError when attempting to fetch resource.":
 	var text = "NetworkError because ipfs has not been launched<br>run : jsm; . config.sh; ipmsd.sh";
-	displayOfIdOfValue("SpanErrorId", text); 
+	updateInnerHTMLOfIdOfValue("SpanErrorId", text); 
 	break;
 	
     case "Failed to fetch":
 	var text = "NetworkError because ipfs has not been launched<br>run :cd minichain ; . config.sh";
-	displayOfIdOfValue("SpanErrorId", text); 
+	updateInnerHTMLOfIdOfValue("SpanErrorId", text); 
 	break;	     
 	
     case "Internal Server Error":
 	//			 var text = "Internal Server Error because ipfs file path was uncorrect";
-	//			 displayOfIdOfValue("SpanErrorId", text); 
+	//			 updateInnerHTMLOfIdOfValue("SpanErrorId", text); 
 	return false;
 	break;
 	
     case "Cannot read property 'length' of null":
 	console.log(callee+'.Cannot read property length of null');
-	displayOfIdOfValue("SpanErrorId", '');
+	updateInnerHTMLOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
 	updateInnerHTMLOfIdOfValue('H3SpanTitleId', dir + ' is empty');
@@ -213,14 +213,14 @@ function logError (err) {
 	
     case "entries is null":
         console.log(callee+':entries is null');
-	displayOfIdOfValue("SpanErrorId", '');
+	updateInnerHTMLOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
 	updateInnerHTMLOfIdOfValue('H3SpanTitleId', dir + ' is empty');
 	break;
 
     case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
-	displayOfIdOfValue("SpanErrorId", '');
+	updateInnerHTMLOfIdOfValue("SpanErrorId", '');
 	break;
 	
     default:
@@ -244,17 +244,6 @@ function navigatorName () {
     }
 //    console.log('navigatorName.result',result);
     return result;
-}
-
-function displayOfIdOfValue (id, val) { // Improve duplicates updateInnerHTMLOfIdOfValue
-    let [callee, caller] = functionNameJS();
-    console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.id:',id);
-    console.log(callee+'.input.val:',val)
-    
-    let doc = document.getElementById(id);
-    console.log(callee+'.doc:',doc);
-    doc.innerHTML = val;
 }
 
 function updateInnerHTMLOfIdOfValue (id, val) {
