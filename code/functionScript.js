@@ -246,7 +246,7 @@ function navigatorName () {
     return result;
 }
 
-function displayOfIdOfValue (id, val) { // Improve duplicate updateElementOfIdOfValue
+function displayOfIdOfValue (id, val) { // Improve duplicates updateElementOfIdOfValue
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id:',id);
@@ -257,7 +257,7 @@ function displayOfIdOfValue (id, val) { // Improve duplicate updateElementOfIdOf
     doc.innerHTML = val;
 }
 
-function updateElementOfIdOfValue (id, val) {
+function updateElementOfIdOfValue (id, val) {// Improve updateInnerHTMLOfIdOfValue
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id',id);
