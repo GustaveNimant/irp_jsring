@@ -100,15 +100,6 @@ function chopOfMfsPath(mfspath){
     return result;
 }
 
-function displayOfIdOfValue (id, value) { // Improve uncorrect name
-    let [callee, caller] = functionNameJS();
-    console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.id:',id);
-    console.log(callee+'.input.value:',value)
-    
-    document.getElementById(id).innerHTML = value
-}
-
 function errorMessage (expected, found, cure, caller) {
     console.error ('\n\nError in',caller);
     console.error ('Expecting',expected);
@@ -164,7 +155,7 @@ function imageOfType(type) { // Improve reference to hardcoded src
      else { return '<img src="images/folder.png" width="25px" height="25">'; }
  }
 
-function logErrorOfHash (err, hash) { // Improve no reference to id "error"
+function logErrorOfHash (err, hash) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.err:',err);
@@ -253,6 +244,17 @@ function navigatorName () {
     }
 //    console.log('navigatorName.result',result);
     return result;
+}
+
+function displayOfIdOfValue (id, val) { // Improve duplicate updateElementOfIdOfValue
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.id:',id);
+    console.log(callee+'.input.val:',val)
+    
+    let doc = document.getElementById(id);
+    console.log(callee+'.doc:',doc);
+    doc.innerHTML = val;
 }
 
 function updateElementOfIdOfValue (id, val) {
