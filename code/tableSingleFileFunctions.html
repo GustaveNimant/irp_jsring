@@ -228,32 +228,45 @@
      return table;    
  }
 
- function saveSingleFileOnIpms () { // Improve 2 hardcoded ids
+ function provideTextAreaSaved() {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     
+
      let texAre = document.getElementById('TextAreaSingleFileContentId');
      console.log(callee+'.texAre:',texAre);
      let content = texAre.value;
      console.log(callee+'.content:',content);
-     
+     texAre.disabled = true;
+     let butSav = document.getElementById('InputButtonSaveSingleFileOnIpmsId');
+     butSav.disabled = true;
+
+     return content;
+ }
+ 
+ function provideSingleFileMfsPath() {
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
      let filNam = innerHTMLSpanOfId('H3SpanTitleId');
      console.log(callee+'.filNam:',filNam);
-
      let dirPat = valueInputTextOfId('InputTextCurrentMfsDirectoryId');
      if (dirPat == '/') {
 	 var mfspath = dirPat + filNam
      } else {
 	 var mfspath = dirPat + '/' + filNam
      }
-
+     
      console.log(callee+'.mfspath:',mfspath);
+     return mfspath;
+ }
+ 
+ function saveSingleFileOnIpms () { // Improve 2 hardcoded ids
+     let [callee, caller] = functionNameJS();
+     console.log('Entering in',callee,'called by',caller);
+
+     let mfspath = provideSingleFileMfsPath();
+     let content = provideTextAreaSaved();
      
      writeOfMfsFilePathOfContent(mfspath, content) ;
-     
-     texAre.disabled = true;
-     let butSav = document.getElementById('InputButtonSaveSingleFileOnIpmsId');
-     butSav.disabled = true;
  }
 
 </script>
