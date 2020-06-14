@@ -126,7 +126,7 @@
      let [callee, caller] = functionNameJS();
      console.log(callee+'.input.hash:',hash);
 
-     getHash(hash);
+     contentOfSingleFileHashOfStorageId(hash, 'TextAreaSingleFileContentId');
      createTextareaForFileContent();
  }
 
@@ -190,7 +190,7 @@
      butSav.disabled = false;
  }
 
- function getHash(hash) { // Improve reference to TextAreaSingleFileContentId 
+ function contentOfSingleFileHashOfStorageId(hash, id) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.hash:',hash)
@@ -206,7 +206,7 @@
      
      return fetchGetTextCors(url)
 	 .then( obj => { return Promise.resolve(obj) })
-	 .then(callback('TextAreaSingleFileContentId'))
+	 .then(callback(id))
 	 .catch(logError)
  }
 
@@ -246,6 +246,7 @@
  function provideSingleFileMfsPath() {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
+     
      let filNam = innerHTMLSpanOfId('H3SpanTitleId');
      console.log(callee+'.filNam:',filNam);
      let dirPat = valueInputTextOfId('InputTextCurrentMfsDirectoryId');
@@ -254,7 +255,7 @@
      } else {
 	 var mfspath = dirPat + '/' + filNam
      }
-     
+     console.log(callee+'.dirPat:',dirPat);
      console.log(callee+'.mfspath:',mfspath);
      return mfspath;
  }
