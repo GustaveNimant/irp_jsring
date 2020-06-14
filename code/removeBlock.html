@@ -41,7 +41,7 @@
 	 .then (resp => {console.log(callee+'.resp',resp)})
 	 .then (_ => {document.getElementById('InputTextCurrentMfsDirectoryId').value = parent})
      	 .then (_ => {getCurrentMfsDirectory()})
-	 .then (_ => {updateElementOfIdOfValue('DivFileRemovedId', 'File or directory deleted')})
+	 .then (_ => {updateInnerHTMLOfIdOfValue('DivFileRemovedId', 'File or directory deleted')})
 	 .then (_ => {document.getElementById('InputTextRemoveFileOrDirectoryId').value = document.getElementById('InputTextCurrentMfsDirectoryId').value})
 	 .catch(err => logError(err))
  }	 

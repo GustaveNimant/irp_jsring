@@ -19,7 +19,7 @@
      let rad = document.getElementById('InputRadioUploadNewId');
      console.log (callee+'.rad:',rad);
      rad.checked = true;
-     updateElementOfIdOfValue ('InputRadioUploadNewId', rad);
+     updateInnerHTMLOfIdOfValue ('InputRadioUploadNewId', rad);
  }
  
  function hashOfMfsFilePath(mfsFilePath) {
@@ -38,7 +38,7 @@
 	     if (json.Type == "error") {
 		 const message = 'Error from '+callee+' : '+json.Message;
 		 console.log(callee+'.message',message);
-		 updateElementOfIdOfValue("SpanErrorId", message);
+		 updateInnerHTMLOfIdOfValue("SpanErrorId", message);
 	     }
 	     return json.Hash} )
      return result;
@@ -91,7 +91,7 @@
      console.log(callee+'.formData:',formData)
      let val = "File '"+name+"' uploaded to "+mfsdirOld
      console.log (callee+'.val:', val);
-     updateElementOfIdOfValue('DivFileUploadedId', val);
+     updateInnerHTMLOfIdOfValue('DivFileUploadedId', val);
 
      getCurrentMfsDirectory();
  }

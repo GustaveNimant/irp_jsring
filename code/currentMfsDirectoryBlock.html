@@ -37,7 +37,7 @@
 	 console.log(callee+'.mfspath has been pushed in navArr:',navArr);
 
 	 updateOfSpanIdOfDivIdOfText("DivSpanCreateDirectoryId", "DivCreateDirectoryId", mfspath);
-	 updateElementOfIdOfValue ("DivSpanUploadId", mfspath);
+	 updateInnerHTMLOfIdOfValue ("DivSpanUploadId", mfspath);
 	 getHashAndTypeOfMfsPath (mfspath);
 	 getFileListOfMfsDirPath (mfspath);
      }
@@ -75,7 +75,7 @@
 	 
 	 deleteActionsAndErrorTexts();
 	 deleteAllRowsOfTable (table);
-	 updateElementOfIdOfValue ('H3SpanTitleId', mfsDirPath);
+	 updateInnerHTMLOfIdOfValue ('H3SpanTitleId', mfsDirPath);
 
 	 try {
 	     if (entries == null) throw "entries is null"		 
@@ -101,9 +101,9 @@
 	 let [callee, caller] = functionNameJS();
 	 console.log('Entering in',callee,'called by',caller);
 	 
-	 updateElementOfIdOfValue ('DivFileUploadedId', '');
-	 updateElementOfIdOfValue ('SpanErrorId', '');
-	 updateElementOfIdOfValue ('DivFileRemovedId', '');
+	 updateInnerHTMLOfIdOfValue ('DivFileUploadedId', '');
+	 updateInnerHTMLOfIdOfValue ('SpanErrorId', '');
+	 updateInnerHTMLOfIdOfValue ('DivFileRemovedId', '');
      }
 
      function mfsPathOfForm(form) {
