@@ -61,8 +61,8 @@ function callbackIpfsLocal (id) {
      
      const substi = ([obj1, obj2]) => {
 	 let url = linkIpfsHash (obj1);
-	 updateElementOfIdOfValue(id1, url);
-	 updateElementOfIdOfValue(id2, obj2);
+	 updateInnerHTMLOfIdOfValue(id1, url);
+	 updateInnerHTMLOfIdOfValue(id2, obj2);
      };
      return substi
  }
@@ -208,7 +208,7 @@ function logError (err) {
 	displayOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
-	updateElementOfIdOfValue('H3SpanTitleId', dir + ' is empty');
+	updateInnerHTMLOfIdOfValue('H3SpanTitleId', dir + ' is empty');
 	break;
 	
     case "entries is null":
@@ -216,7 +216,7 @@ function logError (err) {
 	displayOfIdOfValue("SpanErrorId", '');
 	var dir = document.getElementById('CurrentMfsDirectoryId').value;
 	console.log(callee+'.dir', dir);
-	updateElementOfIdOfValue('H3SpanTitleId', dir + ' is empty');
+	updateInnerHTMLOfIdOfValue('H3SpanTitleId', dir + ' is empty');
 	break;
 
     case "Cannot read property 'QmPcmWRAzbsDA25SENuZ7qRCPWYsPsWCgQV4vKPndydryc' of undefined":
@@ -246,7 +246,7 @@ function navigatorName () {
     return result;
 }
 
-function displayOfIdOfValue (id, val) { // Improve duplicates updateElementOfIdOfValue
+function displayOfIdOfValue (id, val) { // Improve duplicates updateInnerHTMLOfIdOfValue
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id:',id);
@@ -257,7 +257,7 @@ function displayOfIdOfValue (id, val) { // Improve duplicates updateElementOfIdO
     doc.innerHTML = val;
 }
 
-function updateElementOfIdOfValue (id, val) {// Improve updateInnerHTMLOfIdOfValue
+function updateInnerHTMLOfIdOfValue (id, val) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.id',id);
@@ -310,6 +310,9 @@ function innerHTMLSpanOfId(id) {
 function sizeOfJsonOfKey (json, key) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.json:',json);
+    console.log(callee+'.input.key:',key);
+    
     let siz = json[key]['Size']
     if (siz > 0) { return ' ('+siz+' octets) '; }
     else {return "";}
@@ -333,6 +336,8 @@ function typeImageOfJsonOfKey (json, key) {
     console.log(callee+'.input.key',key);
 
     let type = typeOfJsonOfKey (json, key);
+    console.log (callee+'.type:', type);
+
     result = imageOfType(type);
     console.log (callee+'.result:', result);
     return result;
