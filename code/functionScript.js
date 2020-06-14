@@ -249,7 +249,7 @@ function navigatorName () {
 	result = "Chrome";
     }
     else {
-	result = "unkown";
+	throw "Error in navigatorName.unknown navigator "+navNam;
     }
 //    console.log('navigatorName.result',result);
     return result;

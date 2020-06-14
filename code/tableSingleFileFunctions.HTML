@@ -27,13 +27,13 @@
      let cop = updateInputOfFormOfTypeOfNameOfIdOfValue("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId", mfspath);
  }
  
- function createTableOfSingleFileNameOfHash (name, hash) { 
+ function createTableOfSingleFileNameOfHash (namFil, hash) { 
      let [callee, caller] = functionNameJS();
-     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.namFil:',namFil);
      console.log(callee+'.input.hash:',hash);
-     updateRemoveFileAndCopyFileOfFile (name);
+     updateRemoveFileAndCopyFileOfFile (namFil);
      
-     updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', name);
+     updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', namFil);
 
      table = getTableOfIdOfName ('TableLsResultId', 'TableLsResultName');
      
@@ -45,23 +45,23 @@
      createElementTable (tr, 'td', linkIpfsHash (hash));
 
      var tr = createElementTable (table,'tr', '');
-     createElementTable (tr, 'td', buttonCopyFile (name));
-     createElementTable (tr, 'td', buttonModifyFile (name));
+     createElementTable (tr, 'td', buttonCopyFile (namFil));
+     createElementTable (tr, 'td', createInputButtonModifyOfSingleFileName (namFil));
 
      var tr = createElementTable (table,'tr', '');
-     createElementTable (tr, 'td', buttonDeleteFile (name));
+     createElementTable (tr, 'td', createInputButtonDeleteOfSingleFileName (namFil));
 
      console.log (callee+'.table:', table);
      displayFileContentOfHash(hash);
  }
 
- function buttonCopyFile (name) {
+ function buttonCopyFile (namFil) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.namFil:',namFil);
      let action = 'copy';
      let butCop = '<input type="button" value="Copy ';
-     butCop += name;
+     butCop += namFil;
      butCop += '" onclick="addGreenBackgroundOfCopyOrRemove(\'';
      butCop += action;
      butCop += '\')">';
@@ -88,21 +88,21 @@
      }
  }
  
- function buttonDeleteFile (name) { // Improve InputTextCurrentMfsDirectoryId
+ function createInputButtonDeleteOfSingleFileName (namFil) { // Improve InputTextCurrentMfsDirectoryId
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.namFil:',namFil);
 
      let path = document.getElementById ('InputTextCurrentMfsDirectoryId').value;
      if (path == '/') {
-	 var mfspath = path + name
+	 var mfspath = path + namFil
      } else {
-	 var mfspath = path + '/' + name
+	 var mfspath = path + '/' + namFil
      }
      let action = 'delete';
      console.log(callee+'.mfspath:', mfspath);
      let butDel = '<input type="button" value="Delete ';
-     butDel += name;
+     butDel += namFil;
      butDel += '" onclick="addGreenBackgroundOfCopyOrRemove(\'';
      butDel += 'delete';
      butDel += '\')">';
@@ -110,12 +110,12 @@
      return butDel;
  }
 
- function buttonModifyFile (name) {
+ function createInputButtonModifyOfSingleFileName (namFil) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.namFil:',namFil);
      
-     let result = '<input type="button" value="Modify ' + name + '" onclick="unlockFileEdit ()">';
+     let result = '<input type="button" value="Modify ' + namFil + '" onclick="unlockFileEdit ()">';
      console.log(callee+'.result:',result);
      return result;
  }
@@ -128,7 +128,7 @@
      createTextareaForFileContent();
  }
 
- function createTextareaForFileContent() { // Improve reference to saveSingleFileOnIpms()
+ function createTextareaForFileContent() { 
      let [callee, caller] = functionNameJS();
      console.log(callee+'.entering');
 
@@ -149,7 +149,7 @@
      var texAre = document.createElement ('textarea');
      texAre.rows = 20;
      texAre.cols = 80;
-     texAre.id = 'TextAreaSingleFileContentId';
+     texAre.id = 'TextAreaContentSingleFileId';
      texAre.disabled = true;
 
      var br2 = document.createElement ('br');
@@ -159,9 +159,9 @@
      var inpBut = document.createElement ('input');
      inpBut.type = 'button';
      inpBut.value = 'Save';
-     inpBut.id = 'InputButtonSaveSingleFileOnIpmsId';
+     inpBut.id = 'InputButtonSaveOnIpmsSingleFileId';
      inpBut.disabled = true;
-     inpBut.onclick = function () {saveSingleFileOnIpms ()};
+     inpBut.onclick = function () {saveOnIpmsSingleFile ()};
 
      divTex.append (cen);
      cen.append (bol);
@@ -182,13 +182,13 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
 
-     let txtAre = document.getElementById('TextAreaSingleFileContentId');
+     let txtAre = document.getElementById('TextAreaContentSingleFileId');
      txtAre.disabled = false;
-     let butSav = document.getElementById('InputButtonSaveSingleFileOnIpmsId');
+     let butSav = document.getElementById('InputButtonSaveOnIpmsSingleFileId');
      butSav.disabled = false;
  }
 
- function getHash(hash) { // Improve reference to TextAreaSingleFileContentId 
+ function getHash(hash) { // Improve reference to TextAreaContentSingleFileId 
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.hash:',hash)
@@ -204,33 +204,33 @@
      
      return fetchGetTextCors(url)
 	 .then( obj => { return Promise.resolve(obj) })
-	 .then(callback('TextAreaSingleFileContentId'))
+	 .then(callback('TextAreaContentSingleFileId'))
 	 .catch(logError)
  }
 
- function getTableOfIdOfName (tableId, tableName) {
+ function getTableOfIdOfName (tabId, tabNam) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.tableId:',tableId);
-     console.log(callee+'.input.tableName:',tableName);
+     console.log(callee+'.input.tabId:',tabId);
+     console.log(callee+'.input.tabNam:',tabNam);
      
-     let table = document.getElementById(tableId);
+     let table = document.getElementById(tabId);
      console.log(callee+'.table:',table);
 
      var name = table.attributes['name'].value;
      console.log(callee+'.name:',name);
 
-     if(name != tableName) {
-	 throw "Error'" + tableId + "' '" + tableName;
+     if(name != tabNam) {
+	 throw "Error'" + tabId + "' '" + tabNam;
      }
      return table;    
  }
 
- function saveSingleFileOnIpms () { // Improve 2 hardcoded ids
+ function saveOnIpmsSingleFile () { // Improve 2 hardcoded ids
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     let texAre = document.getElementById('TextAreaSingleFileContentId');
+     let texAre = document.getElementById('TextAreaContentSingleFileId');
      console.log(callee+'.texAre:',texAre);
      let content = texAre.value;
      console.log(callee+'.content:',content);
@@ -250,7 +250,7 @@
      writeOfMfsFilePathOfContent(mfspath, content) ;
      
      texAre.disabled = true;
-     let butSav = document.getElementById('InputButtonSaveSingleFileOnIpmsId');
+     let butSav = document.getElementById('InputButtonSaveOnIpmsSingleFileId');
      butSav.disabled = true;
  }
 
