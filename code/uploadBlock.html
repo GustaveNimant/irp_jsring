@@ -55,7 +55,8 @@
      let fakepath = valueInputOfFormOfTypeOfNameOfId("UploadForm", "file", "nameoffile", "InputFileFakePathId"); 
      console.log(callee+'.fakepath:',fakepath);
 
-     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
+//     let mfsdir = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
+     let mfsdir = valueSwitchOfId("InputTextCurrentMfsDirectoryId");
      console.log(callee+'.mfsdir:',mfsdir);
 
      let mfsdirOld = mfsdir;
