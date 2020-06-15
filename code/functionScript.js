@@ -169,9 +169,7 @@ function logErrorOfHash (err, hash) {
     case "Internal Server Error":
 	var text = "Internal Server Error because ipfs file path was uncorrect<br>run : ipfs pin add "+hash;
 	updateInnerHTMLOfIdOfValue("SpanErrorId", text);
-	
 	break;
-	
     default:
 	console.log(callee+'.default.err:',err);
     } // switch
@@ -381,7 +379,9 @@ function valueSwitchOfId(id) {
 
     let doc = document.getElementById(id);
     console.log(callee+'.doc:',doc);
-
+    if(doc == null) {
+	console.error(callee+'.No document with id',id);
+    }
     let tagNam = doc.tagName;
     console.log(callee+'.tagNam:',tagNam);
     

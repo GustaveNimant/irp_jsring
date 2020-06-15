@@ -128,8 +128,7 @@
 	 console.log('Entering in',callee,'called by',caller);
 	 console.log(callee+'.input.mfspath:',mfspath);
 
-	 const webui = 'http://127.0.0.1:5001';
-	 const api_url = webui + '/api/v0/'
+	 const api_url = 'http://127.0.0.1:5001/api/v0/'
 	 
 	 var url = api_url + 'files/stat?arg='+mfspath+'&hash=true&type=true'
 	 console.log(callee+'.url:',url);

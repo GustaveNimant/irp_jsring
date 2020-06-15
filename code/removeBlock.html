@@ -12,7 +12,8 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     var mfspath = document.getElementById('InputTextRemoveFileOrDirectoryId').value;
+     // var mfspath = document.getElementById('InputTextRemoveFileOrDirectoryId').value;
+     var mfspath = valueSwitchOfId('InputTextRemoveFileOrDirectoryId');
      console.log(callee+'.mfspath:',mfspath);
      
      let conf_mess = 'Confirm removing of ' + mfspath;
@@ -31,8 +32,8 @@
      
      let [parent, rootName, basename, ext] = chopOfMfsPath (mfspath);
      console.log(callee+'.parent:',parent);
-     const webui = 'http://127.0.0.1:5001';
-     const api_url = webui + '/api/v0/'
+
+     const api_url = 'http://127.0.0.1:5001/api/v0/'
 
      var url = api_url + 'files/rm?arg='+mfspath+'&force=true'
      console.log(callee+'.url:',url);
@@ -42,20 +43,9 @@
 	 .then (_ => {document.getElementById('InputTextCurrentMfsDirectoryId').value = parent})
      	 .then (_ => {getCurrentMfsDirectory()})
 	 .then (_ => {updateInnerHTMLOfIdOfValue('DivFileRemovedId', 'File or directory deleted')})
-	 .then (_ => {document.getElementById('InputTextRemoveFileOrDirectoryId').value = document.getElementById('InputTextCurrentMfsDirectoryId').value})
+	 .then (_ => {document.getElementById('InputTextRemoveFileOrDirectoryId').value = valueSwitchOfId('InputTextCurrentMfsDirectoryId')})
 	 .catch(err => logError(err))
  }	 
-
- function updateElementOfIdOfValue__ (id, value) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-
-     console.log(callee+'.input.id:',id);
-     console.log(callee+'.input.value:',value);
-
-     let doc = document.getElementById(id);
-     doc.innerHTML = value;
- }
 
 </script>
 <!-- End of RemoveBlock -->
