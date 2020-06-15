@@ -38,6 +38,7 @@
      updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', filNam);
 
      table = getTableOfIdOfName ('TableLsResultId', 'TableLsResultName');
+     console.log (callee+'.table 1:', table);
      
      deleteAllRowsOfTable (table);
      createHeaderForFileOfTable (table);
@@ -53,7 +54,7 @@
      var tr = createElementTable (table,'tr', '');
      createElementTable (tr, 'td', buttonDeleteFile (filNam));
 
-     console.log (callee+'.table:', table);
+     console.log (callee+'.table 2:', table);
      displayFileContentOfHash(hash);
  }
 
@@ -61,6 +62,7 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.filNam:',filNam);
+
      let action = 'copy';
      let butCop = '<input type="button" value="Copy ';
      butCop += filNam;
@@ -75,6 +77,7 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.action:', action);
+
      switch (action) {
 	 case "copy" :
 	     let copSou = document.getElementById('InputTextCopyPathSourceId');
@@ -95,11 +98,13 @@
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.filNam:',filNam);
 
-     let path = document.getElementById ('InputTextCurrentMfsDirectoryId').value;
-     if (path == '/') {
-	 var mfspath = path + filNam
+     //     let dirPat = document.getElementById ('InputTextCurrentMfsDirectoryId').value;
+     let dirPat = valueSwitchOfId('InputTextCurrentMfsDirectoryId');
+     console.log(callee+'.dirPat:', dirPat);
+     if (dirPat == '/') {
+	 var mfspath = dirPat + filNam
      } else {
-	 var mfspath = path + '/' + filNam
+	 var mfspath = dirPat + '/' + filNam
      }
      let action = 'delete';
      console.log(callee+'.mfspath:', mfspath);
@@ -127,10 +132,10 @@
      console.log(callee+'.input.hash:',hash);
 
      contentOfSingleFileHashOfStorageId(hash, 'TextAreaSingleFileContentId');
-     createTextareaForFileContent();
+     createTextAreaForFileContent();
  }
 
- function createTextareaForFileContent() { // Improve reference to saveSingleFileOnIpms()
+ function createTextAreaForFileContent() { // Improve reference to saveSingleFileOnIpms()
      let [callee, caller] = functionNameJS();
      console.log(callee+'.entering');
 
@@ -210,7 +215,7 @@
 	 .catch(logError)
  }
 
- function getTableOfIdOfName (tabId, tabNam) {
+ function getTableOfIdOfName(tabId, tabNam) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.tabId:',tabId);
@@ -260,7 +265,7 @@
      return mfspath;
  }
  
- function saveSingleFileOnIpms () { // Improve 2 hardcoded ids
+ function saveSingleFileOnIpms() { // Improve 2 hardcoded ids
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
 
