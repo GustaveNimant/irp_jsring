@@ -32,16 +32,23 @@
 	 let form = getFormOfName("CurrentMfsDirectoryForm");
 	 let mfspath = mfsPathOfForm(form);
 	 console.log(callee+'.mfspath',mfspath);
-	 
-	 navArr.push (mfspath);
-	 console.log(callee+'.mfspath has been pushed in navArr:',navArr);
 
+	 if (navArr.length != 0) {	 
+	     navArr.push (mfspath);
+	     console.log(callee+'.mfspath has been pushed in navArr:',navArr);
+	 }
+	 else {
+	     // special case when mfspath is any directory 
+	     navArr = stackOfDirectoryPath(mfspath);
+	     console.log(callee+'.mfspath has created navArr:',navArr);
+	 }
+	 
 	 updateOfSpanIdOfDivIdOfText("DivSpanCreateDirectoryId", "DivCreateDirectoryId", mfspath);
 	 updateInnerHTMLOfIdOfValue ("DivSpanUploadId", mfspath);
 	 getHashAndTypeOfMfsPath (mfspath);
 	 getFileListOfMfsDirPath (mfspath);
      }
-
+     
      function getFileListOfMfsDirPath (mfsDirPath) {
 	 let [callee, caller] = functionNameJS();
 	 console.log('Entering in',callee,'called by',caller);
@@ -51,7 +58,7 @@
 	     errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
 	 }
 	 
-//	 const api_url = 'http://127.0.0.1:5001/api/v0/'
+	 //	 const api_url = 'http://127.0.0.1:5001/api/v0/'
 	 var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
 	 console.log(callee+'.url:',url);
 	 return fetch(url, { method: "POST", mode: 'cors'})
@@ -128,7 +135,7 @@
 	 console.log('Entering in',callee,'called by',caller);
 	 console.log(callee+'.input.mfspath:',mfspath);
 
-//	 const api_url = 'http://127.0.0.1:5001/api/v0/'
+	 //	 const api_url = 'http://127.0.0.1:5001/api/v0/'
 	 
 	 var url = api_url + 'files/stat?arg='+mfspath+'&hash=true&type=true'
 	 console.log(callee+'.url:',url);

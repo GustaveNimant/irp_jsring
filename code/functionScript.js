@@ -423,4 +423,26 @@ function valueSwitchOfId(id) {
     return result;
 }
 
+function stackOfDirectoryPath(dirPat){
+    // /my/ceci/truc => [ '/', '/my', '/my/ceci', '/my/ceci/truc' ]
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.dirPat:',dirPat);
+
+    let dirArr = dirPat.split('/');
+
+    var current = '';
+    var result= ['/'];
+    for (p of dirArr) {
+	if (p != '') {
+	    console.log(callee+'.p:',p);
+	    current += '/' + p ;
+	    console.log(callee+'.current:',current);
+	    result.push(current);
+	}
+    }
+    
+    console.log(callee+'.result:',result);
+    return result;
+}
 
