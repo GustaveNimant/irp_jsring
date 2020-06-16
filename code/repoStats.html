@@ -9,7 +9,7 @@
 	     let [callee, caller] = functionNameJS();
 	     console.log('Entering in',callee,'called by',caller);
              
-	     const api_url = 'http://127.0.0.1:5001/api/v0/';
+//	     const api_url = 'http://127.0.0.1:5001/api/v0/';
 	     let  url = api_url + 'stats/repo?human=true';
 	     console.log(callee, 'url ', url);
 	     return fetch(url, { method: "POST", mode: 'cors'})

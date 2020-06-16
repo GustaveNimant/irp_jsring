@@ -81,7 +81,7 @@
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.hash:',hash);
      
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
+//     const api_url = 'http://127.0.0.1:5001/api/v0/'
      let  url = api_url + 'pin/ls?arg=/ipfs/'+hash+'&type=all'
      return fetchRespNoCatch(url)
 	 .then( obj => {
@@ -102,7 +102,7 @@
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.hash:',hash);
 
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
+//     const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'pin/add?arg=/ipfs/'+hash+'&progress=true'
      console.log(callee+'.url',url)
      return fetchGetText(url)
@@ -115,7 +115,7 @@
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.hash:',hash);
      
-     const api_url = 'http://127.0.0.1:5001/api/v0/'
+//     const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'pin/rm?arg=/ipfs/'+hash
      console.log(callee+'.url',url)
      return fetchGetJson(url)

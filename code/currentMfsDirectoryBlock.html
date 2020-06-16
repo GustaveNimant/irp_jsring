@@ -51,7 +51,7 @@
 	     errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
 	 }
 	 
-	 const api_url = 'http://127.0.0.1:5001/api/v0/'
+//	 const api_url = 'http://127.0.0.1:5001/api/v0/'
 	 var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
 	 console.log(callee+'.url:',url);
 	 return fetch(url, { method: "POST", mode: 'cors'})
@@ -128,7 +128,7 @@
 	 console.log('Entering in',callee,'called by',caller);
 	 console.log(callee+'.input.mfspath:',mfspath);
 
-	 const api_url = 'http://127.0.0.1:5001/api/v0/'
+//	 const api_url = 'http://127.0.0.1:5001/api/v0/'
 	 
 	 var url = api_url + 'files/stat?arg='+mfspath+'&hash=true&type=true'
 	 console.log(callee+'.url:',url);
