@@ -142,20 +142,3 @@ function spanOfId(spanId) {
     return element;
 }
 
-function getTableOfIdOfName (tableId, tableName) {
-    let [callee, caller] = functionNameJS();
-    console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.tableId:',tableId);
-    console.log(callee+'.input.tableName:',tableName);
-    
-    let table = document.getElementById(tableId);
-    console.log(callee+'.table:',table);
-
-    var name = table.attributes['name'].value;
-    console.log(callee+'.name:',name);
-
-    if(name != tableName) {
-	throw "Error'" + tableId + "' '" + tableName;
-    }
-    return table;    
-}

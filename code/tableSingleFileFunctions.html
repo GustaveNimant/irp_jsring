@@ -37,9 +37,9 @@
      
      updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', filNam);
 
-     table = getTableOfIdOfName ('TableLsResultId', 'TableLsResultName');
+     var table = tableOfId('TableLsResultId');
      console.log (callee+'.table 1:', table);
-     
+
      deleteAllRowsOfTable (table);
      createHeaderForFileOfTable (table);
 
@@ -205,7 +205,7 @@
 	 return false;
      }
 
-//     const api_url = 'http://127.0.0.1:5001/api/v0/';
+     //     const api_url = 'http://127.0.0.1:5001/api/v0/';
      var url = api_url + 'cat?arg='+hash
      console.log(callee+'.url:',url);
      
@@ -213,24 +213,6 @@
 	 .then( obj => { return Promise.resolve(obj) })
 	 .then(callback(id))
 	 .catch(logError)
- }
-
- function getTableOfIdOfName(tabId, tabNam) {
-     let [callee, caller] = functionNameJS();
-     console.log('Entering in',callee,'called by',caller);
-     console.log(callee+'.input.tabId:',tabId);
-     console.log(callee+'.input.tabNam:',tabNam);
-     
-     let table = document.getElementById(tabId);
-     console.log(callee+'.table:',table);
-
-     var name = table.attributes['name'].value;
-     console.log(callee+'.name:',name);
-
-     if(name != tabNam) {
-	 throw "Error'" + tabId + "' '" + tabNam;
-     }
-     return table;    
  }
 
  function provideTextAreaSaved() {

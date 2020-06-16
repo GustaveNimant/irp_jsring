@@ -244,17 +244,6 @@ function navigatorName () {
     return result;
 }
 
-function updateInnerHTMLOfIdOfValue (id, val) {
-    let [callee, caller] = functionNameJS();
-    console.log('Entering in',callee,'called by',caller);
-    console.log(callee+'.input.id',id);
-    console.log(callee+'.input.val',val);
-
-    let doc = document.getElementById(id);
-    console.log(callee+'.doc:',doc);
-    doc.innerHTML = val;
-}
-
 function valueInputTextOfId(id) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
@@ -363,6 +352,9 @@ function nameSwitchOfId(id) {
 	break;
     case "FORM":
 	result = doc.name;
+	break;
+    case "TABLE":
+	result = doc.attributes['name'].value;
 	break;
     default:
 	console.error(callee+'.tagNam:',tagNam);
