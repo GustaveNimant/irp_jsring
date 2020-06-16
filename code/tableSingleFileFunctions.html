@@ -234,9 +234,11 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     let filNam = innerHTMLSpanOfId('H3SpanTitleId');
+     //let filNam = innerHTMLSpanOfId('H3SpanTitleId');
+     let filNam = valueSwitchOfId('H3SpanTitleId');
      console.log(callee+'.filNam:',filNam);
-     let dirPat = valueInputTextOfId('InputTextCurrentMfsDirectoryId');
+     //let dirPat = valueInputTextOfId('InputTextCurrentMfsDirectoryId');
+     let dirPat = valueSwitchOfId('InputTextCurrentMfsDirectoryId');
      if (dirPat == '/') {
 	 var mfspath = dirPat + filNam
      } else {
