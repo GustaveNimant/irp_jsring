@@ -37,7 +37,8 @@
      
      updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', filNam);
 
-     var table = tableOfId('TableLsResultId');
+     //     var table = tableOfId('TableLsResultId');
+     var table = elementOfIdOfTag('TableLsResultId', 'TABLE');
      console.log (callee+'.table 1:', table);
 
      deleteAllRowsOfTable (table);
@@ -222,8 +223,10 @@
      let texAre = document.getElementById('TextAreaSingleFileContentId');
      console.log(callee+'.texAre:',texAre);
      let content = texAre.value;
+
      console.log(callee+'.content:',content);
      texAre.disabled = true;
+
      let butSav = document.getElementById('InputButtonSaveSingleFileOnIpmsId');
      butSav.disabled = true;
 
