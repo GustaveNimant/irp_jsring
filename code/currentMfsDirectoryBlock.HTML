@@ -1,0 +1,166 @@
+<!-- CurrentMfsDirectoryBlock --><form method="POST" name="CurrentMfsDirectoryForm">
+    <center>
+	<img src="images/back.png" width="30" height="25" title="Click to Go Back" onclick="goBack()">
+	<span class="TitleClass">
+	    Current Mfs directory <input type="text" name="InputTextCurrentMfsDirectoryName" id="InputTextCurrentMfsDirectoryId" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
+	    <input type="button" onClick="getCurrentMfsDirectory()" value="Display">
+	    <input type="button" onClick="document.location.reload(true)" value="Reset page">
+	</span>
+	<!-- <pre id="ls"></pre> -->
+    </center>
+</form>
+
+<center>
+    <div class="TypeAndHashClass">
+	<div>This Mfs <b><span id="DivSpanTypeId">type</span></b> has Hash <b><span id="DivSpanHashId">hash</span></b></div>
+	<span style="color:red" id="SpanErrorId"></span>
+	<div>
+</center>
+
+<table id="TableLsResultId" name ="TableLsResultName">
+    <tr><th colspan=4><h3 class="WhiteOnDarkBlueClass"><span id="H3SpanTitleId" name="H3SpanTitleName" class="H3SpanTitleClass"></span></h3></th>
+</table>
+	</div>
+    </div>
+
+    <script>
+
+     function getCurrentMfsDirectory(){
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+
+	 let form = getFormOfName("CurrentMfsDirectoryForm");
+	 let mfspath = mfsPathOfForm(form);
+	 console.log(callee+'.mfspath',mfspath);
+
+	 if (navArr.length != 0) {	 
+	     navArr.push (mfspath);
+	     console.log(callee+'.mfspath has been pushed in navArr:',navArr);
+	 }
+	 else {
+	     // special case when mfspath is any directory 
+	     navArr = stackOfDirectoryPath(mfspath);
+	     console.log(callee+'.mfspath has created navArr:',navArr);
+	 }
+	 
+	 updateOfSpanIdOfDivIdOfText("DivSpanCreateDirectoryId", "DivCreateDirectoryId", mfspath);
+	 updateInnerHTMLOfIdOfValue ("DivSpanUploadId", mfspath);
+	 getHashAndTypeOfMfsPath (mfspath);
+	 getFileListOfMfsDirPath (mfspath);
+     }
+     
+     function getFileListOfMfsDirPath (mfsDirPath) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.mfsDirPath:',mfsDirPath);
+
+	 if (mfsDirPath == "") {
+	     errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
+	 }
+	 
+	 //	 const api_url = 'http://127.0.0.1:5001/api/v0/'
+	 var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
+	 console.log(callee+'.url:',url);
+	 return fetch(url, { method: "POST", mode: 'cors'})
+	     .then (validate)
+	     .then (resp => { console.log(callee+'.resp',resp);return resp.json()})
+	     .then (body => {displayOfJsonOfMfsDirPath(body, mfsDirPath)})
+	     .catch(err => {console.log(err); logError(err)})
+     }
+     
+     function displayOfJsonOfMfsDirPath (json, mfsDirPath) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.json:', json);
+	 console.log(callee+'.input.mfsDirPath:', mfsDirPath);
+	 
+	 let entries = json.Entries
+	 console.log(callee+'.entries:', entries);
+	 
+	 table = document.getElementById('TableLsResultId')
+	 console.log(callee+'.table:',table);
+	 
+	 deleteActionsAndErrorTexts();
+	 deleteAllRowsOfTable (table);
+	 updateInnerHTMLOfIdOfValue ('H3SpanTitleId', mfsDirPath);
+
+	 try {
+	     if (entries == null) throw "entries is null"		 
+	 } catch (e) {
+	     logError(e);
+	 }
+
+	 if (entries.length != 0){
+	     createHeaderOfTable (table);
+	 }
+
+	 // remove textArea for single File if any
+	 var mydiv = document.getElementById("DivTextAreaSingleFileId");
+	 if (mydiv != null) {
+	     console.log(callee+'.mydiv:',mydiv);
+	     mydiv.innerHTML = "";
+	 }
+	 
+	 createTableOfEntriesOfMfsDirPath (entries, mfsDirPath);
+     }
+
+     function deleteActionsAndErrorTexts() {  // Improve
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 
+	 updateInnerHTMLOfIdOfValue ('DivFileUploadedId', '');
+	 updateInnerHTMLOfIdOfValue ('SpanErrorId', '');
+	 updateInnerHTMLOfIdOfValue ('DivFileRemovedId', '');
+     }
+
+     function mfsPathOfForm(form) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.form:',form);
+
+	 let name = form.name;
+	 console.log(callee+'.name:',name);
+
+	 let result = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
+
+	 console.log(callee+'.result:',result);
+	 if (result == "") {
+	     errorMessage ('result were not empty',result, "Check", caller);
+	 }
+	 return result;
+     }	     
+
+     function getHashAndTypeOfMfsPath (mfspath) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log(callee+'.input.mfspath:',mfspath);
+
+	 //	 const api_url = 'http://127.0.0.1:5001/api/v0/'
+	 
+	 var url = api_url + 'files/stat?arg='+mfspath+'&hash=true&type=true'
+	 console.log(callee+'.url:',url);
+	 return fetchGetJson(url)
+	     .then( obj => {console.log(callee+'.obj',obj);
+		 return Promise.resolve([obj.Hash, obj.Type]) })
+	     .then(callbackOfIdOfId ('DivSpanHashId', 'DivSpanTypeId'))
+	     .catch(logError)
+     }
+
+     function linkIpfsHash (hash) {
+	 let [callee, caller] = functionNameJS();
+	 console.log('Entering in',callee,'called by',caller);
+	 console.log (callee+'.input.hash:',hash);
+	 
+	 let api_url = 'http://127.0.0.1:5001/ipfs/';
+	 let link = '<a href="';
+	 link += api_url;
+	 link += hash;
+	 link += '" target="_blank">';
+	 link += hash;
+	 link += '</a>';
+	 console.log (callee+'.link:',link);
+	 return link;
+     }
+
+    </script>
+    <!-- End of CurrentMfsDirectoryBlock -->

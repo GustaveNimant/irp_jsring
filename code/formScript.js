@@ -50,7 +50,7 @@ function elementInputOfFormOfTypeOfNameOfId(forNam, inpTyp, inpNam, curId) {
     }
     return element;
 }
-function updateInputOfFormOfTypeOfNameOfIdOfValue(forNam, inpTyp, inpNam, curId, value) {
+function updateInputOfFormOfTypeOfNameOfIdOfValue__(forNam, inpTyp, inpNam, curId, value) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);
     console.log(callee+'.input.value',value);

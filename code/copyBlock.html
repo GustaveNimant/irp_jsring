@@ -13,8 +13,10 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     var from = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId");
-     let to   = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathTargetId");
+     //     var from = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId");
+     //     let to   = valueInputOfFormOfTypeOfNameOfId("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathTargetId");
+     var from = valueSwitchOfId("InputTextCopyPathSourceId");
+     var to = valueSwitchOfId("InputTextCopyPathTargetId");
      
      if ( from.charAt(0) != '/') {
 	 from = '/ipfs/' + from;

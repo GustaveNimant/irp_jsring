@@ -8,7 +8,7 @@
      createElementTable (tr, 'th', 'Hash');
  }
 
- function updateRemoveFileAndCopyFileOfFile (filNam) {
+ function updateRemoveFileAndCopyFileOfFileName (filNam) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.filNam:',filNam);
@@ -26,14 +26,15 @@
      let but = document.getElementById('InputButtonRemoveId');
      but.disabled = false;
      
-     let cop = updateInputOfFormOfTypeOfNameOfIdOfValue("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId", mfspath);
+     //  updateInputOfFormOfTypeOfNameOfIdOfValue("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId", mfspath);
+     updateValueOfIdOfValue("InputTextCopyPathSourceId", mfspath);
  }
  
  function createTableOfSingleFileNameOfHash (filNam, hash) { 
      let [callee, caller] = functionNameJS();
      console.log(callee+'.input.filNam:',filNam);
      console.log(callee+'.input.hash:',hash);
-     updateRemoveFileAndCopyFileOfFile (filNam);
+     updateRemoveFileAndCopyFileOfFileName (filNam);
      
      updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', filNam);
 
