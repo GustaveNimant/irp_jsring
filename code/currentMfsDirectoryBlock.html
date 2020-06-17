@@ -31,7 +31,7 @@
 
 	 //	 let form = getFormOfName("CurrentMfsDirectoryForm");
 	 //	 let mfspath = mfsPathOfForm(form);
-	 let mfspath = valueSwitchOfId("InputTextCurrentMfsDirectoryId");
+	 let mfspath = valueSwitchOfId ("InputTextCurrentMfsDirectoryId");
 	 console.log(callee+'.mfspath',mfspath);
 
 	 if (navArr.length != 0) {	 
@@ -44,7 +44,8 @@
 	     console.log(callee+'.mfspath has created navArr:',navArr);
 	 }
 	 
-	 updateOfSpanIdOfDivIdOfText("DivSpanCreateDirectoryId", "DivCreateDirectoryId", mfspath);
+	 //	 updateOfSpanIdOfDivIdOfText("DivSpanCreateDirectoryId", "DivCreateDirectoryId", mfspath);
+	 updateInnerHTMLOfIdOfValue ("DivSpanCreateDirectoryId", mfspath);
 	 updateInnerHTMLOfIdOfValue ("DivSpanUploadId", mfspath);
 	 getHashAndTypeOfMfsPath (mfspath);
 	 getFileListOfMfsDirPath (mfspath);
@@ -56,7 +57,7 @@
 	 console.log(callee+'.input.mfsDirPath:',mfsDirPath);
 
 	 if (mfsDirPath == "") {
-	     errorMessage ('mfsDirpath were not empty', mfsDirPath, "Check", caller);
+	     errorMessage ('mfsDirPath were not empty', mfsDirPath, "Check", caller);
 	 }
 	 
 	 //	 const api_url = 'http://127.0.0.1:5001/api/v0/'
@@ -114,7 +115,7 @@
 	 updateInnerHTMLOfIdOfValue ('DivFileRemovedId', '');
      }
 
-     function mfsPathOfForm(form) {
+     function mfsPathOfForm__(form) {
 	 let [callee, caller] = functionNameJS();
 	 console.log('Entering in',callee,'called by',caller);
 	 console.log(callee+'.input.form:',form);
@@ -152,9 +153,9 @@
 	 console.log('Entering in',callee,'called by',caller);
 	 console.log (callee+'.input.hash:',hash);
 	 
-	 let api_url = 'http://127.0.0.1:5001/ipfs/';
+	 let api_ipfs_url = 'http://127.0.0.1:5001/ipfs/';
 	 let link = '<a href="';
-	 link += api_url;
+	 link += api_ipfs_url;
 	 link += hash;
 	 link += '" target="_blank">';
 	 link += hash;
