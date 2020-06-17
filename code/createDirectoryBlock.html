@@ -12,10 +12,12 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     let msfDirPath = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
+     // let msfDirPath = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
+     let msfDirPath = valueSwitchOfId("InputTextCurrentMfsDirectoryId");
      console.log(callee+'.mfsDirPath:',msfDirPath);
 
-     let mfsDirName = document.getElementById('InputTextCreateDirectoryId').value;
+     // let mfsDirName = document.getElementById('InputTextCreateDirectoryId').value;
+     let mfsDirName = valueSwitchOfId("InputTextCreateDirectoryId");
      console.log(callee+'.mfsDirName:',mfsDirName);
      
      if (msfDirPath == '/'){
