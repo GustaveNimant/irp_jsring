@@ -115,23 +115,6 @@
 	 updateInnerHTMLOfIdOfValue ('DivFileRemovedId', '');
      }
 
-     function mfsPathOfForm__(form) {
-	 let [callee, caller] = functionNameJS();
-	 console.log('Entering in',callee,'called by',caller);
-	 console.log(callee+'.input.form:',form);
-
-	 let name = form.name;
-	 console.log(callee+'.name:',name);
-
-	 let result = valueInputOfFormOfTypeOfNameOfId("CurrentMfsDirectoryForm", "text", "InputTextCurrentMfsDirectoryName", "InputTextCurrentMfsDirectoryId");
-
-	 console.log(callee+'.result:',result);
-	 if (result == "") {
-	     errorMessage ('result were not empty',result, "Check", caller);
-	 }
-	 return result;
-     }	     
-
      function getHashAndTypeOfMfsPath (mfspath) {
 	 let [callee, caller] = functionNameJS();
 	 console.log('Entering in',callee,'called by',caller);
