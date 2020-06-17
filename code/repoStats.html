@@ -3,14 +3,15 @@
 	<div id="DivRepoStatsId">
 	</div>
 	<br>
+	
 	<script>
 	 
 	 function getRepoStats() {
 	     let [callee, caller] = functionNameJS();
 	     console.log('Entering in',callee,'called by',caller);
              
-	     let  url = api_url + 'stats/repo?human=true';
-	     console.log(callee, 'url ', url);
+	     let url = api_url + 'stats/repo?human=true';
+	     console.log(callee,'.url:', url);
 	     return fetch(url, { method: "POST", mode: 'cors'})
 		 .then (resp => resp.json())
 	 }
@@ -37,7 +38,6 @@
 	     console.log (callee+'.htmlStr:',htmlStr);
 	     return htmlStr;
 	 }
-	 
 
 	 function convertSizeOfValue(value){
 	     let [callee, caller] = functionNameJS();

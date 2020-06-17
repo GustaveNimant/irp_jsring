@@ -26,9 +26,10 @@
      createElementTable (tr, 'th', 'Hash')   
  }
 
- function createTableOfEntriesOfMfsDirPath (entries, mfsDirPath){
+ function createTableOfEntriesOfMfsDirPath (table, entries, mfsDirPath){
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
+     console.log(callee+'.input.table:',table);
      console.log(callee+'.input.entries:', entries);
      console.log(callee+'.input.mfsDirPath:', mfsDirPath);
 

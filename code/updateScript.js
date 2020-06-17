@@ -11,6 +11,7 @@ function updateInnerHTMLOfIdOfValue (id, val) {
     doc.innerHTML = val;
     
 }
+
 function updateValueOfIdOfValue (id, val) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);

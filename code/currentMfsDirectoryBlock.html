@@ -79,7 +79,7 @@
 	 let entries = json.Entries
 	 console.log(callee+'.entries:', entries);
 	 
-	 table = document.getElementById('TableLsResultId')
+	 let table = document.getElementById('TableLsResultId')
 	 console.log(callee+'.table:',table);
 	 
 	 deleteActionsAndErrorTexts();
@@ -103,7 +103,7 @@
 	     mydiv.innerHTML = "";
 	 }
 	 
-	 createTableOfEntriesOfMfsDirPath (entries, mfsDirPath);
+	 createTableOfEntriesOfMfsDirPath (table, entries, mfsDirPath);
      }
 
      function deleteActionsAndErrorTexts() {  // Improve
