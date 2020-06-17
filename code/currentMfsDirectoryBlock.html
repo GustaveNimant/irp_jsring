@@ -29,8 +29,9 @@
 	 let [callee, caller] = functionNameJS();
 	 console.log('Entering in',callee,'called by',caller);
 
-	 let form = getFormOfName("CurrentMfsDirectoryForm");
-	 let mfspath = mfsPathOfForm(form);
+	 //	 let form = getFormOfName("CurrentMfsDirectoryForm");
+	 //	 let mfspath = mfsPathOfForm(form);
+	 let mfspath = valueSwitchOfId("InputTextCurrentMfsDirectoryId");
 	 console.log(callee+'.mfspath',mfspath);
 
 	 if (navArr.length != 0) {	 
