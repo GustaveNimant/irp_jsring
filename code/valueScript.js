@@ -49,7 +49,7 @@ function valueSwitchOfId(id) {
 	result = doc.innerText;
 	break;
     case "INPUT":
-	if ((doc.type == "button") || (doc.type == "text")){ 
+	if ((doc.type == "button") || (doc.type == "text") || (doc.type == "file")){ 
 	    result = doc.value;
 	}
 	else {
