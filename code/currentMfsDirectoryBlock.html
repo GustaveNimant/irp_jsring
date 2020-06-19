@@ -55,10 +55,6 @@
 	 console.log('Entering in',callee,'called by',caller);
 	 console.log(callee+'.input.mfsDirPath:',mfsDirPath);
 
-	 if (mfsDirPath == "") {
-	     errorMessage ('mfsDirPath were not empty', mfsDirPath, "Check", caller);
-	 }
-	 
 	 var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
 	 console.log(callee+'.url:',url);
 	 return fetch(url, { method: "POST", mode: 'cors'})
