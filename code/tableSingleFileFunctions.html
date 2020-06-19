@@ -38,10 +38,7 @@
      
      updateSpanOfIdOfNameOfText('H3SpanTitleId', 'H3SpanTitleName', filNam);
 
-     //     var table = tableOfId('TableLsResultId');
-     var table = elementOfIdOfTag('TableLsResultId', 'TABLE');
-     console.log (callee+'.table 1:', table);
-
+     var table = tableOfId("TableLsResultId");
      deleteAllRowsOfTable (table);
      createHeaderForFileOfTable (table);
 
@@ -139,7 +136,7 @@
 
  function createTextAreaForFileContent() { // Improve reference to saveSingleFileOnIpms()
      let [callee, caller] = functionNameJS();
-     console.log(callee+'.entering');
+     console.log('Entering in',callee,'called by',caller);
 
      var divTex = document.createElement ('div');
      divTex.id = "DivTextAreaSingleFileId";
