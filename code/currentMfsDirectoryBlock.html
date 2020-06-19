@@ -5,6 +5,8 @@
 	    Current Mfs directory <input type="text" name="InputTextCurrentMfsDirectoryName" id="InputTextCurrentMfsDirectoryId" value="/" onkeyup="callFunctionWhenEnterEvent(event, getForm()">
 	    <input type="button" onClick="getCurrentMfsDirectory()" value="Display">
 	    <input type="button" onClick="document.location.reload(true)" value="Reset page">
+	    <br>
+	    Previous Mfs directory <input type="text" name="InputHiddenPreviousMfsDirectoryName" id="InputHiddenPreviousMfsDirectoryId">
 	</span>
 	<!-- <pre id="ls"></pre> -->
     </center>
@@ -29,26 +31,23 @@
 	 let [callee, caller] = functionNameJS();
 	 console.log('Entering in',callee,'called by',caller);
 
-	 //	 let form = getFormOfName("CurrentMfsDirectoryForm");
-	 //	 let mfspath = mfsPathOfForm(form);
-	 let mfspath = valueSwitchOfId ("InputTextCurrentMfsDirectoryId");
-	 console.log(callee+'.mfspath',mfspath);
+	 let mfsDirPath = valueSwitchOfId ("InputTextCurrentMfsDirectoryId");
+	 console.log(callee+'.mfsDirPath',mfsDirPath);
 
 	 if (navArr.length != 0) {	 
-	     navArr.push (mfspath);
-	     console.log(callee+'.mfspath has been pushed in navArr:',navArr);
+	     navArr.push (mfsDirPath);
+	     console.log(callee+'.mfsDirPath has been pushed in navArr:',navArr);
 	 }
 	 else {
-	     // special case when mfspath is any directory 
-	     navArr = stackOfDirectoryPath(mfspath);
-	     console.log(callee+'.mfspath has created navArr:',navArr);
+	     // special case when mfsDirPath is any directory 
+	     navArr = stackOfDirectoryPath(mfsDirPath);
+	     console.log(callee+'.mfsDirPath has created navArr:',navArr);
 	 }
 	 
-	 //	 updateOfSpanIdOfDivIdOfText("DivSpanCreateDirectoryId", "DivCreateDirectoryId", mfspath);
-	 updateInnerHTMLOfIdOfValue ("DivSpanCreateDirectoryId", mfspath);
-	 updateInnerHTMLOfIdOfValue ("DivSpanUploadId", mfspath);
-	 getHashAndTypeOfMfsPath (mfspath);
-	 getFileListOfMfsDirPath (mfspath);
+	 updateInnerHTMLOfIdOfValue ("DivSpanCreateDirectoryId", mfsDirPath);
+	 updateInnerHTMLOfIdOfValue ("DivSpanUploadId", mfsDirPath);
+	 getHashAndTypeOfMfsPath (mfsDirPath);
+	 getFileListOfMfsDirPath (mfsDirPath);
      }
      
      function getFileListOfMfsDirPath (mfsDirPath) {
@@ -60,7 +59,6 @@
 	     errorMessage ('mfsDirPath were not empty', mfsDirPath, "Check", caller);
 	 }
 	 
-	 //	 const api_url = 'http://127.0.0.1:5001/api/v0/'
 	 var url = api_url + 'files/ls?arg=' + mfsDirPath + '&l=true'
 	 console.log(callee+'.url:',url);
 	 return fetch(url, { method: "POST", mode: 'cors'})

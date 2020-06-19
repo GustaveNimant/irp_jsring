@@ -21,6 +21,10 @@ function updateValueOfIdOfValue (id, val) {
     // Improve check that innerHTML does exist
     
     let doc = document.getElementById(id);
+
+    let previous = document.getElementById(id).value;
+    console.log(callee+'.id',id,'previous value',previous,'updated to',val);
+    
     console.log(callee+'.doc:',doc);
     doc.value = val;
     

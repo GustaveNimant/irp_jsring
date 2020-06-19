@@ -1,3 +1,13 @@
+function elementDisabledOfIdOfBoolean(id, bool) {
+    let [callee, caller] = functionNameJS();
+    console.log('Entering in',callee,'called by',caller);
+    console.log(callee+'.input.id:',id);
+    console.log(callee+'.input.bool:',bool);
+    
+    let doc = document.getElementById(id);
+    doc.disabled = bool;
+}
+
 function tableOfId (tabId) {
     let [callee, caller] = functionNameJS();
     console.log('Entering in',callee,'called by',caller);

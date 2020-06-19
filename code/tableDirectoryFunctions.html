@@ -1,5 +1,6 @@
 <!-- Table Functions -->
 <script>
+
  function deleteAllRowsOfTable (table) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
@@ -50,46 +51,49 @@
      }
  }
 
- function createNameButtonOfMfsDirPath (mfspath, name, type, hash) {
+ function createNameButtonOfMfsDirPath (mfspath, rootName, type, hash) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.mfspath:',mfspath);
-     console.log(callee+'.input.name:',name);
+     console.log(callee+'.input.rootName:',rootName);
      console.log(callee+'.input.type:',type);
      console.log(callee+'.input.hash:',hash);
 
      let but = '<input type="button" id="InputButtonNameId" class="InputButtonNameClass" value="';
-     but += name;
+     but += rootName;
      if (type == 1){
-	 but += '" onclick="addNameOnInputMfsPath(this.value)"';
+	 but += '" onclick="updateIdsOfRootName(this.value)"';
      } else {
 	 
-	 but += '" onclick="createTableOfSingleFileNameOfHash(' + "'" + name + "'" + ',' + "'" + hash + "'" + ')"';
+	 but += '" onclick="createTableOfSingleFileNameOfHash(' + "'" + rootName + "'" + ',' + "'" + hash + "'" + ')"';
 	 console.log(callee+'.but',but);
      }
      but += '>';
      return but;
  }
 
- function addNameOnInputMfsPath (mfspath) {
+ function updateIdsOfRootName (rootName) {
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
-     console.log (callee+'.input.mfspath:', mfspath);
+     console.log (callee+'.input.rootName:', rootName);
 
-     let oldMfsdir = document.getElementById('InputTextCurrentMfsDirectoryId').value;
+     let oldMfsdir = valueSwitchOfId("InputTextCurrentMfsDirectoryId");
      console.log (callee+'.oldMfsdir:', oldMfsdir);
+     updateValueOfIdOfValue("InputHiddenPreviousMfsDirectoryId", oldMfsdir);
      let path = oldMfsdir;
      if (oldMfsdir == '/'){
-	 path += mfspath;
+	 path += rootName;
      } else {
 	 path += '/';
-	 path += mfspath;
+	 path += rootName;
      }
      console.log (callee+'.path:', path);
-     var del = document.getElementById('InputTextRemoveFileOrDirectoryId');
-     del.value = path;
-     var mfsdir = document.getElementById('InputTextCurrentMfsDirectoryId');
-     mfsdir.value = path;
+
+     updateValueOfIdOfValue("InputTextRemoveFileOrDirectoryId", path);
+     updateValueOfIdOfValue("InputTextCopyPathSourceId", path);
+     updateValueOfIdOfValue("InputTextCopyPathTargetId", path);
+     updateValueOfIdOfValue("InputTextCurrentMfsDirectoryId", path);
+     
      document.getElementById('InputButtonRemoveId').disabled = false;
      getCurrentMfsDirectory();
  }

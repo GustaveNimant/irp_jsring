@@ -13,7 +13,7 @@
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.filNam:',filNam);
      
-     let dirPat = valueInputTextOfId('InputTextCurrentMfsDirectoryId');
+     let dirPat = valueSwitchOfId("InputTextCurrentMfsDirectoryId");
      if (dirPat == '/') {
 	 mfspath = dirPat + filNam;
      } else {
@@ -21,13 +21,13 @@
      }
      console.log(callee+'.mfspath:',mfspath);
 
-     let inp = document.getElementById('InputTextRemoveFileOrDirectoryId');
-     inp.value = mfspath;
+     updateValueOfIdOfValue("InputTextRemoveFileOrDirectoryId", mfspath);
+     
      let but = document.getElementById('InputButtonRemoveId');
      but.disabled = false;
      
-     //  updateInputOfFormOfTypeOfNameOfIdOfValue("CopyForm", "text", "InputTextCopyName", "InputTextCopyPathSourceId", mfspath);
      updateValueOfIdOfValue("InputTextCopyPathSourceId", mfspath);
+     updateValueOfIdOfValue("InputTextCopyPathTargetId", mfspath);
  }
  
  function createTableOfSingleFileNameOfHash (filNam, hash) { 
@@ -92,12 +92,11 @@
      }
  }
  
- function buttonDeleteFile (filNam) { // Improve InputTextCurrentMfsDirectoryId
+ function buttonDeleteFile (filNam) { 
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      console.log(callee+'.input.filNam:',filNam);
 
-     //     let dirPat = document.getElementById ('InputTextCurrentMfsDirectoryId').value;
      let dirPat = valueSwitchOfId('InputTextCurrentMfsDirectoryId');
      console.log(callee+'.dirPat:', dirPat);
      if (dirPat == '/') {
@@ -188,10 +187,8 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
 
-     let txtAre = document.getElementById('TextAreaSingleFileContentId');
-     txtAre.disabled = false;
-     let butSav = document.getElementById('InputButtonSaveSingleFileOnIpmsId');
-     butSav.disabled = false;
+     elementDisabledOfIdOfBoolean("TextAreaSingleFileContentId", false);
+     elementDisabledOfIdOfBoolean("InputButtonSaveSingleFileOnIpmsId", false);
  }
 
  function contentOfSingleFileHashOfStorageId(hash, id) {
@@ -204,7 +201,6 @@
 	 return false;
      }
 
-     //     const api_url = 'http://127.0.0.1:5001/api/v0/';
      var url = api_url + 'cat?arg='+hash
      console.log(callee+'.url:',url);
      
@@ -218,16 +214,12 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
 
-     let texAre = document.getElementById('TextAreaSingleFileContentId');
-     console.log(callee+'.texAre:',texAre);
-     let content = texAre.value;
-
+     let content = valueSwitchOfId("TextAreaSingleFileContentId");
      console.log(callee+'.content:',content);
-     texAre.disabled = true;
 
-     let butSav = document.getElementById('InputButtonSaveSingleFileOnIpmsId');
-     butSav.disabled = true;
-
+     elementDisabledOfIdOfBoolean("TextAreaSingleFileContentId", true);
+     elementDisabledOfIdOfBoolean("InputButtonSaveSingleFileOnIpmsId", true);
+     
      return content;
  }
  
@@ -235,10 +227,9 @@
      let [callee, caller] = functionNameJS();
      console.log('Entering in',callee,'called by',caller);
      
-     //let filNam = innerHTMLSpanOfId('H3SpanTitleId');
      let filNam = valueSwitchOfId('H3SpanTitleId');
      console.log(callee+'.filNam:',filNam);
-     //let dirPat = valueInputTextOfId('InputTextCurrentMfsDirectoryId');
+
      let dirPat = valueSwitchOfId('InputTextCurrentMfsDirectoryId');
      if (dirPat == '/') {
 	 var mfspath = dirPat + filNam
