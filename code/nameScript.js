@@ -21,7 +21,7 @@ function nameSwitchOfId(id) {
 	}
 	break;
     case "INPUT":
-	if ((doc.type == "button") || (doc.type == "text")) {
+	if ((doc.type == "button") || (doc.type == "text") || (doc.type == "file")) {
 	    result = doc.name;
 	}
 	else {

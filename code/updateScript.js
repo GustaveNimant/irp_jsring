@@ -4,9 +4,10 @@ function updateInnerHTMLOfIdOfValue (id, val) {
     console.log(callee+'.input.id',id);
     console.log(callee+'.input.val',val);
 
-    // Improve check that innerHTML does exist
-    
     let doc = document.getElementById(id);
+    if (doc == null) {
+	throw "Error in "+callee+" unkown id "+id
+    }
     console.log(callee+'.doc:',doc);
     doc.innerHTML = val;
     
@@ -18,9 +19,10 @@ function updateValueOfIdOfValue (id, val) {
     console.log(callee+'.input.id',id);
     console.log(callee+'.input.val',val);
 
-    // Improve check that innerHTML does exist
-    
     let doc = document.getElementById(id);
+    if (doc == null) {
+	throw "Error in "+callee+" unkown id "+id
+    }
 
     let previous = document.getElementById(id).value;
     console.log(callee+'.id',id,'previous value',previous,'updated to',val);

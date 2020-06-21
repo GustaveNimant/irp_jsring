@@ -62,11 +62,11 @@
      console.log(callee+'.file:',file)
      
      if (document.getElementById('InputRadioUploadNewId').checked) {
-	 var name = document.getElementById('InputTextUploadKeptNameId').value;
-	 console.log(callee+'.name:',name);
+	 var name = valueSwitchOfId('InputTextUploadKeptNameId');
+	 console.log(callee+'.new.name:',name);
      } else {
 	 var name = file.name;
-	 console.log(callee+'.old.name:',name);
+	 console.log(callee+'.name:',name);
      }
      console.log(callee+'.name:',name);
      mfsdir += '/';
@@ -101,7 +101,6 @@
      console.log(callee+'.input.mfsFilePath:',mfsFilePath);
      console.log(callee+'.input.content:',content)
 
-     //     const api_url = 'http://127.0.0.1:5001/api/v0/'
      var url = api_url + 'files/write?arg=' + mfsFilePath + '&create=1';
      console.log(callee+'.url:',url);
      return fetchPostTextForm(url, content)
